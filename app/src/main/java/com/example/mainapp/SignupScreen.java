@@ -1,7 +1,4 @@
 package com.example.mainapp;
-
-import static android.app.ProgressDialog.show;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -10,11 +7,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SignupScreen extends AppCompatActivity {
@@ -70,7 +62,7 @@ public class SignupScreen extends AppCompatActivity {
         tvLoginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // חזרה למסך התחברות
+
                 finish();
             }
         });

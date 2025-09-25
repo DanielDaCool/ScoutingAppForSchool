@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.R;
+import com.example.myapplication.SignupScreen;
+
 public class LoginScreen extends AppCompatActivity {
     private EditText etUserId, etPassword;
     private Button btnLogin;

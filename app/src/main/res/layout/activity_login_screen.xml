@@ -6,6 +6,8 @@
     android:gravity="center"
     android:background="#FFFFFF">
 
+
+
     <!-- כותרת -->
     <TextView
         android:layout_width="wrap_content"
@@ -13,7 +15,8 @@
         android:text="התחברות לאפליקציה"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:textColor="@color/demaciaColor"
+
+        android:textColor="#9D00FF"
         android:layout_marginBottom="40dp"
         android:gravity="center" />
 
@@ -51,7 +54,7 @@
         android:text="התחבר"
         android:textAlignment="center"
         android:textSize="22sp"
-        android:backgroundTint="@color/demaciaColor"
+        android:backgroundTint="#9D00FF"
         android:textColor="#FFFFFF"
         android:layout_marginBottom="16dp" />
 
@@ -64,7 +67,7 @@
         android:focusable="true"
         android:padding="8dp"
         android:text="יצירת חשבון"
-        android:textColor="@color/demaciaColor"
+        android:textColor="#9D00FF"
         android:textSize="20sp" />
 
 </LinearLayout>
