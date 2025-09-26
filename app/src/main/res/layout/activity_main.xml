@@ -45,6 +45,10 @@
         android:layout_height="wrap_content"
         android:text="רשימת משחקים"
         android:layout_marginBottom="16dp"
+
+        android:textSize="16dp"
+
+        android:textStyle="bold"
         android:backgroundTint="#9D00FF"
         />
 
@@ -54,6 +58,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="מילוי טופס סקאוטינג"
+        android:textSize="16dp"
+        android:textStyle="bold"
 
         android:backgroundTint="#9D00FF"/>
 

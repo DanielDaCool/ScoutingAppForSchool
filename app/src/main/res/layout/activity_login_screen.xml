@@ -68,6 +68,7 @@
         android:padding="8dp"
         android:text="יצירת חשבון"
         android:textColor="#9D00FF"
+        android:textAlignment="center"
         android:textSize="20sp" />
 
 </LinearLayout>
