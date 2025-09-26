@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".GamesList">
+
+    <!-- כותרת המסך -->
+    <TextView
+        android:id="@+id/textViewListTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="רשימת משחקים"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#9D00FF"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
+
+    <!-- שדה סינון לפי מספר קבוצה -->
+    <EditText
+        android:id="@+id/editTextTeamFilter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="סנן לפי מספר קבוצה"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/textViewListTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/checkboxMyGames"
+        android:layout_marginEnd="8dp" />
+
+    <!-- תיבת סימון למשחקים שלי -->
+    <CheckBox
+        android:id="@+id/checkboxMyGames"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="המשחקים שלי"
+        app:layout_constraintTop_toTopOf="@id/editTextTeamFilter"
+        app:layout_constraintBottom_toBottomOf="@id/editTextTeamFilter"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

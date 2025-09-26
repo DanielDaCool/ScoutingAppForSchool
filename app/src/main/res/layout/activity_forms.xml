@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Forms">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layoutDirection="rtl"
+        >
+
+        <!-- כותרת המסך -->
+        <TextView
+            android:id="@+id/textViewFormsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="טופס סקאוטינג"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- מספר קבוצה ומספר משחק -->
+        <TextView
+            android:id="@+id/textViewTeamMatchInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="קבוצה: - / משחק: -"
+            android:textSize="18sp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- דוגמה לשדות בטופס -->
+        <!-- שלב אוטונומי -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="שלב אוטונומי"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="הצליח" />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="נכשל" />
+        </RadioGroup>
+
+        <!-- מספר חלקי משחק שהונחו -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="מספר חלקי משחק שהונחו"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editTextGamePieces"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="הכנס מספר"
+            android:layout_marginBottom="16dp" />
+
+        <!-- הערות נוספות -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="הערות"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editTextNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:lines="4"
+            android:gravity="top"
+            android:hint="כתוב הערות כאן..."
+            android:layout_marginBottom="32dp" />
+
+        <!-- כפתור שמירה -->
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="שמור ועדכן" />
+
+    </LinearLayout>
+</ScrollView>
+    

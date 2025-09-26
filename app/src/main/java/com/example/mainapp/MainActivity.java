@@ -1,50 +1,39 @@
 package com.example.mainapp;
-
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-
-
 public class MainActivity extends AppCompatActivity {
-    Button loginBtn, signupBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        init();
+        // Find the buttons by their ID
+        Button gamesListButton = findViewById(R.id.buttonGamesList);
+        Button formsButton = findViewById(R.id.buttonForms);
 
-
-        onClick(signupBtn, new Intent(MainActivity.this, SignupScreen.class));
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, LoginScreen.class));
-            }
-        });
-
-    }
-
-
-    private void init() {
-        this.loginBtn = findViewById(R.id.loginBtn);
-        this.signupBtn = findViewById(R.id.signupBtn);
-
-
-    }
-
-    private void onClick(Button btn, Intent intent) {
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(intent);
-            }
-        });
+        // Set up the click listener for the Games List button
+//        gamesListButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Create an Intent to start the GamesListActivity
+//                Intent intent = new Intent(MainActivity.this, GamesListActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        // Set up the click listener for the Forms button
+//        formsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Create an Intent to start the FormsActivity
+//                Intent intent = new Intent(MainActivity.this, FormsActivity.class);
+//                startActivity(intent);
+//            }
+//        });
     }
 }

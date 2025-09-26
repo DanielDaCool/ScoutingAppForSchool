@@ -1,31 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/loginBtn"
+    <!-- טקסט כותרת -->
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="מסך התחברות"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="אפליקציית סקאוטינג"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="#9D00FF"
+        android:layout_marginBottom="20dp"
+        android:gravity="center" />
 
-    <Button
-        android:id="@+id/signupBtn"
+    <!-- טקסט ברוכים הבאים -->
+    <TextView
+        android:id="@+id/textViewWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="מסך הרשמה"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.584" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:text="שלום, שם"
+        android:textSize="22sp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- מידע על המשחק הקרוב לסקאוטינג -->
+    <TextView
+        android:id="@+id/textViewNextMatch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="המשחק הבא שלך: משחק #42"
+        android:textSize="18sp"
+        android:layout_marginBottom="48dp" />
+
+    <!-- כפתור למסך רשימת המשחקים -->
+    <Button
+        android:id="@+id/buttonGamesList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="רשימת משחקים"
+        android:layout_marginBottom="16dp" />
+
+    <!-- כפתור למסך מילוי הטופס -->
+    <Button
+        android:id="@+id/buttonForms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="מילוי טופס סקאוטינג" />
+
+</LinearLayout>

@@ -13,6 +13,15 @@
         android:theme="@style/Theme.MainApp"
         tools:targetApi="31">
         <activity
+            android:name=".Forms"
+            android:exported="false" />
+        <activity
+            android:name=".GamesList"
+            android:exported="false" />
+        <activity
+            android:name=".LoginScreen"
+            android:exported="false" />
+        <activity
             android:name=".SignupScreen"
             android:exported="false" />
         <activity
