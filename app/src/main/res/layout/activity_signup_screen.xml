@@ -86,6 +86,8 @@
             android:text="לחץ כאן להתחברות"
             android:textColor="#9D00FF"
             android:textSize="14sp"
+            android:textStyle="bold"
+
             android:clickable="true"
             android:focusable="true"
             android:padding="8dp"
