@@ -3,8 +3,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="32dp"
-    android:gravity="center"
-    android:background="#FFFFFF">
+    android:gravity="center_horizontal"
+    android:background="#FFFFFF"
+    >
 
 
 

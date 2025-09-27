@@ -20,6 +20,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="טופס סקאוטינג"
+            android:textColor="#9D00FF"
+            android:layout_gravity="center_horizontal"
             android:textSize="24sp"
             android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
@@ -99,6 +101,7 @@
             android:id="@+id/buttonSave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="#9D00FF"
             android:text="שמור ועדכן" />
 
     </LinearLayout>
