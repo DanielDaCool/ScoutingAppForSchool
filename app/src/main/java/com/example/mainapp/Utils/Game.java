@@ -37,15 +37,16 @@ public class Game {
         return getTeamsPlaying() +  "\n" + " סקאוטר: " + DataHelper.getScouterNameFromID(scouterID);
     }
     private String getTeamsPlaying() {
-        StringBuilder blueAlliance = new StringBuilder();
-        StringBuilder redAlliance = new StringBuilder();
+        StringBuilder blueAllianceString = new StringBuilder();
+        StringBuilder redAllianceString = new StringBuilder();
 
         for (int i = 0; i < this.redAlliance.length; i++) {
-            blueAlliance.append(this.blueAlliance[i].teamNumber()).append(", ");
-            redAlliance.append(this.redAlliance[i].teamNumber()).append(", ");
+            blueAllianceString.append(this.blueAlliance[i].teamNumber()).append(", ");
+            redAllianceString.append(this.redAlliance[i].teamNumber()).append(", ");
         }
 
-        return blueAlliance.deleteCharAt(redAlliance.length() - 2) + "VS " + redAlliance.deleteCharAt(redAlliance.length() - 2);
+
+        return blueAllianceString.deleteCharAt(blueAllianceString.length() - 2) + "VS " + redAllianceString.deleteCharAt(redAllianceString.length() - 2);
     }
 
 }

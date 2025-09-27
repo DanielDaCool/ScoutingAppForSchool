@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="16dp"
+    android:padding="60dp"
     tools:context=".MainActivity">
 
     <!-- טקסט כותרת -->
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="רשימת משחקים"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="10dp"
 
         android:textSize="16dp"
 
@@ -52,15 +52,45 @@
         android:backgroundTint="#9D00FF"
         />
 
-    <!-- כפתור למסך מילוי הטופס -->
+
     <Button
         android:id="@+id/buttonForms"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="מילוי טופס סקאוטינג"
-        android:textSize="16dp"
-        android:textStyle="bold"
+        android:layout_marginBottom="10dp"
 
-        android:backgroundTint="#9D00FF"/>
+        android:textSize="16dp"
+
+        android:textStyle="bold"
+        android:backgroundTint="#9D00FF"
+        />
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="לחץ להתחברות"
+        android:layout_marginBottom="10dp"
+
+        android:textSize="16dp"
+
+        android:textStyle="bold"
+        android:backgroundTint="#9D00FF"
+        />
+    <Button
+        android:id="@+id/buttonSignup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="לחץ להרשמה"
+        android:layout_marginBottom="10dp"
+
+        android:textSize="16dp"
+
+        android:textStyle="bold"
+        android:backgroundTint="#9D00FF"
+        />
+
+
+
 
 </LinearLayout>
