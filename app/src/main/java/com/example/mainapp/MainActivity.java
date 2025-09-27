@@ -1,5 +1,7 @@
 package com.example.mainapp;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,14 +9,22 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Button gamesListButton;
+    private Button formsButton;
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Find the buttons by their ID
-        Button gamesListButton = findViewById(R.id.buttonGamesList);
-        Button formsButton = findViewById(R.id.buttonForms);
+        init();
+
+        gamesListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(context, GamesList.class));
+            }
+        });
 
         // Set up the click listener for the Games List button
 //        gamesListButton.setOnClickListener(new View.OnClickListener() {
@@ -35,5 +45,11 @@ public class MainActivity extends AppCompatActivity {
 //                startActivity(intent);
 //            }
 //        });
+    }
+    private void init(){
+
+        gamesListButton = findViewById(R.id.buttonGamesList);
+        formsButton = findViewById(R.id.buttonForms);
+        context = MainActivity.this;
     }
 }
