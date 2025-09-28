@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
     private Button formsButton;
     private Button loginButton;
     private Button signupButton;
+    private Button statsButton;
     private Context context;
 
     @Override
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         setOnClickListener(formsButton, Forms.class);
         setOnClickListener(signupButton, SignupScreen.class);
         setOnClickListener(loginButton, LoginScreen.class);
+        setOnClickListener(statsButton, TeamStatsActivity.class);
     }
 
     private void setOnClickListener(Button btn, Class classToGo){
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         formsButton = findViewById(R.id.buttonForms);
         loginButton = findViewById(R.id.buttonLogin);
         signupButton = findViewById(R.id.buttonSignup);
+        statsButton = findViewById(R.id.buttonStats);
         context = MainActivity.this;
     }
 }
