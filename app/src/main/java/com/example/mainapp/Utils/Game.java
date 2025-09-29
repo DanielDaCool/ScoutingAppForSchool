@@ -1,5 +1,7 @@
 package com.example.mainapp.Utils;
 
+import java.util.Arrays;
+
 public class Game {
     private final Team[] blueAlliance;
     private final Team[] redAlliance;
@@ -27,6 +29,18 @@ public class Game {
 
     public Team[] getRedAlliance() {
         return this.redAlliance;
+    }
+    public int[] getPlayingTeamsNumbers(){
+        int[] arr = new int[6];
+        Arrays.fill(arr, 0);
+
+        for (int i = 0; i < 3; i++){
+            arr[i] = this.redAlliance[i].teamNumber();
+        }
+        for(int j = 3; j < 6; j++){
+            arr[j] = this.blueAlliance[j-3].teamNumber();
+        }
+        return arr;
     }
 
     public String getGameTitle() {

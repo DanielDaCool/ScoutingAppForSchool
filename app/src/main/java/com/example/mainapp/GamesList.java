@@ -2,6 +2,11 @@ package com.example.mainapp;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -16,6 +21,7 @@ import com.example.mainapp.Adapters.GameAdapter;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DataHelper;
 import com.example.mainapp.Utils.Game;
+import com.example.mainapp.Utils.TeamUtils;
 
 import java.util.ArrayList;
 
@@ -23,7 +29,9 @@ public class GamesList extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private GameAdapter gameAdapter;
+    private EditText listFilter;
     private ArrayList<Game> gameList;
+    private ArrayList<Game> filteredGameList;
     private Context context;
 
     @Override
@@ -35,12 +43,58 @@ public class GamesList extends AppCompatActivity {
 
         // Setup RecyclerView with adapter
         setupRecyclerView();
+        listFilter.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    String input = listFilter.getText().toString().trim();
+
+                    if (input.isEmpty()) {
+                        filteredGameList = new ArrayList<>(gameList);
+                        updateToFiltered();
+                        return true;
+                    }
+
+                    try {
+                        int teamNumber = Integer.parseInt(input);
+                        if (teamNumber < 0 || teamNumber > 10000) {
+                            Toast.makeText(context, "מספר קבוצה לא חוקי", Toast.LENGTH_SHORT).show();
+                            listFilter.setText("");
+                        } else {
+                            showFilteredGames(teamNumber);
+                        }
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(context, "תכניס מספר אמיתי", Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+    private void copyData(ArrayList<Game> from, ArrayList<Game> to){
+
+    }
+    private void showFilteredGames(int teamNumber){
+        filteredGameList = new ArrayList<>(gameList);
+        filteredGameList.removeIf(game -> !TeamUtils.ContainsTeam(game.getPlayingTeamsNumbers(), teamNumber));
+        updateToFiltered();
+
+
+    }
+    private void updateToFiltered(){
+        gameAdapter = new GameAdapter(filteredGameList);
+        setupRecyclerView();
+
+
     }
     private void init(){
         recyclerView = findViewById(R.id.gamesList);
         gameList = DataHelper.getGames();
+        filteredGameList = gameList;
         gameAdapter = new GameAdapter(gameList);
         context = GamesList.this;
+        listFilter = findViewById(R.id.editTextTeamFilter);
     }
 
     private void initializeRecyclerView() {

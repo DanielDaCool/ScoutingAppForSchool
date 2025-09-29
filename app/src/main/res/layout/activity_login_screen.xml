@@ -30,22 +30,21 @@
         android:layout_height="50dp"
         android:layout_marginBottom="16dp"
         android:hint="שם משתמש"
-        android:inputType="text"
         android:padding="12dp"
 
-        android:textAlignment="center"
-        android:textDirection="ltr" />
+        android:textAlignment="textStart"
+        android:textDirection="rtl" />
 
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="סיסמא"
-        android:textAlignment="center"
+        android:textAlignment="textEnd"
         android:inputType="textPassword"
         android:padding="12dp"
         android:layout_marginBottom="24dp"
-        android:textDirection="ltr" />
+        android:textDirection="rtl" />
 
     <!-- כפתור התחברות -->
     <Button

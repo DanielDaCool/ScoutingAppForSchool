@@ -5,7 +5,7 @@ import java.util.List;
 
 public class DataHelper {
     public static String getScouterNameFromID(int scouterID) {
-        return "TEST";
+        return "TEST " + Tests.generateRandomNumber(10) ;
     }
 
     public static ArrayList<Game> getGames() { //need to decide if using API or manually writing in constants the games

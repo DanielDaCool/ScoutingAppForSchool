@@ -20,7 +20,20 @@ public class TeamUtils {
         int c = getTotalScoredGamePieces(allGamesOfTeam);
         return (double) c/allGamesOfTeam.size();
     }
-
+    public static boolean ContainsTeam(Team[] arr, int teamNumber){
+        for (Team t:
+             arr) {
+            if(t.teamNumber() == teamNumber) return true;
+        }
+        return false;
+    }
+    public static boolean ContainsTeam(int[] arr, int teamNumber){
+        for (int a:
+             arr) {
+            if(a == teamNumber) return true;
+        }
+        return false;
+    }
 
     public static GamePiece getMostScoredGamePiece(ArrayList<TeamAtGame> allGamesOfTeam){
 

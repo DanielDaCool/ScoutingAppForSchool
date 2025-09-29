@@ -72,7 +72,7 @@ public class Tests {
     public static ArrayList<Game> generateGames() {
         ArrayList<Game> l = new ArrayList<Game>();
 
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 300; i++) {
             l.add(generateGame(i+1));
         }
         return l;
@@ -87,7 +87,7 @@ public class Tests {
         Team[] t = new Team[3];
 
         for (int i = 0; i < t.length; i++) {
-            t[i] = new Team(generateRandomNumber(10000), "TBD");
+            t[i] = new Team(generateRandomNumber(1000), "TBD");
         }
 
         return t;

@@ -26,29 +26,24 @@ public class LoginScreen extends AppCompatActivity {
 
         init();
 
-        // הגדרת לחיצה על כפתור התחברות
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String userId = etUserId.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
 
-                // בדיקה בסיסית
                 if (userId.isEmpty() || password.isEmpty()) {
                     Toast.makeText(context, "אנא מלא את כל השדות", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                // הודעה זמנית - כאן תוסיף את לוגיקת ההתחברות
                 Toast.makeText(context, "מתחבר עם ID: " + userId, Toast.LENGTH_SHORT).show();
             }
         });
 
-        // הגדרת לחיצה על קישור הרשמה
         tvSignupLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // מעבר למסך הרשמה
                 Intent intent = new Intent(context, SignupScreen.class);
                 startActivity(intent);
             }
@@ -57,7 +52,6 @@ public class LoginScreen extends AppCompatActivity {
 
     private void init() {
 
-        // חיבור הרכיבים
         etUserId = findViewById(R.id.etUserId);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);

@@ -39,6 +39,7 @@
         android:layout_marginBottom="16dp"
         android:hint="שם משתמש"
         android:inputType="text"
+
         android:padding="12dp" />
 
 
@@ -49,6 +50,7 @@
         android:layout_height="50dp"
         android:layout_marginBottom="16dp"
         android:hint="סיסמא (לפחות 6 תווים)"
+        android:textAlignment="textEnd"
         android:inputType="textPassword"
         android:padding="12dp"
         android:textDirection="rtl" />
@@ -63,6 +65,8 @@
         android:hint="אישור סיסמא"
         android:inputType="textPassword"
         android:padding="12dp"
+
+        android:textAlignment="textEnd"
         android:textDirection="rtl" />
 
     <!-- כפתור הרשמה -->
