@@ -42,6 +42,7 @@ public class TBAApiManager {
                 .addHeader("X-TBA-Auth-Key", API_KEY)
                 .build();
 
+
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
                 throw new IOException("Unexpected code " + response);
@@ -62,17 +63,56 @@ public class TBAApiManager {
         }
         return teams;
     }
+    public void getEventGames(EVENTS eventKey, GameCallback callback) {
+        new Thread(() -> {
+            try {
+                String json = fetchData("/event/" + eventKey + "/matches");
+                System.out.println("JSON Response length: " + json.length());
 
-    // Get matches at an event
-    public ArrayList<Game> getEventGames(EVENTS eventKey) throws IOException, JSONException {
-        String json = fetchData("/event/" + eventKey + "/matches");
-        JSONArray jsonArray = new JSONArray(json);
-        ArrayList<Game> gamesList = new ArrayList<Game>();
-        for(int i = 0; i < jsonArray.length(); i++){
-            JSONObject gameJson = jsonArray.getJSONObject(i);
-            gamesList.add(JsonParser.parseToGame(gameJson));
-        }
-        return gamesList;
+                JSONArray jsonArray = new JSONArray(json);
+                ArrayList<Game> gamesList = new ArrayList<>();
+
+                System.out.println("Total matches in JSON: " + jsonArray.length());
+
+                for(int i = 0; i < jsonArray.length(); i++){
+                    JSONObject gameJson = jsonArray.getJSONObject(i);
+                    String compLevel = gameJson.optString("comp_level", "");
+
+                    System.out.println("Match " + i + " comp_level: " + compLevel +
+                            ", match_number: " + gameJson.optInt("match_number", -1));
+
+                    if (compLevel.equals("qm")) {
+                        try {
+                            Game game = JsonParser.parseToGame(gameJson);
+                            if (game != null) {
+                                gamesList.add(game);
+                                System.out.println("Added qual match #" + game.getGameNumber());
+                            }
+                        } catch (Exception e) {
+                            System.err.println("Error parsing game " + i + ": " + e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                // Sort games by match number
+                gamesList.sort((g1, g2) -> Integer.compare(g1.getGameNumber(), g2.getGameNumber()));
+
+                System.out.println("Final games list size: " + gamesList.size());
+                callback.onSuccess(gamesList);
+
+            } catch (Exception e) {
+                System.err.println("Error: " + e.getMessage());
+                e.printStackTrace();
+                callback.onError(e);
+            }
+        }).start();
+    }
+
+    // Callback interface
+    public interface GameCallback {
+        void onSuccess(ArrayList<Game> games);
+        void onError(Exception e);
     }
 
     // Get specific team info

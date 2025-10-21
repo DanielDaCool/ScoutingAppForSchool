@@ -3,23 +3,18 @@ package com.example.mainapp;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mainapp.Adapters.GameAdapter;
+import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
-import com.example.mainapp.Utils.DataHelper;
 import com.example.mainapp.Utils.Game;
 import com.example.mainapp.Utils.TeamUtils;
 
@@ -41,8 +36,39 @@ public class GamesList extends AppCompatActivity {
 
         init();
 
-        // Setup RecyclerView with adapter
+        // FIXED: Setup RecyclerView BEFORE loading data
         setupRecyclerView();
+
+        // Load games from API
+        TBAApiManager.getInstance().getEventGames(Constants.CURRENT_EVENT_ON_APP, new TBAApiManager.GameCallback() {
+            @Override
+            public void onSuccess(ArrayList<Game> games) {
+                runOnUiThread(() -> {
+                    System.out.println("Successfully loaded " + games.size() + " games");
+
+                    
+
+                    gameList.clear();
+                    gameList.addAll(games);
+                    filteredGameList.clear();
+                    filteredGameList.addAll(games);
+
+                    gameAdapter.notifyDataSetChanged();
+
+                    Toast.makeText(context, "Loaded " + games.size() + " qualification matches", Toast.LENGTH_SHORT).show();
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                runOnUiThread(() -> {
+                    System.err.println("Error loading games: " + e.getMessage());
+                    e.printStackTrace();
+                    Toast.makeText(context, "Error loading games: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+            }
+        });
+
         listFilter.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -50,8 +76,9 @@ public class GamesList extends AppCompatActivity {
                     String input = listFilter.getText().toString().trim();
 
                     if (input.isEmpty()) {
-                        filteredGameList = new ArrayList<>(gameList);
-                        updateToFiltered();
+                        filteredGameList.clear();
+                        filteredGameList.addAll(gameList);
+                        gameAdapter.notifyDataSetChanged();
                         return true;
                     }
 
@@ -72,37 +99,30 @@ public class GamesList extends AppCompatActivity {
             }
         });
     }
-    private void copyData(ArrayList<Game> from, ArrayList<Game> to){
 
-    }
     private void showFilteredGames(int teamNumber){
-        filteredGameList = new ArrayList<>(gameList);
-        filteredGameList.removeIf(game -> !TeamUtils.ContainsTeam(game.getPlayingTeamsNumbers(), teamNumber));
-        updateToFiltered();
-
-
+        filteredGameList.clear();
+        for (Game game : gameList) {
+            if (TeamUtils.ContainsTeam(game.getPlayingTeamsNumbers(), teamNumber)) {
+                filteredGameList.add(game);
+            }
+        }
+        gameAdapter.notifyDataSetChanged();
     }
-    private void updateToFiltered(){
-        gameAdapter = new GameAdapter(filteredGameList);
-        setupRecyclerView();
 
-
-    }
     private void init(){
         recyclerView = findViewById(R.id.gamesList);
-        gameList = DataHelper.getGames(Constants.currentEventOnApp);
-        filteredGameList = gameList;
-        gameAdapter = new GameAdapter(gameList);
         context = GamesList.this;
         listFilter = findViewById(R.id.editTextTeamFilter);
-    }
 
-    private void initializeRecyclerView() {
-        recyclerView = findViewById(R.id.gamesList);
+        // FIXED: Create separate ArrayList instances
+        gameList = new ArrayList<>();
+        filteredGameList = new ArrayList<>();
+
+        gameAdapter = new GameAdapter(filteredGameList);
     }
 
     private void setupRecyclerView() {
-
         gameAdapter.setOnItemClickListener(new GameAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Game game, int position) {
@@ -112,22 +132,21 @@ public class GamesList extends AppCompatActivity {
             }
         });
 
-        // Set layout manager (vertical list)
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
-        // Set adapter to RecyclerView
         recyclerView.setAdapter(gameAdapter);
     }
 
-    // Helper methods for dynamic operations
     public void addNewGame(Game newGame) {
         gameList.add(newGame);
-        gameAdapter.notifyItemInserted(gameList.size() - 1);
+        filteredGameList.add(newGame);
+        gameAdapter.notifyItemInserted(filteredGameList.size() - 1);
     }
 
     public void removeGame(int position) {
-        if (position >= 0 && position < gameList.size()) {
-            gameList.remove(position);
+        if (position >= 0 && position < filteredGameList.size()) {
+            Game gameToRemove = filteredGameList.get(position);
+            gameList.remove(gameToRemove);
+            filteredGameList.remove(position);
             gameAdapter.notifyItemRemoved(position);
         }
     }

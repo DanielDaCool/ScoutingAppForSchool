@@ -11,16 +11,15 @@ public class DataHelper {
         return "TEST " + Tests.generateRandomNumber(10) ;
     }
 
-    public static ArrayList<Game> getGames(EVENTS event) {
-        try{
-
-            return TBAApiManager.getInstance().getEventGames(event);
-
-        }
-        catch (Exception e){
-            return new ArrayList<>();
-        }
-    }
+//    public static ArrayList<Game> getGames(EVENTS event) {
+//        try{
+//            return TBAApiManager.getInstance().getEventGames(event);
+//
+//        }
+//        catch (Exception e){
+//            return new ArrayList<>();
+//        }
+//    }
 
     public static double getAvgPoints(int teamNumber) {
 
