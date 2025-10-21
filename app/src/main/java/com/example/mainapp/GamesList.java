@@ -90,7 +90,7 @@ public class GamesList extends AppCompatActivity {
     }
     private void init(){
         recyclerView = findViewById(R.id.gamesList);
-        gameList = DataHelper.getGames();
+        gameList = DataHelper.getGames(Constants.currentEventOnApp);
         filteredGameList = gameList;
         gameAdapter = new GameAdapter(gameList);
         context = GamesList.this;

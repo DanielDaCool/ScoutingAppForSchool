@@ -14,6 +14,13 @@ public class Game {
         this.gameNumber = gameNumber;
         this.scouterID = scouterID;
     }
+    public Game(Team[] blueAlliance, Team[] redAlliance, int gameNumber) {
+        this.blueAlliance = blueAlliance;
+        this.redAlliance = redAlliance;
+        this.gameNumber = gameNumber;
+        this.scouterID = -1;
+    }
+
 
     public int getScouterID() {
         return this.scouterID;

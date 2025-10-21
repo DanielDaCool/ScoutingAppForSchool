@@ -1,5 +1,8 @@
 package com.example.mainapp.Utils;
 
+import com.example.mainapp.TBAHelpers.EVENTS;
+import com.example.mainapp.TBAHelpers.TBAApiManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +11,15 @@ public class DataHelper {
         return "TEST " + Tests.generateRandomNumber(10) ;
     }
 
-    public static ArrayList<Game> getGames() { //need to decide if using API or manually writing in constants the games
-        return new ArrayList<Game>(Tests.generateGames());
+    public static ArrayList<Game> getGames(EVENTS event) {
+        try{
+
+            return TBAApiManager.getInstance().getEventGames(event);
+
+        }
+        catch (Exception e){
+            return new ArrayList<>();
+        }
     }
 
     public static double getAvgPoints(int teamNumber) {
