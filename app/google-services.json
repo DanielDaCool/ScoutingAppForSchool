@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "742321552421",
+    "project_id": "scoutingapp-7bb4e",
+    "storage_bucket": "scoutingapp-7bb4e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742321552421:android:c46ac17d4efc4604db13cc",
+        "android_client_info": {
+          "package_name": "com.example.mainapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBp3ylaOtxNOWVT8EuoFyjYPXv0UD1HltU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

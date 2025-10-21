@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -25,6 +26,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -32,7 +34,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -43,4 +44,12 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.google.code.gson:gson:2.10.1")
+
+    // 🔥 Add Firebase BoM (Bill of Materials)
+    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
+
+    // 🔥 Add at least one Firebase SDK (choose one)
+    implementation("com.google.firebase:firebase-database")  // Realtime Database
+    // OR
+    // implementation("com.google.firebase:firebase-firestore")  // Cloud Firestore
 }

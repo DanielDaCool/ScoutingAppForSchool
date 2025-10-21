@@ -42,10 +42,10 @@ public class Game {
         Arrays.fill(arr, 0);
 
         for (int i = 0; i < 3; i++){
-            arr[i] = this.redAlliance[i].teamNumber();
+            arr[i] = this.redAlliance[i].getTeamNumber();
         }
         for(int j = 3; j < 6; j++){
-            arr[j] = this.blueAlliance[j-3].teamNumber();
+            arr[j] = this.blueAlliance[j-3].getTeamNumber();
         }
         return arr;
     }
@@ -62,8 +62,8 @@ public class Game {
         StringBuilder redAllianceString = new StringBuilder();
 
         for (int i = 0; i < this.redAlliance.length; i++) {
-            blueAllianceString.append(this.blueAlliance[i].teamNumber()).append(", ");
-            redAllianceString.append(this.redAlliance[i].teamNumber()).append(", ");
+            blueAllianceString.append(this.blueAlliance[i].getTeamNumber()).append(", ");
+            redAllianceString.append(this.redAlliance[i].getTeamNumber()).append(", ");
         }
 
 

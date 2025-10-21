@@ -23,7 +23,7 @@ public class TeamUtils {
     public static boolean ContainsTeam(Team[] arr, int teamNumber){
         for (Team t:
              arr) {
-            if(t.teamNumber() == teamNumber) return true;
+            if(t.getTeamNumber() == teamNumber) return true;
         }
         return false;
     }

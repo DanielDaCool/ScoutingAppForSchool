@@ -42,8 +42,8 @@ public class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.Team
             return;
         }
 
-        int teamNumber = teamGames.get(0).getTeam().teamNumber();
-        String teamName = teamGames.get(0).getTeam().teamName();
+        int teamNumber = teamGames.get(0).getTeam().getTeamNumber();
+        String teamName = teamGames.get(0).getTeam().getTeamName();
 
         double avgPoints = DataHelper.getAvgPoints(teamNumber);
         double avgGamePieces = TeamUtils.getAvgGamePiecePerGame(teamGames);
