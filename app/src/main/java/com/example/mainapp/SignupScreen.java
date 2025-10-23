@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class SignupScreen extends AppCompatActivity {
+public class    SignupScreen extends AppCompatActivity {
 
 
     private EditText etFullName, etUserId, etEmail, etPassword, etConfirmPassword;
@@ -76,4 +76,5 @@ public class SignupScreen extends AppCompatActivity {
         tvLoginLink = findViewById(R.id.tvLoginLink);
         context = SignupScreen.this;
     }
+
 }

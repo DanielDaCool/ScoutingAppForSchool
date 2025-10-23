@@ -52,15 +52,35 @@ public class TBAApiManager {
     }
 
     // Get teams at an event
-    public List<Team> getEventTeams(EVENTS eventKey) throws IOException, JSONException {
-        String json = fetchData("/event/" + eventKey + "/teams");
-        JSONArray jsonArray = new JSONArray(json);
+    public List<Team> getEventTeams(EVENTS eventKey, TeamCallback callback) throws IOException, JSONException {
+        ArrayList<Team> teams = new ArrayList<Team>();
+        new Thread(() -> {
+            try {
+                String json = fetchData("/event/" + eventKey + "/teams/simple");
+                System.out.println("JSON Response length: " + json.length());
 
-        List<Team> teams = new ArrayList<Team>();
-        for(int i = 0; i < jsonArray.length(); i++){
-            JSONObject teamJson = jsonArray.getJSONObject(i);
-            teams.add(JsonParser.parseToTeam(teamJson));
-        }
+                JSONArray jsonArray = new JSONArray(json);
+
+
+
+                for(int i = 0; i < jsonArray.length(); i++){
+                    JSONObject teamJson = jsonArray.getJSONObject(i);
+                    teams.add(JsonParser.parseToTeam(teamJson));
+                }
+
+               teams.sort((t1, t2) -> Integer.compare(t1.getTeamNumber(), t2.getTeamNumber()));
+
+                callback.onSuccess(teams);
+
+            } catch (Exception e) {
+                System.err.println("Error: " + e.getMessage());
+                e.printStackTrace();
+                callback.onError(e);
+            }
+        }).start();
+
+
+
         return teams;
     }
     public void getEventGames(EVENTS eventKey, GameCallback callback) {
@@ -115,6 +135,10 @@ public class TBAApiManager {
         void onError(Exception e);
     }
 
+    public interface TeamCallback{
+        void onSuccess(ArrayList<Team> teams);
+        void onError(Exception e);
+    }
     // Get specific team info
     public Team getTeam(int teamNumber) throws IOException, JSONException {
         String json = fetchData("/team/frc" + teamNumber);

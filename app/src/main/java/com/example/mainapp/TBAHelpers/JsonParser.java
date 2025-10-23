@@ -10,7 +10,7 @@ import org.json.JSONObject;
 public class JsonParser {
     public static Team parseToTeam(JSONObject ob){
         int num = ob.optInt("team_number", -1);
-        String name = ob.optString("name", "");
+        String name = ob.optString("nickname", "");
         return new Team(num, name);
     }
 
