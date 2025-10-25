@@ -17,7 +17,7 @@ public class Tests {
         ArrayList<TeamAtGame> perTeam = new ArrayList<TeamAtGame>();
         for(int i = 0; i < 60; i++){
 
-            TeamAtGame g = new TeamAtGame(t, generateRandomNumber(2) > 1, i);
+            TeamAtGame g = new TeamAtGame(t , i);
             generateGamePiecesScored(g);
             perTeam.add(g);
         }
@@ -31,7 +31,7 @@ public class Tests {
             ArrayList<TeamAtGame> perTeam = new ArrayList<TeamAtGame>();
             for(int i = 0; i < 60; i++){
 
-                TeamAtGame g = new TeamAtGame(t, generateRandomNumber(2) > 1, i);
+                TeamAtGame g = new TeamAtGame(t,  i);
                 generateGamePiecesScored(g);
                 perTeam.add(g);
             }

@@ -38,6 +38,17 @@ public class TeamStats implements Serializable {
         allGames.add(g);
     }
 
+    public double calculateAvgClimbPerGame(){
+        if (allGames == null || allGames.isEmpty()) {
+            return 0.0;  // ✅ Return 0 instead of NaN
+        }
+
+        int count = 0;
+        for (TeamAtGame t : allGames){
+            if(t.getClimb() != null && t.getClimb() != CLIMB.DIDNT_TRY && t.getClimb() != CLIMB.FAILED) count++;
+        }
+        return  (double) count / allGames.size();
+    }
     public double calculateAvgPoints() {
         if (allGames == null || allGames.isEmpty()) {
             return 0.0;  // ✅ Return 0 instead of NaN

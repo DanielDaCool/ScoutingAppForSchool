@@ -144,6 +144,21 @@ public class TBAApiManager {
         }).start();
     }
 
+
+    public void getTeam(int teamNumber, SingleTeamCallback callback) throws IOException, JSONException {
+        new Thread(()->{
+            try{
+                String json = fetchData("/team/frc" + teamNumber);
+                callback.onSuccess(JsonParser.parseToTeam(new JSONObject(json)));
+            }
+            catch (Exception e){
+                System.err.println("Error: " + e.getMessage());
+                e.printStackTrace();
+                callback.onError(e);
+            }
+        }).start();
+    }
+
     // Callback interface
     public interface GameCallback {
         void onSuccess(ArrayList<Game> games);
@@ -154,16 +169,16 @@ public class TBAApiManager {
         void onSuccess(ArrayList<Team> teams);
         void onError(Exception e);
     }
+    public interface SingleTeamCallback{
+        void onSuccess(Team t);
+        void onError(Exception e);
+    }
     public interface  CountCallback{
         void onSuccess(int count);
         void onError(Exception e);
     }
     // Get specific team info
-    public Team getTeam(int teamNumber) throws IOException, JSONException {
-        String json = fetchData("/team/frc" + teamNumber);
-        return JsonParser.parseToTeam(new JSONObject(json));
 
-    }
 
     // Get specific match info
     public Game getMatch(String matchKey) throws IOException, JSONException {

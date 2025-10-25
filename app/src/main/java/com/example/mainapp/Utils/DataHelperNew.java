@@ -118,7 +118,28 @@ public class DataHelperNew {
                     }
                 });
     }
-
+    public void readTeamStats(String teamID, DataCallback<TeamStats> callback) {
+        rootRef.child(Constants.GAMES_TABLE_NAME).child(teamID).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DataSnapshot snapshot = task.getResult();
+                        if (snapshot.exists()) {
+                            TeamStats t = snapshot.getValue(TeamStats.class);
+                            if (callback != null) {
+                                callback.onSuccess(t);
+                            }
+                        } else {
+                            if (callback != null) {
+                                callback.onFailure("User not found");
+                            }
+                        }
+                    } else {
+                        if (callback != null) {
+                            callback.onFailure(task.getException().getMessage());
+                        }
+                    }
+                });
+    }
 
     public void getLatestUserId(DatabaseCallback callback) {
         rootRef.child(Constants.USERS_TABLE_NAME)
@@ -164,7 +185,49 @@ public class DataHelperNew {
                     }
                 });
     }
+    /**
+     * Update specific fields of a record
+     *
+     * @param tableName The name of the table/collection
+     * @param id        The ID of the record
+     * @param updates   Map of field names to new values
+     * @param callback  Callback for success/failure
+     */
+    public void update(String tableName, String id, Map<String, Object> updates, DatabaseCallback callback) {
+        rootRef.child(tableName).child(id).updateChildren(updates)
+                .addOnSuccessListener(aVoid -> {
+                    if (callback != null) {
+                        callback.onSuccess(id);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) {
+                        callback.onFailure(e.getMessage());
+                    }
+                });
+    }
 
+    /**
+     * Replace entire record (overwrites all data)
+     *
+     * @param tableName The name of the table/collection
+     * @param id        The ID of the record
+     * @param data      The new object to save
+     * @param callback  Callback for success/failure
+     */
+    public void replace(String tableName, String id, Object data, DatabaseCallback callback) {
+        rootRef.child(tableName).child(id).setValue(data)
+                .addOnSuccessListener(aVoid -> {
+                    if (callback != null) {
+                        callback.onSuccess(id);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) {
+                        callback.onFailure(e.getMessage());
+                    }
+                });
+    }
     // ==================== CALLBACK INTERFACES ====================
 
     public interface DatabaseCallback {
