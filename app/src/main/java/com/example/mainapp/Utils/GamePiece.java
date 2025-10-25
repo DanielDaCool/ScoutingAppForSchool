@@ -19,4 +19,24 @@ public enum GamePiece {
     public int getTeleopPoints(){return  this.teleopPoints;}
 
     public int getAutoPoints(){return  this.autoPoints;}
+    public static GamePiece getGamePieceFromString(String gamePiece){
+        switch (gamePiece.toLowerCase()){
+            case "l1":
+                return L1;
+            case "l2":
+                return L2;
+
+            case "l3":
+                return L3;
+            case "l4":
+                return L4;
+            case "net":
+                return NET;
+            case "processor":
+                return PROCESSOR;
+
+
+        }
+        return L1;
+    }
 }

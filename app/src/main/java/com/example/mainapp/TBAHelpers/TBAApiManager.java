@@ -83,6 +83,21 @@ public class TBAApiManager {
 
         return teams;
     }
+    public void getGamesCount(EVENTS eventKey, CountCallback callback){
+        new Thread(()->{
+            try{
+                String json = fetchData("/event/" + eventKey + "/matches");
+                System.out.println("JSON Response length: " + json.length());
+
+                callback.onSuccess(new JSONArray(json).length());
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+
+
+    }
     public void getEventGames(EVENTS eventKey, GameCallback callback) {
         new Thread(() -> {
             try {
@@ -137,6 +152,10 @@ public class TBAApiManager {
 
     public interface TeamCallback{
         void onSuccess(ArrayList<Team> teams);
+        void onError(Exception e);
+    }
+    public interface  CountCallback{
+        void onSuccess(int count);
         void onError(Exception e);
     }
     // Get specific team info

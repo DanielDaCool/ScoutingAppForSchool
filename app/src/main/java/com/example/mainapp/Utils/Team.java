@@ -6,7 +6,7 @@ public class Team implements Serializable {
     private int teamNumber;
     private String teamName;
 
-
+    public Team(){}
     // ✅ Full constructor
     public Team(int teamNumber, String teamName) {
         this.teamNumber = teamNumber;

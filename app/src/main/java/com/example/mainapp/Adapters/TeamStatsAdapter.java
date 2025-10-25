@@ -10,6 +10,7 @@ import com.example.mainapp.R;
 import com.example.mainapp.Utils.TeamAtGame;
 import com.example.mainapp.Utils.GamePiece;
 import com.example.mainapp.Utils.DataHelper;
+import com.example.mainapp.Utils.TeamStats;
 import com.example.mainapp.Utils.TeamUtils;
 
 import java.util.ArrayList;
@@ -17,11 +18,11 @@ import java.util.Locale;
 
 public class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.TeamStatsViewHolder> {
 
-    private ArrayList<ArrayList<TeamAtGame>> allTeamsGames;
+    private ArrayList<TeamStats> teamStats;
 
     // The constructor now takes the already aggregated list
-    public TeamStatsAdapter(ArrayList<ArrayList<TeamAtGame>> allTeamsGamesAggregated) {
-        this.allTeamsGames = allTeamsGamesAggregated;
+    public TeamStatsAdapter(ArrayList<TeamStats> teamStats) {
+        this.teamStats = teamStats;
     }
 
     // Removed the getUniqueTeamNumbers and the aggregation method as it's now in the Activity
@@ -36,30 +37,27 @@ public class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.Team
     @Override
     public void onBindViewHolder(@NonNull TeamStatsViewHolder holder, int position) {
         // The item at 'position' is the complete history for one team
-        ArrayList<TeamAtGame> teamGames = allTeamsGames.get(position);
+        TeamStats curTeamStats = teamStats.get(position);
 
-        if (teamGames.isEmpty()) {
-            return;
-        }
 
-        int teamNumber = teamGames.get(0).getTeam().getTeamNumber();
-        String teamName = teamGames.get(0).getTeam().getTeamName();
+        int teamNumber = curTeamStats.getTeam().getTeamNumber();
+        String teamName = curTeamStats.getTeam().getTeamName();
 
-        double avgPoints = DataHelper.getAvgPoints(teamNumber);
-        double avgGamePieces = TeamUtils.getAvgGamePiecePerGame(teamGames);
-        GamePiece mostScoredPiece = TeamUtils.getMostScoredGamePiece(teamGames);
+        double avgPoints = curTeamStats.calculateAvgPoints();
+        double avgGamePieces = curTeamStats.getAvgGamePieceCount();
+        GamePiece mostScoredPiece = curTeamStats.getMostScoredGamePiece();
 
         holder.teamNumberTextView.setText(String.valueOf(teamNumber));
         holder.teamNameTextView.setText(teamName);
-        holder.avgPointsTextView.setText("ממוצע נקודות: " + String.format("%.1f", avgPoints));
-        holder.avgGamePiecesTextView.setText("ממוצע חלקי משחק: " + String.format("%.1f", avgGamePieces));
+        holder.avgPointsTextView.setText("ממוצע נקודות: " + String.format("%.1f", Double.isNaN(avgPoints) ? 0 : avgPoints));
+        holder.avgGamePiecesTextView.setText("ממוצע חלקי משחק: " + String.format("%.1f", Double.isNaN(avgGamePieces) ? 0 : avgGamePieces));
 
         String mostScoredText = mostScoredPiece != null
                 ? "הגובה הממוצע: " + mostScoredPiece.name()
                 : "הגובה הממוצע: אין מידע";
         holder.mostScoredTextView.setText(mostScoredText);
 
-        holder.gamesPlayedTextView.setText("כמות משחקים: " + teamGames.size());
+        holder.gamesPlayedTextView.setText("כמות משחקים: " + curTeamStats.getGamesPlayed());
     }
 
 
@@ -67,11 +65,11 @@ public class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.Team
     @Override
     public int getItemCount() {
         // Item count is the number of unique teams (size of the outer list)
-        return allTeamsGames.size();
+        return teamStats.size();
     }
 
-    public void updateData(ArrayList<ArrayList<TeamAtGame>> newData) {
-        this.allTeamsGames = newData;
+    public void updateData(ArrayList<TeamStats> newData) {
+        this.teamStats = newData;
         notifyDataSetChanged();
     }
 

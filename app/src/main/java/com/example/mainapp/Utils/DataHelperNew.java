@@ -21,7 +21,7 @@ public class DataHelperNew {
     private static DataHelperNew instance;
 
     private DataHelperNew() {
-        database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance("https://scoutingapp-7bb4e-default-rtdb.europe-west1.firebasedatabase.app");
         rootRef = database.getReference();
     }
 
@@ -34,28 +34,37 @@ public class DataHelperNew {
 
 
     public void createUser(User user, DatabaseCallback callback) {
-        DatabaseReference tableRef = rootRef.child(Constants.USERS_TABLE_NAME);
-        String id = tableRef.push().getKey();
+        isTableEmpty(Constants.USERS_TABLE_NAME, new ExistsCallback() {
+            @Override
+            public void onResult(boolean empty) {
+                if (!empty) {
+                    getLatestUserId(new DatabaseCallback() {
+                        @Override
+                        public void onSuccess(String id) {
+                            int userID = Integer.parseInt(id) + 1;
+                            createWithId(Constants.USERS_TABLE_NAME, Integer.toString(userID), new User(user.getFullName(), userID, user.getPassword()), callback);
+                        }
 
-        if (id != null) {
-            tableRef.child(id).setValue(user)
-                    .addOnSuccessListener(Void -> {
-                        if (callback != null) callback.onSuccess(id);
-                    })
-                    .addOnFailureListener(e -> {
-                        if (callback != null) {
-                            callback.onFailure(e.getMessage());
+                        @Override
+                        public void onFailure(String error) {
+                            callback.onFailure(error);
                         }
                     });
-        }
+                } else {
+                    createWithId(Constants.USERS_TABLE_NAME, "1", new User(user.getFullName(), 1, user.getPassword()), callback);
+                }
+            }
+        });
     }
 
-    public void create(Object data, DatabaseCallback callback) {
-        DatabaseReference tableRef = rootRef.child(tableName);
-        String id = tableRef.push().getKey();
+    public void createTeamStats(TeamStats data, DatabaseCallback callback) {
+        createWithId(Constants.GAMES_TABLE_NAME, Integer.toString(data.getTeam().getTeamNumber()), data, callback);
+    }
 
-        if (id != null) {
-            tableRef.child(id).setValue(data)
+    public void createWithId(String tableName, String id, Object data, DatabaseCallback callback) {
+        new Thread(() -> {
+
+            rootRef.child(tableName).child(id).setValue(data)
                     .addOnSuccessListener(aVoid -> {
                         if (callback != null) {
                             callback.onSuccess(id);
@@ -66,54 +75,40 @@ public class DataHelperNew {
                             callback.onFailure(e.getMessage());
                         }
                     });
-        }
+        }).start();
     }
 
-    /**
-     * Create a new record with custom ID
-     *
-     * @param tableName The name of the table/collection
-     * @param id        Custom ID for the record
-     * @param data      The object to save
-     * @param callback  Callback for success/failure
-     */
-    public void createWithId(String tableName, String id, Object data, DatabaseCallback callback) {
-        rootRef.child(tableName).child(id).setValue(data)
-                .addOnSuccessListener(aVoid -> {
-                    if (callback != null) {
-                        callback.onSuccess(id);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (callback != null) {
-                        callback.onFailure(e.getMessage());
+
+    public void isTableEmpty(String tableName, ExistsCallback callback) {
+        rootRef.child(tableName).limitToFirst(1).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DataSnapshot snapshot = task.getResult();
+                        boolean empty = !snapshot.exists() || !snapshot.hasChildren();
+                        if (callback != null) {
+                            callback.onResult(empty);
+                        }
+                    } else {
+                        if (callback != null) {
+                            callback.onResult(true); // Assume empty on error
+                        }
                     }
                 });
     }
 
-    // ==================== READ ====================
-
-    /**
-     * Read a single record by ID (one-time)
-     *
-     * @param tableName The name of the table/collection
-     * @param id        The ID of the record
-     * @param dataClass The class type to convert to
-     * @param callback  Callback with the data
-     */
-    public <T> void read(String tableName, String id, Class<T> dataClass, DataCallback<T> callback) {
-        rootRef.child(tableName).child(id).get()
+    public void readUser(String userId, DataCallback<User> callback) {
+        rootRef.child(Constants.USERS_TABLE_NAME).child(userId).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         DataSnapshot snapshot = task.getResult();
                         if (snapshot.exists()) {
-                            T data = snapshot.getValue(dataClass);
+                            User user = snapshot.getValue(User.class);
                             if (callback != null) {
-                                callback.onSuccess(data);
+                                callback.onSuccess(user);
                             }
                         } else {
                             if (callback != null) {
-                                callback.onFailure("No data found");
+                                callback.onFailure("User not found");
                             }
                         }
                     } else {
@@ -124,218 +119,47 @@ public class DataHelperNew {
                 });
     }
 
-    /**
-     * Read all records from a table (one-time)
-     *
-     * @param tableName The name of the table/collection
-     * @param dataClass The class type to convert to
-     * @param callback  Callback with list of data
-     */
-    public <T> void readAll(String tableName, Class<T> dataClass, DataListCallback<T> callback) {
-        rootRef.child(tableName).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<T> dataList = new ArrayList<>();
-                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                    T data = childSnapshot.getValue(dataClass);
-                    if (data != null) {
-                        dataList.add(data);
-                    }
-                }
-                if (callback != null) {
-                    callback.onSuccess(dataList);
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                if (callback != null) {
-                    callback.onFailure(error.getMessage());
-                }
-            }
-        });
-    }
-
-    /**
-     * Listen to a single record in real-time
-     *
-     * @param tableName The name of the table/collection
-     * @param id        The ID of the record
-     * @param dataClass The class type to convert to
-     * @param callback  Callback with the data (called on each update)
-     */
-    public <T> void listenToRecord(String tableName, String id, Class<T> dataClass, DataCallback<T> callback) {
-        rootRef.child(tableName).child(id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    T data = snapshot.getValue(dataClass);
-                    if (callback != null) {
-                        callback.onSuccess(data);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                if (callback != null) {
-                    callback.onFailure(error.getMessage());
-                }
-            }
-        });
-    }
-
-    /**
-     * Listen to all records in a table in real-time
-     *
-     * @param tableName The name of the table/collection
-     * @param dataClass The class type to convert to
-     * @param callback  Callback with list of data (called on each update)
-     */
-    public <T> void listenToTable(String tableName, Class<T> dataClass, DataListCallback<T> callback) {
-        rootRef.child(tableName).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<T> dataList = new ArrayList<>();
-                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                    T data = childSnapshot.getValue(dataClass);
-                    if (data != null) {
-                        dataList.add(data);
-                    }
-                }
-                if (callback != null) {
-                    callback.onSuccess(dataList);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                if (callback != null) {
-                    callback.onFailure(error.getMessage());
-                }
-            }
-        });
-    }
-
-    // ==================== UPDATE ====================
-
-    /**
-     * Update specific fields of a record
-     *
-     * @param tableName The name of the table/collection
-     * @param id        The ID of the record
-     * @param updates   Map of field names to new values
-     * @param callback  Callback for success/failure
-     */
-    public void update(String tableName, String id, Map<String, Object> updates, DatabaseCallback callback) {
-        rootRef.child(tableName).child(id).updateChildren(updates)
-                .addOnSuccessListener(aVoid -> {
-                    if (callback != null) {
-                        callback.onSuccess(id);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (callback != null) {
-                        callback.onFailure(e.getMessage());
-                    }
-                });
-    }
-
-    /**
-     * Replace entire record (overwrites all data)
-     *
-     * @param tableName The name of the table/collection
-     * @param id        The ID of the record
-     * @param data      The new object to save
-     * @param callback  Callback for success/failure
-     */
-    public void replace(String tableName, String id, Object data, DatabaseCallback callback) {
-        rootRef.child(tableName).child(id).setValue(data)
-                .addOnSuccessListener(aVoid -> {
-                    if (callback != null) {
-                        callback.onSuccess(id);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (callback != null) {
-                        callback.onFailure(e.getMessage());
-                    }
-                });
-    }
-
-    // ==================== DELETE ====================
-
-    /**
-     * Delete a single record
-     *
-     * @param tableName The name of the table/collection
-     * @param id        The ID of the record
-     * @param callback  Callback for success/failure
-     */
-    public void delete(String tableName, String id, DatabaseCallback callback) {
-        rootRef.child(tableName).child(id).removeValue()
-                .addOnSuccessListener(aVoid -> {
-                    if (callback != null) {
-                        callback.onSuccess(id);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (callback != null) {
-                        callback.onFailure(e.getMessage());
-                    }
-                });
-    }
-
-    /**
-     * Delete entire table
-     *
-     * @param tableName The name of the table/collection
-     * @param callback  Callback for success/failure
-     */
-    public void deleteTable(String tableName, DatabaseCallback callback) {
-        rootRef.child(tableName).removeValue()
-                .addOnSuccessListener(aVoid -> {
-                    if (callback != null) {
-                        callback.onSuccess(tableName);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (callback != null) {
-                        callback.onFailure(e.getMessage());
-                    }
-                });
-    }
-
-    // ==================== UTILITY METHODS ====================
-
-    /**
-     * Get a reference to a specific table
-     *
-     * @param tableName The name of the table/collection
-     * @return DatabaseReference
-     */
-    public DatabaseReference getTableReference(String tableName) {
-        return rootRef.child(tableName);
-    }
-
-    /**
-     * Check if a record exists
-     *
-     * @param tableName The name of the table/collection
-     * @param id        The ID of the record
-     * @param callback  Callback with boolean result
-     */
-    public void exists(String tableName, String id, ExistsCallback callback) {
-        rootRef.child(tableName).child(id).get()
+    public void getLatestUserId(DatabaseCallback callback) {
+        rootRef.child(Constants.USERS_TABLE_NAME)
+                .orderByKey()
+                .limitToLast(1)
+                .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        boolean exists = task.getResult().exists();
-                        if (callback != null) {
-                            callback.onResult(exists);
+                        DataSnapshot snapshot = task.getResult();
+                        if (snapshot.exists()) {
+                            for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                                String latestUserId = childSnapshot.getKey();
+                                if (callback != null) {
+                                    callback.onSuccess(latestUserId);
+                                }
+                                return;
+                            }
+                        } else {
+                            if (callback != null) {
+                                callback.onFailure("No users found");
+                            }
                         }
                     } else {
                         if (callback != null) {
-                            callback.onResult(false);
+                            callback.onFailure(task.getException().getMessage());
+                        }
+                    }
+                });
+    }
+    public void countUsers(CountCallback callback) {
+        rootRef.child(Constants.USERS_TABLE_NAME).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DataSnapshot snapshot = task.getResult();
+                        long count = snapshot.getChildrenCount();
+                        if (callback != null) {
+                            callback.onResult(count);
+                        }
+                    } else {
+                        if (callback != null) {
+                            callback.onResult(0);
                         }
                     }
                 });
@@ -355,13 +179,11 @@ public class DataHelperNew {
         void onFailure(String error);
     }
 
-    public interface DataListCallback<T> {
-        void onSuccess(List<T> dataList);
-
-        void onFailure(String error);
-    }
-
     public interface ExistsCallback {
         void onResult(boolean exists);
+    }
+
+    public interface CountCallback {
+        void onResult(long count);
     }
 }
