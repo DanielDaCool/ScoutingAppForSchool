@@ -1,5 +1,7 @@
-package com.example.mainapp.Utils;
+package com.example.mainapp.Utils.TeamUtils;
 
+import com.example.mainapp.Utils.DatabaseUtils.CLIMB;
+import com.example.mainapp.Utils.GamePiece;
 import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
@@ -114,7 +116,7 @@ public class TeamAtGame implements Serializable {
                 // Skip invalid pieces
             }
         }
-        return sum + c.points;
+        return sum + c.getPoints();
     }
 
     // Firebase-compatible replacement for Pair

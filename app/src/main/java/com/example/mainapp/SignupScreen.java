@@ -9,8 +9,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mainapp.Utils.DataHelper;
-import com.example.mainapp.Utils.User;
+import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
+import com.example.mainapp.Utils.DatabaseUtils.PasswordHasherUtils;
+import com.example.mainapp.Utils.DatabaseUtils.User;
 
 public class    SignupScreen extends AppCompatActivity {
 
@@ -57,8 +58,10 @@ public class    SignupScreen extends AppCompatActivity {
                 // Show loading state
                 btnSignup.setEnabled(false);
 
+                String hashedPass = PasswordHasherUtils.hashPassword(password);
+
                 // Use userId from the EditText, not a local counter
-                User newUser = new User(fullName, -1, password, userName);
+                User newUser = new User(fullName, -1, hashedPass, userName);
 
                 DataHelper.getInstance().createUser(newUser, new DataHelper.DatabaseCallback() {
                     @Override
@@ -66,7 +69,6 @@ public class    SignupScreen extends AppCompatActivity {
                         System.out.println("SUCCESS: User created with ID: " + id);
                         Toast.makeText(context, "נרשמת בהצלחה! שם: " + fullName, Toast.LENGTH_LONG).show();
 
-                        // NOW finish the activity after success
                         finish();
                     }
 

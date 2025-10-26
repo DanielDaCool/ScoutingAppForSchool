@@ -1,7 +1,7 @@
 package com.example.mainapp.TBAHelpers;
 
 import com.example.mainapp.Utils.Game;
-import com.example.mainapp.Utils.Team;
+import com.example.mainapp.Utils.TeamUtils.Team;
 
 import org.json.JSONArray;
 import org.json.JSONException;

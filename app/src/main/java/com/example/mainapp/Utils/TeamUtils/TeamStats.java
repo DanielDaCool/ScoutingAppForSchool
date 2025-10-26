@@ -1,4 +1,7 @@
-package com.example.mainapp.Utils;
+package com.example.mainapp.Utils.TeamUtils;
+
+import com.example.mainapp.Utils.DatabaseUtils.CLIMB;
+import com.example.mainapp.Utils.GamePiece;
 
 import java.io.Serializable;
 import java.util.ArrayList;

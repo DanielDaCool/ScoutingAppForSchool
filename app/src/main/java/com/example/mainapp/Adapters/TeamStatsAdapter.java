@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mainapp.R;
 import com.example.mainapp.Utils.GamePiece;
-import com.example.mainapp.Utils.TeamStats;
+import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
 import java.util.ArrayList;
 

@@ -4,16 +4,13 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import com.example.mainapp.Utils.Game;
-import com.example.mainapp.Utils.Team;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
+import com.example.mainapp.Utils.TeamUtils.Team;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 

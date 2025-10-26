@@ -12,9 +12,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mainapp.Utils.DataHelper;
+import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
+import com.example.mainapp.Utils.DatabaseUtils.PasswordHasherUtils;
 import com.example.mainapp.Utils.SharedPrefHelper;
-import com.example.mainapp.Utils.User;
+import com.example.mainapp.Utils.DatabaseUtils.User;
 
 
 public class LoginScreen extends AppCompatActivity {
@@ -59,11 +60,9 @@ public class LoginScreen extends AppCompatActivity {
             @Override
             public void onSuccess(User user) {
                 btnLogin.setEnabled(true);
-                android.util.Log.d("LoginDebug", "User found: " + user.getUserName());
-                android.util.Log.d("LoginDebug", "Stored password: '" + user.getPassword() + "'");
-                android.util.Log.d("LoginDebug", "Entered password: '" + password + "'");
-                android.util.Log.d("LoginDebug", "Passwords match: " + user.getPassword().equals(password));
-                if (user.getPassword().equals(password)) {
+
+
+                if (user.getPassword().equals(PasswordHasherUtils.hashPassword(password))) {
                     // Login successful
                     Toast.makeText(context, "התחברת בהצלחה! ברוך הבא " + user.getFullName(), Toast.LENGTH_SHORT).show();
                     SharedPrefHelper.getInstance(context).saveUser(user.getUserID(), user.getUserName(), user.getFullName());
@@ -80,11 +79,6 @@ public class LoginScreen extends AppCompatActivity {
 
             @Override
             public void onFailure(String error) {
-//                // Hide progress and enable button
-//                if (progressBar != null) {
-//                    progressBar.setVisibility(View.GONE);
-//                }
-//                btnLogin.setEnabled(true);
 
                 // Show error message
                 if (error.equals("User not found")) {

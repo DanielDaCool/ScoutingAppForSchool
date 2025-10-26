@@ -1,9 +1,14 @@
-package com.example.mainapp.Utils;
+package com.example.mainapp.Utils.DatabaseUtils;
 
+import com.example.mainapp.Utils.Constants;
+import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class DataHelper {
@@ -18,6 +23,8 @@ public class DataHelper {
         database = FirebaseDatabase.getInstance("https://scoutingapp-7bb4e-default-rtdb.europe-west1.firebasedatabase.app");
         rootRef = database.getReference();
     }
+
+    public DatabaseReference getRootRef(){return this.rootRef;}
 
     public static DataHelper getInstance() {
         if (instance == null) {
@@ -113,8 +120,6 @@ public class DataHelper {
                 });
     }
 
-    // Replace the readUserByUsername method in your DataHelper class with this:
-
     public void readUserByUsername(String userName, DataCallback<User> callback) {
         android.util.Log.d("DataHelper", "Starting query for userName: " + userName);
 
@@ -148,7 +153,6 @@ public class DataHelper {
                                     android.util.Log.d("DataHelper", "User.password: " + user.getPassword());
                                     android.util.Log.d("DataHelper", "User.userID: " + user.getUserID());
 
-                                    // Only accept users that have a non-null userName matching our search
                                     if (user.getUserName() != null && user.getUserName().equals(userName)) {
                                         foundUser = user;
                                         android.util.Log.d("DataHelper", "Found matching user with ID: " + user.getUserID());
@@ -206,6 +210,29 @@ public class DataHelper {
                 });
     }
 
+    public void readAllTeamStats(DataCallback<ArrayList<TeamStats>> callback){
+        new Thread(()->{
+            rootRef.child(Constants.GAMES_TABLE_NAME).get().addOnCompleteListener(task -> {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot = task.getResult();
+                    ArrayList<TeamStats> teamStatsList = new ArrayList<>();
+                    if(snapshot.exists()){
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            TeamStats teamStats = child.getValue(TeamStats.class);
+                            if(teamStats != null){
+                                teamStatsList.add(teamStats);
+                            }
+                        }
+                    }
+                    if (callback != null) {
+                        callback.onSuccess(teamStatsList);
+                    }
+                }
+            });
+        }).start();
+    }
+
+
     public void getLatestUserId(DatabaseCallback callback) {
         rootRef.child(Constants.USERS_TABLE_NAME)
                 .orderByKey()
@@ -252,14 +279,18 @@ public class DataHelper {
                 });
     }
 
-    /**
-     * Update specific fields of a record
-     *
-     * @param tableName The name of the table/collection
-     * @param id        The ID of the record
-     * @param updates   Map of field names to new values
-     * @param callback  Callback for success/failure
-     */
+    public void countTeams(CountCallback callback) {
+        rootRef.child(Constants.GAMES_TABLE_NAME).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DataSnapshot snapshot = task.getResult();
+                long count = snapshot.getChildrenCount();
+                if (callback != null) callback.onResult(count);
+            } else {
+                if (callback != null) callback.onResult(0);
+            }
+        });
+    }
+
     public void update(String tableName, String id, Map<String, Object> updates, DatabaseCallback callback) {
         rootRef.child(tableName).child(id).updateChildren(updates)
                 .addOnSuccessListener(aVoid -> {
@@ -274,14 +305,6 @@ public class DataHelper {
                 });
     }
 
-    /**
-     * Replace entire record (overwrites all data)
-     *
-     * @param tableName The name of the table/collection
-     * @param id        The ID of the record
-     * @param data      The new object to save
-     * @param callback  Callback for success/failure
-     */
     public void replace(String tableName, String id, Object data, DatabaseCallback callback) {
         rootRef.child(tableName).child(id).setValue(data)
                 .addOnSuccessListener(aVoid -> {
@@ -295,17 +318,17 @@ public class DataHelper {
                     }
                 });
     }
-    // ==================== CALLBACK INTERFACES ====================
+
+
+// ==================== CALLBACK INTERFACES ====================
 
     public interface DatabaseCallback {
         void onSuccess(String id);
-
         void onFailure(String error);
     }
 
     public interface DataCallback<T> {
         void onSuccess(T data);
-
         void onFailure(String error);
     }
 
@@ -315,5 +338,10 @@ public class DataHelper {
 
     public interface CountCallback {
         void onResult(long count);
+    }
+
+    public interface TeamStatsListCallback {
+        void onDataChanged(ArrayList<TeamStats> teamStatsList);
+        void onError(String error);
     }
 }

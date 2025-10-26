@@ -1,4 +1,6 @@
-package com.example.mainapp.Utils;
+package com.example.mainapp.Utils.TeamUtils;
+
+import com.example.mainapp.Utils.GamePiece;
 
 import java.util.ArrayList;
 import java.util.HashMap;

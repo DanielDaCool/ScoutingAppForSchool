@@ -1,4 +1,4 @@
-package com.example.mainapp.Utils;
+package com.example.mainapp.Utils.DatabaseUtils;
 
 public enum CLIMB {
     HIGH(12),

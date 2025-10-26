@@ -1,8 +1,6 @@
 package com.example.mainapp;
 import com.example.mainapp.Utils.SharedPrefHelper;
-import com.example.mainapp.Utils.Team;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.appcompat.app.AppCompatActivity;

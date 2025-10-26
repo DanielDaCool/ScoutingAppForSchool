@@ -11,9 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mainapp.Adapters.TeamStatsAdapter;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
-import com.example.mainapp.Utils.DataHelper;
-import com.example.mainapp.Utils.Team;
-import com.example.mainapp.Utils.TeamStats;
+import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
+import com.example.mainapp.Utils.TeamUtils.Team;
+import com.example.mainapp.Utils.TeamUtils.TeamStats;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 
@@ -26,8 +27,9 @@ public class TeamStatsActivity extends AppCompatActivity {
     private TeamStatsAdapter adapter;
 
     // CHANGE 1: The activity now holds the final, aggregated list
-    private ArrayList<TeamStats> allTeamsStats;
+    private static ArrayList<TeamStats> allTeamsStats;
     private ArrayList<Team> teamsAtComp;
+    private ValueEventListener teamStatsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +44,14 @@ public class TeamStatsActivity extends AppCompatActivity {
         // CHANGE 2: Pass the aggregated list to the adapter
         adapter = new TeamStatsAdapter(allTeamsStats);
         recyclerView.setAdapter(adapter);
+
         loadTeamsFromAPI();
 
+    }
+
+
+    public static void setAllTeamsStats(ArrayList<TeamStats> arrList){
+        allTeamsStats = arrList;
     }
 
     private void loadTeamsFromAPI() {
@@ -104,9 +112,6 @@ public class TeamStatsActivity extends AppCompatActivity {
     }
 
 
-    public void updateStatsAfterSendingForm(){
-
-    }
 
     private void init() {
         // Get all team games (the flat list of every game played by every team)

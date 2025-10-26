@@ -2,6 +2,7 @@ package com.example.mainapp;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,15 +12,17 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mainapp.TBAHelpers.TBAApiManager;
-import com.example.mainapp.Utils.CLIMB;
+import com.example.mainapp.Utils.DatabaseUtils.CLIMB;
 import com.example.mainapp.Utils.Constants;
-import com.example.mainapp.Utils.DataHelper;
+import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.GamePiece;
-import com.example.mainapp.Utils.Team;
-import com.example.mainapp.Utils.TeamAtGame;
-import com.example.mainapp.Utils.TeamStats;
+import com.example.mainapp.Utils.TeamUtils.Team;
+import com.example.mainapp.Utils.TeamUtils.TeamAtGame;
+import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
 public class Forms extends AppCompatActivity {
+    private static final String TAG = "FormsActivity";
+
     private EditText autoL1, autoL2, autoL3, autoL4, teleL1, teleL2, teleL3, teleL4, teleNet, teleProc, teamNumber, gameNumber;
     private Button sendBtn;
     private Context context;
@@ -33,6 +36,8 @@ public class Forms extends AppCompatActivity {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "=== Send button clicked ===");
+
                 // Validate inputs
                 if (teamNumber.getText().toString().trim().isEmpty()) {
                     Toast.makeText(context, "ENTER TEAM NUMBER", Toast.LENGTH_LONG).show();
@@ -48,15 +53,21 @@ public class Forms extends AppCompatActivity {
                     int teamNum = getInputFromEditText(teamNumber);
                     int gameNum = getInputFromEditText(gameNumber);
 
+                    Log.d(TAG, "Team Number: " + teamNum + ", Game Number: " + gameNum);
+
                     TBAApiManager.getInstance().getTeam(teamNum, new TBAApiManager.SingleTeamCallback() {
                         @Override
                         public void onSuccess(Team t) {
+                            Log.d(TAG, "TBA API Success: Got team " + t.getTeamNumber());
+
                             runOnUiThread(() -> {
                                 DataHelper.getInstance().readTeamStats(
                                         Integer.toString(t.getTeamNumber()),
                                         new DataHelper.DataCallback<TeamStats>() {
                                             @Override
                                             public void onSuccess(TeamStats data) {
+                                                Log.d(TAG, "Read existing TeamStats for team " + t.getTeamNumber());
+
                                                 try {
                                                     // Create new team at game
                                                     TeamAtGame teamAtGame = new TeamAtGame(t, gameNum);
@@ -64,9 +75,14 @@ public class Forms extends AppCompatActivity {
 
                                                     // Add game to stats
                                                     if (data == null) {
+                                                        Log.d(TAG, "Creating new TeamStats");
                                                         data = new TeamStats(t);
                                                     }
                                                     data.addGame(teamAtGame);
+
+                                                    Log.d(TAG, "TeamStats now has " + data.getGamesPlayed() + " games");
+                                                    Log.d(TAG, "About to save to Firebase table: " + Constants.GAMES_TABLE_NAME);
+                                                    Log.d(TAG, "Team ID: " + t.getTeamNumber());
 
                                                     // Save to database
                                                     DataHelper.getInstance().replace(
@@ -76,6 +92,8 @@ public class Forms extends AppCompatActivity {
                                                             new DataHelper.DatabaseCallback() {
                                                                 @Override
                                                                 public void onSuccess(String id) {
+                                                                    Log.d(TAG, "!!! FIREBASE SAVE SUCCESS !!! Team ID: " + id);
+
                                                                     runOnUiThread(() -> {
                                                                         Toast.makeText(context, "Data saved successfully!", Toast.LENGTH_SHORT).show();
                                                                         clearForm();
@@ -84,6 +102,8 @@ public class Forms extends AppCompatActivity {
 
                                                                 @Override
                                                                 public void onFailure(String error) {
+                                                                    Log.e(TAG, "!!! FIREBASE SAVE FAILED !!! Error: " + error);
+
                                                                     runOnUiThread(() -> {
                                                                         Toast.makeText(context, "Failed to save: " + error, Toast.LENGTH_LONG).show();
                                                                     });
@@ -91,6 +111,7 @@ public class Forms extends AppCompatActivity {
                                                             }
                                                     );
                                                 } catch (Exception e) {
+                                                    Log.e(TAG, "Error processing data", e);
                                                     runOnUiThread(() -> {
                                                         Toast.makeText(context, "Error processing data: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                                     });
@@ -99,9 +120,49 @@ public class Forms extends AppCompatActivity {
 
                                             @Override
                                             public void onFailure(String error) {
-                                                runOnUiThread(() -> {
-                                                    Toast.makeText(context, "Failed to read team stats: " + error, Toast.LENGTH_LONG).show();
-                                                });
+                                                Log.d(TAG, "No existing TeamStats found (this is OK for first game): " + error);
+
+                                                // Create new TeamStats since none exists
+                                                try {
+                                                    TeamStats newData = new TeamStats(t);
+                                                    TeamAtGame teamAtGame = new TeamAtGame(t, gameNum);
+                                                    updateGamePieceScored(teamAtGame);
+                                                    newData.addGame(teamAtGame);
+
+                                                    Log.d(TAG, "Created new TeamStats with 1 game");
+                                                    Log.d(TAG, "About to save to Firebase table: " + Constants.GAMES_TABLE_NAME);
+
+                                                    DataHelper.getInstance().replace(
+                                                            Constants.GAMES_TABLE_NAME,
+                                                            Integer.toString(t.getTeamNumber()),
+                                                            newData,
+                                                            new DataHelper.DatabaseCallback() {
+                                                                @Override
+                                                                public void onSuccess(String id) {
+                                                                    Log.d(TAG, "!!! FIREBASE SAVE SUCCESS (NEW) !!! Team ID: " + id);
+
+                                                                    runOnUiThread(() -> {
+                                                                        Toast.makeText(context, "Data saved successfully!", Toast.LENGTH_SHORT).show();
+                                                                        clearForm();
+                                                                    });
+                                                                }
+
+                                                                @Override
+                                                                public void onFailure(String error) {
+                                                                    Log.e(TAG, "!!! FIREBASE SAVE FAILED (NEW) !!! Error: " + error);
+
+                                                                    runOnUiThread(() -> {
+                                                                        Toast.makeText(context, "Failed to save: " + error, Toast.LENGTH_LONG).show();
+                                                                    });
+                                                                }
+                                                            }
+                                                    );
+                                                } catch (Exception e) {
+                                                    Log.e(TAG, "Error creating new data", e);
+                                                    runOnUiThread(() -> {
+                                                        Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                                    });
+                                                }
                                             }
                                         }
                                 );
@@ -110,14 +171,17 @@ public class Forms extends AppCompatActivity {
 
                         @Override
                         public void onError(Exception e) {
+                            Log.e(TAG, "TBA API Error", e);
                             runOnUiThread(() -> {
                                 Toast.makeText(context, "Failed to fetch team: " + e.getMessage(), Toast.LENGTH_LONG).show();
                             });
                         }
                     });
                 } catch (NumberFormatException e) {
+                    Log.e(TAG, "Number format error", e);
                     Toast.makeText(context, "Invalid number format", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
+                    Log.e(TAG, "General error", e);
                     Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -125,6 +189,8 @@ public class Forms extends AppCompatActivity {
     }
 
     private void updateGamePieceScored(TeamAtGame teamAtGame) {
+        Log.d(TAG, "Updating game pieces scored");
+
         // Auto period
         for (int i = 0; i < getInputFromEditText(autoL1); i++) {
             teamAtGame.addGamePieceScored(GamePiece.L1, true);
@@ -139,18 +205,18 @@ public class Forms extends AppCompatActivity {
             teamAtGame.addGamePieceScored(GamePiece.L4, true);
         }
 
-        // Teleop period - FIXED: Now uses correct GamePiece types
+        // Teleop period
         for (int i = 0; i < getInputFromEditText(teleL1); i++) {
             teamAtGame.addGamePieceScored(GamePiece.L1, false);
         }
         for (int i = 0; i < getInputFromEditText(teleL2); i++) {
-            teamAtGame.addGamePieceScored(GamePiece.L2, false); // FIXED: was L1
+            teamAtGame.addGamePieceScored(GamePiece.L2, false);
         }
         for (int i = 0; i < getInputFromEditText(teleL3); i++) {
-            teamAtGame.addGamePieceScored(GamePiece.L3, false); // FIXED: was L1
+            teamAtGame.addGamePieceScored(GamePiece.L3, false);
         }
         for (int i = 0; i < getInputFromEditText(teleL4); i++) {
-            teamAtGame.addGamePieceScored(GamePiece.L4, false); // FIXED: was L1
+            teamAtGame.addGamePieceScored(GamePiece.L4, false);
         }
         for (int i = 0; i < getInputFromEditText(teleNet); i++) {
             teamAtGame.addGamePieceScored(GamePiece.NET, false);
@@ -160,8 +226,8 @@ public class Forms extends AppCompatActivity {
         }
         teamAtGame.addClimb(checkClimb());
     }
-    private CLIMB checkClimb(){
 
+    private CLIMB checkClimb(){
         RadioGroup group = findViewById(R.id.ClimbGroup);
         if(!group.isSelected()) return CLIMB.DIDNT_TRY;
         int climb = group.getCheckedRadioButtonId();
@@ -214,5 +280,7 @@ public class Forms extends AppCompatActivity {
         this.gameNumber = findViewById(R.id.GameNumberEditText);
         this.sendBtn = findViewById(R.id.buttonSave);
         this.context = Forms.this;
+
+        Log.d(TAG, "Forms activity initialized");
     }
 }

@@ -16,7 +16,7 @@ import com.example.mainapp.Adapters.GameAdapter;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.Game;
-import com.example.mainapp.Utils.TeamUtils;
+import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 
 import java.util.ArrayList;
 
