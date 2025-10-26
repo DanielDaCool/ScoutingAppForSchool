@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mainapp.Utils.DataHelperNew;
+import com.example.mainapp.Utils.DataHelper;
 import com.example.mainapp.Utils.User;
 
 public class    SignupScreen extends AppCompatActivity {
@@ -33,12 +33,12 @@ public class    SignupScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String fullName = etFullName.getText().toString().trim();
-                String userId = etUserId.getText().toString().trim();
+                String userName = etUserId.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
                 String confirmPassword = etConfirmPassword.getText().toString().trim();
 
                 // בדיקות בסיסיות
-                if (fullName.isEmpty() || userId.isEmpty() ||
+                if (fullName.isEmpty() || userName.isEmpty() ||
                         password.isEmpty() || confirmPassword.isEmpty()) {
                     Toast.makeText(context, "אנא מלא את כל השדות", Toast.LENGTH_SHORT).show();
                     return;
@@ -58,9 +58,9 @@ public class    SignupScreen extends AppCompatActivity {
                 btnSignup.setEnabled(false);
 
                 // Use userId from the EditText, not a local counter
-                User newUser = new User(fullName, -1, password);
+                User newUser = new User(fullName, -1, password, userName);
 
-                DataHelperNew.getInstance().createUser(newUser, new DataHelperNew.DatabaseCallback() {
+                DataHelper.getInstance().createUser(newUser, new DataHelper.DatabaseCallback() {
                     @Override
                     public void onSuccess(String id) {
                         System.out.println("SUCCESS: User created with ID: " + id);

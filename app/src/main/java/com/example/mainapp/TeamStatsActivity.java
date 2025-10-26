@@ -11,9 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mainapp.Adapters.TeamStatsAdapter;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
-import com.example.mainapp.Utils.DataHelperNew;
+import com.example.mainapp.Utils.DataHelper;
 import com.example.mainapp.Utils.Team;
-import com.example.mainapp.Utils.TeamAtGame;
 import com.example.mainapp.Utils.TeamStats;
 
 import org.json.JSONException;
@@ -90,7 +89,7 @@ public class TeamStatsActivity extends AppCompatActivity {
     private void uploadDataFromAPIToDB() {
 
         for (TeamStats teamStats : allTeamsStats){
-            DataHelperNew.getInstance().createTeamStats(teamStats, new DataHelperNew.DatabaseCallback() {
+            DataHelper.getInstance().createTeamStats(teamStats, new DataHelper.DatabaseCallback() {
                 @Override
                 public void onSuccess(String id) {
 

@@ -27,6 +27,8 @@ public class JsonParser {
     }
 
     public static Game parseToGame(JSONObject ob) throws JSONException {
+
+
         int number = ob.optInt("match_number", -1);
         Team[] redArr = new Team[3];
         Team[] blueArr = new Team[3];

@@ -1,4 +1,5 @@
 package com.example.mainapp;
+import com.example.mainapp.Utils.SharedPrefHelper;
 import com.example.mainapp.Utils.Team;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private Button loginButton;
     private Button signupButton;
     private Button statsButton;
+    private TextView welcomeText;
     private Context context;
 
     @Override
@@ -36,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
         setOnClickListener(signupButton, SignupScreen.class);
         setOnClickListener(loginButton, LoginScreen.class);
         setOnClickListener(statsButton, TeamStatsActivity.class);
+        String userName = SharedPrefHelper.getInstance(context).getUserName();
+        welcomeText.setText("שלום, " + userName);
+
     }
 
     private void setOnClickListener(Button btn, Class classToGo){
@@ -47,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
     private void init() {
 
         gamesListButton = findViewById(R.id.buttonGamesList);
@@ -54,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.buttonLogin);
         signupButton = findViewById(R.id.buttonSignup);
         statsButton = findViewById(R.id.buttonStats);
+        welcomeText = findViewById(R.id.textViewWelcome);
         context = MainActivity.this;
     }
 }

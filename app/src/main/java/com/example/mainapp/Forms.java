@@ -1,7 +1,6 @@
 package com.example.mainapp;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.CLIMB;
 import com.example.mainapp.Utils.Constants;
-import com.example.mainapp.Utils.DataHelperNew;
+import com.example.mainapp.Utils.DataHelper;
 import com.example.mainapp.Utils.GamePiece;
 import com.example.mainapp.Utils.Team;
 import com.example.mainapp.Utils.TeamAtGame;
@@ -53,9 +52,9 @@ public class Forms extends AppCompatActivity {
                         @Override
                         public void onSuccess(Team t) {
                             runOnUiThread(() -> {
-                                DataHelperNew.getInstance().readTeamStats(
+                                DataHelper.getInstance().readTeamStats(
                                         Integer.toString(t.getTeamNumber()),
-                                        new DataHelperNew.DataCallback<TeamStats>() {
+                                        new DataHelper.DataCallback<TeamStats>() {
                                             @Override
                                             public void onSuccess(TeamStats data) {
                                                 try {
@@ -70,11 +69,11 @@ public class Forms extends AppCompatActivity {
                                                     data.addGame(teamAtGame);
 
                                                     // Save to database
-                                                    DataHelperNew.getInstance().replace(
+                                                    DataHelper.getInstance().replace(
                                                             Constants.GAMES_TABLE_NAME,
                                                             Integer.toString(t.getTeamNumber()),
                                                             data,
-                                                            new DataHelperNew.DatabaseCallback() {
+                                                            new DataHelper.DatabaseCallback() {
                                                                 @Override
                                                                 public void onSuccess(String id) {
                                                                     runOnUiThread(() -> {

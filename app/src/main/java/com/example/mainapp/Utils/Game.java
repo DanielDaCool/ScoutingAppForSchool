@@ -55,7 +55,7 @@ public class Game {
     }
 
     public String getDescription(){
-        return getTeamsPlaying() +  "\n" + " סקאוטר: " + DataHelper.getScouterNameFromID(scouterID);
+        return getTeamsPlaying();
     }
     private String getTeamsPlaying() {
         StringBuilder blueAllianceString = new StringBuilder();

@@ -7,14 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mainapp.R;
-import com.example.mainapp.Utils.TeamAtGame;
 import com.example.mainapp.Utils.GamePiece;
-import com.example.mainapp.Utils.DataHelper;
 import com.example.mainapp.Utils.TeamStats;
-import com.example.mainapp.Utils.TeamUtils;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.TeamStatsViewHolder> {
 
