@@ -1,5 +1,7 @@
 package com.example.mainapp.Utils.DatabaseUtils;
 
+import androidx.annotation.NonNull;
+
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import com.google.firebase.database.DataSnapshot;
@@ -24,7 +26,9 @@ public class DataHelper {
         rootRef = database.getReference();
     }
 
-    public DatabaseReference getRootRef(){return this.rootRef;}
+    public DatabaseReference getRootRef() {
+        return this.rootRef;
+    }
 
     public static DataHelper getInstance() {
         if (instance == null) {
@@ -209,17 +213,32 @@ public class DataHelper {
                     }
                 });
     }
+    public void isTableDataEmpty(ExistsCallback callback){
+        readAllTeamStats(new DataCallback<ArrayList<TeamStats>>() {
+            @Override
+            public void onSuccess(ArrayList<TeamStats> data) {
+                for(TeamStats t : data){
+                    if(t.getAllGames().size() != 0) callback.onResult(false);
+                }
+                callback.onResult(true);
+            }
 
-    public void readAllTeamStats(DataCallback<ArrayList<TeamStats>> callback){
-        new Thread(()->{
+            @Override
+            public void onFailure(String error) {
+
+            }
+        });
+    }
+    public void readAllTeamStats(DataCallback<ArrayList<TeamStats>> callback) {
+        new Thread(() -> {
             rootRef.child(Constants.GAMES_TABLE_NAME).get().addOnCompleteListener(task -> {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     DataSnapshot snapshot = task.getResult();
                     ArrayList<TeamStats> teamStatsList = new ArrayList<>();
-                    if(snapshot.exists()){
-                        for(DataSnapshot child : snapshot.getChildren()){
+                    if (snapshot.exists()) {
+                        for (DataSnapshot child : snapshot.getChildren()) {
                             TeamStats teamStats = child.getValue(TeamStats.class);
-                            if(teamStats != null){
+                            if (teamStats != null) {
                                 teamStatsList.add(teamStats);
                             }
                         }
@@ -320,15 +339,59 @@ public class DataHelper {
     }
 
 
-// ==================== CALLBACK INTERFACES ====================
+    public ValueEventListener listenToAllTeamStats(TeamStatsUpdateCallback callback) {
+        DatabaseReference teamStatsRef = database.getReference("teamStats"); // התאם את הנתיב לפי המבנה שלך
+
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<TeamStats> teamStatsList = new ArrayList<>();
+
+                for (DataSnapshot teamSnapshot : snapshot.getChildren()) {
+                    TeamStats teamStats = teamSnapshot.getValue(TeamStats.class);
+                    if (teamStats != null) {
+                        teamStatsList.add(teamStats);
+                    }
+                }
+
+                callback.onSuccess(teamStatsList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onFailure(error.getMessage());
+            }
+        };
+
+        teamStatsRef.addValueEventListener(listener);
+        return listener;
+    }
+
+    // מתוד להסרת המאזין
+    public void removeTeamStatsListener(ValueEventListener listener) {
+        if (listener != null) {
+            DatabaseReference teamStatsRef = database.getReference("teamStats");
+            teamStatsRef.removeEventListener(listener);
+        }
+    }
+
+
+    // ==================== CALLBACK INTERFACES ====================
+    public interface TeamStatsUpdateCallback {
+        void onSuccess(ArrayList<TeamStats> teamStatsList);
+
+        void onFailure(String error);
+    }
 
     public interface DatabaseCallback {
         void onSuccess(String id);
+
         void onFailure(String error);
     }
 
     public interface DataCallback<T> {
         void onSuccess(T data);
+
         void onFailure(String error);
     }
 
@@ -342,6 +405,7 @@ public class DataHelper {
 
     public interface TeamStatsListCallback {
         void onDataChanged(ArrayList<TeamStats> teamStatsList);
+
         void onError(String error);
     }
 }
