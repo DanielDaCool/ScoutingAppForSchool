@@ -14,7 +14,6 @@ import com.example.mainapp.Adapters.TeamStatsAdapter;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
-import com.example.mainapp.Utils.DatabaseUtils.FirebaseListenerService;
 import com.example.mainapp.Utils.TeamUtils.Team;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import com.google.firebase.database.ValueEventListener;
@@ -34,26 +33,26 @@ public class TeamStatsActivity extends AppCompatActivity {
     private ArrayList<Team> teamsAtComp;
     private ValueEventListener teamStatsListener;
 
-    private BroadcastReceiver teamStatsReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (FirebaseListenerService.ACTION_TEAM_STATS_UPDATED.equals(intent.getAction())) {
-                String updateType = intent.getStringExtra(FirebaseListenerService.EXTRA_UPDATE_TYPE);
-                int count = intent.getIntExtra(FirebaseListenerService.EXTRA_TEAM_STATS_COUNT, 0);
-
-                if (FirebaseListenerService.UPDATE_TYPE_SUCCESS.equals(updateType)) {
-                    System.out.println("✅ Firebase updated: " + count + " teams");
-                    runOnUiThread(() -> {
-                        adapter.notifyDataSetChanged();
-                        Toast.makeText(context, "נטענו " + count + " קבוצות", Toast.LENGTH_SHORT).show();
-                    });
-                } else {
-                    System.err.println("❌ Firebase update error");
-                    Toast.makeText(context, "שגיאה בעדכון נתונים", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    };
+//    private BroadcastReceiver teamStatsReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            if (FirebaseListenerService.ACTION_TEAM_STATS_UPDATED.equals(intent.getAction())) {
+//                String updateType = intent.getStringExtra(FirebaseListenerService.EXTRA_UPDATE_TYPE);
+//                int count = intent.getIntExtra(FirebaseListenerService.EXTRA_TEAM_STATS_COUNT, 0);
+//
+//                if (FirebaseListenerService.UPDATE_TYPE_SUCCESS.equals(updateType)) {
+//                    System.out.println("✅ Firebase updated: " + count + " teams");
+//                    runOnUiThread(() -> {
+//                        adapter.notifyDataSetChanged();
+//                        Toast.makeText(context, "נטענו " + count + " קבוצות", Toast.LENGTH_SHORT).show();
+//                    });
+//                } else {
+//                    System.err.println("❌ Firebase update error");
+//                    Toast.makeText(context, "שגיאה בעדכון נתונים", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +68,7 @@ public class TeamStatsActivity extends AppCompatActivity {
         adapter = new TeamStatsAdapter(allTeamsStats);
         recyclerView.setAdapter(adapter);
 
-        startFirebaseService();
+//        startFirebaseService();
         DataHelper.getInstance().isTableDataEmpty(new DataHelper.ExistsCallback() {
             @Override
             public void onResult(boolean isEmpty) {
@@ -79,12 +78,12 @@ public class TeamStatsActivity extends AppCompatActivity {
 
     }
 
-    private void startFirebaseService(){
-        Intent listenerService = new Intent(this, FirebaseListenerService.class);
-        startService(listenerService);
-
-        System.out.println("🚀 Firebase Service started");
-    }
+//    private void startFirebaseService(){
+//        Intent listenerService = new Intent(this, FirebaseListenerService.class);
+//        startService(listenerService);
+//
+//        System.out.println("🚀 Firebase Service started");
+//    }
 
     private void loadTeamsFromAPI() {
         try {

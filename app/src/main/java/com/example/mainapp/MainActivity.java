@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         init();
         setOnClickListener(gamesListButton,GamesList.class);
-        setOnClickListener(formsButton, Forms.class);
+        setOnClickListener(formsButton, FormsActivity.class);
         setOnClickListener(signupButton, SignupScreen.class);
         setOnClickListener(loginButton, LoginScreen.class);
         setOnClickListener(statsButton, TeamStatsActivity.class);

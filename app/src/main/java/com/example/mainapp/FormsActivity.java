@@ -20,10 +20,11 @@ import com.example.mainapp.Utils.TeamUtils.Team;
 import com.example.mainapp.Utils.TeamUtils.TeamAtGame;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
-public class Forms extends AppCompatActivity {
+public class FormsActivity extends AppCompatActivity {
     private static final String TAG = "FormsActivity";
 
     private EditText autoL1, autoL2, autoL3, autoL4, teleL1, teleL2, teleL3, teleL4, teleNet, teleProc, teamNumber, gameNumber;
+    private RadioGroup group;
     private Button sendBtn;
     private Context context;
 
@@ -224,13 +225,16 @@ public class Forms extends AppCompatActivity {
         for (int i = 0; i < getInputFromEditText(teleProc); i++) {
             teamAtGame.addGamePieceScored(GamePiece.PROCESSOR, false);
         }
+        Log.d(TAG, "ADDED CLIMB: " + checkClimb());
         teamAtGame.addClimb(checkClimb());
     }
 
     private CLIMB checkClimb(){
-        RadioGroup group = findViewById(R.id.ClimbGroup);
-        if(!group.isSelected()) return CLIMB.DIDNT_TRY;
+
+
         int climb = group.getCheckedRadioButtonId();
+        if(climb == -1) return CLIMB.DIDNT_TRY;
+
 
         if(climb == R.id.ClimbHigh) return CLIMB.HIGH;
         if(climb == R.id.ClimbLow) return  CLIMB.LOW;
@@ -279,7 +283,9 @@ public class Forms extends AppCompatActivity {
         this.teamNumber = findViewById(R.id.TeamNumberEditText);
         this.gameNumber = findViewById(R.id.GameNumberEditText);
         this.sendBtn = findViewById(R.id.buttonSave);
-        this.context = Forms.this;
+        this.context = FormsActivity.this;
+
+        this.group = findViewById(R.id.ClimbGroup);
 
         Log.d(TAG, "Forms activity initialized");
     }

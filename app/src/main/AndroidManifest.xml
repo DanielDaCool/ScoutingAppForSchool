@@ -18,7 +18,7 @@
             android:name=".TeamStatsActivity"
             android:exported="false" />
         <activity
-            android:name=".Forms"
+            android:name=".FormsActivity"
             android:exported="false" />
         <activity
             android:name=".GamesList"
@@ -39,11 +39,13 @@
             </intent-filter>
 
         </activity>
-
         <service
-            android:name=".Utils.DatabaseUtils.FirebaseListenerService"
+            android:name=".Utils.DatabaseUtils.FirebaseService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync">
+        </service>
+
 
     </application>
 

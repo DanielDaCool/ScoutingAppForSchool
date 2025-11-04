@@ -18,10 +18,11 @@ public class TeamAtGame implements Serializable {
     private CLIMB c;
 
 
-    // Empty constructor for Firebase
+
     public TeamAtGame() {
         this.gamePiecesScored = new ArrayList<>();
         this.gamePieceCount = new HashMap<>();
+        this.c = CLIMB.DIDNT_TRY;
     }
 
     public TeamAtGame(Team team, int gameID) {
@@ -32,6 +33,7 @@ public class TeamAtGame implements Serializable {
         for (GamePiece g : GamePiece.values()) {
             gamePieceCount.put(g.name(), 0);
         }
+        this.c = CLIMB.DIDNT_TRY;
 
     }
 

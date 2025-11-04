@@ -13,6 +13,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * Refactored DataHelper - Removed listener methods
+ * Use FirebaseMonitoringService for real-time updates instead
+ */
 public class DataHelper {
 
     private FirebaseDatabase database;
@@ -125,20 +129,16 @@ public class DataHelper {
     }
 
     public void readUserByUsername(String userName, DataCallback<User> callback) {
-        android.util.Log.d("DataHelper", "Starting query for userName: " + userName);
 
         rootRef.child(Constants.USERS_TABLE_NAME)
                 .orderByChild("userName")
                 .equalTo(userName)
                 .get()
                 .addOnCompleteListener(task -> {
-                    android.util.Log.d("DataHelper", "Query completed");
 
                     if (task.isSuccessful()) {
                         DataSnapshot snapshot = task.getResult();
 
-                        android.util.Log.d("DataHelper", "Snapshot exists: " + snapshot.exists());
-                        android.util.Log.d("DataHelper", "Children count: " + snapshot.getChildrenCount());
 
                         if (snapshot.exists() && snapshot.getChildrenCount() > 0) {
                             User foundUser = null;
@@ -146,16 +146,11 @@ public class DataHelper {
 
                             for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                                 childCount++;
-                                android.util.Log.d("DataHelper", "=== Child #" + childCount + " ===");
-                                android.util.Log.d("DataHelper", "Child key: " + childSnapshot.getKey());
-                                android.util.Log.d("DataHelper", "Child raw data: " + childSnapshot.getValue());
+
 
                                 User user = childSnapshot.getValue(User.class);
 
                                 if (user != null) {
-                                    android.util.Log.d("DataHelper", "User.userName: " + user.getUserName());
-                                    android.util.Log.d("DataHelper", "User.password: " + user.getPassword());
-                                    android.util.Log.d("DataHelper", "User.userID: " + user.getUserID());
 
                                     if (user.getUserName() != null && user.getUserName().equals(userName)) {
                                         foundUser = user;
@@ -213,6 +208,7 @@ public class DataHelper {
                     }
                 });
     }
+
     public void isTableDataEmpty(ExistsCallback callback){
         readAllTeamStats(new DataCallback<ArrayList<TeamStats>>() {
             @Override
@@ -229,6 +225,7 @@ public class DataHelper {
             }
         });
     }
+
     public void readAllTeamStats(DataCallback<ArrayList<TeamStats>> callback) {
         new Thread(() -> {
             rootRef.child(Constants.GAMES_TABLE_NAME).get().addOnCompleteListener(task -> {
@@ -338,60 +335,24 @@ public class DataHelper {
                 });
     }
 
-
-    public ValueEventListener listenToAllTeamStats(TeamStatsUpdateCallback callback) {
-        DatabaseReference teamStatsRef = database.getReference("teamStats"); // התאם את הנתיב לפי המבנה שלך
-
-        ValueEventListener listener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<TeamStats> teamStatsList = new ArrayList<>();
-
-                for (DataSnapshot teamSnapshot : snapshot.getChildren()) {
-                    TeamStats teamStats = teamSnapshot.getValue(TeamStats.class);
-                    if (teamStats != null) {
-                        teamStatsList.add(teamStats);
-                    }
-                }
-
-                callback.onSuccess(teamStatsList);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                callback.onFailure(error.getMessage());
-            }
-        };
-
-        teamStatsRef.addValueEventListener(listener);
-        return listener;
-    }
-
-    // מתוד להסרת המאזין
-    public void removeTeamStatsListener(ValueEventListener listener) {
-        if (listener != null) {
-            DatabaseReference teamStatsRef = database.getReference("teamStats");
-            teamStatsRef.removeEventListener(listener);
-        }
-    }
+    // ==================== REMOVED LISTENER METHODS ====================
+    // The following methods have been removed:
+    // - listenToAllTeamStats()
+    // - removeTeamStatsListener()
+    //
+    // Use FirebaseMonitoringService instead for real-time updates
+    // See ServiceManager.java for usage examples
+    // ==================================================================
 
 
     // ==================== CALLBACK INTERFACES ====================
-    public interface TeamStatsUpdateCallback {
-        void onSuccess(ArrayList<TeamStats> teamStatsList);
-
-        void onFailure(String error);
-    }
-
     public interface DatabaseCallback {
         void onSuccess(String id);
-
         void onFailure(String error);
     }
 
     public interface DataCallback<T> {
         void onSuccess(T data);
-
         void onFailure(String error);
     }
 
@@ -403,9 +364,6 @@ public class DataHelper {
         void onResult(long count);
     }
 
-    public interface TeamStatsListCallback {
-        void onDataChanged(ArrayList<TeamStats> teamStatsList);
-
-        void onError(String error);
-    }
+    // Removed: TeamStatsUpdateCallback interface
+    // Removed: TeamStatsListCallback interface
 }
