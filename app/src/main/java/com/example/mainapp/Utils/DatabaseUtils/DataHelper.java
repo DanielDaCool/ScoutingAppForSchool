@@ -249,6 +249,7 @@ public class DataHelper {
     }
 
 
+
     public void getLatestUserId(DatabaseCallback callback) {
         rootRef.child(Constants.USERS_TABLE_NAME)
                 .orderByKey()
@@ -335,15 +336,19 @@ public class DataHelper {
                 });
     }
 
-    // ==================== REMOVED LISTENER METHODS ====================
-    // The following methods have been removed:
-    // - listenToAllTeamStats()
-    // - removeTeamStatsListener()
-    //
-    // Use FirebaseMonitoringService instead for real-time updates
-    // See ServiceManager.java for usage examples
-    // ==================================================================
+    public void getCurrentTeamSnapshot(TeamSnapshotCallback callback){
+        rootRef.child(Constants.GAMES_TABLE_NAME).get().addOnCompleteListener(
 
+                task -> {
+                    if(task.isSuccessful()){
+                        callback.onSuccess(task.getResult());
+                    }
+                    else{
+                        callback.onFailure(new Exception("Task not successful"));
+                    }
+                }
+        );
+    }
 
     // ==================== CALLBACK INTERFACES ====================
     public interface DatabaseCallback {
@@ -362,6 +367,11 @@ public class DataHelper {
 
     public interface CountCallback {
         void onResult(long count);
+    }
+
+    public interface TeamSnapshotCallback{
+        void onSuccess(DataSnapshot snapshot);
+        void onFailure(Exception e);
     }
 
     // Removed: TeamStatsUpdateCallback interface

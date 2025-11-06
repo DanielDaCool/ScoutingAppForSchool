@@ -94,7 +94,7 @@ public class FormsActivity extends AppCompatActivity {
                                                                 @Override
                                                                 public void onSuccess(String id) {
                                                                     Log.d(TAG, "!!! FIREBASE SAVE SUCCESS !!! Team ID: " + id);
-
+                                                                    TeamStatsActivity.notifyUpdateInDatabase();
                                                                     runOnUiThread(() -> {
                                                                         Toast.makeText(context, "Data saved successfully!", Toast.LENGTH_SHORT).show();
                                                                         clearForm();
@@ -122,48 +122,7 @@ public class FormsActivity extends AppCompatActivity {
                                             @Override
                                             public void onFailure(String error) {
                                                 Log.d(TAG, "No existing TeamStats found (this is OK for first game): " + error);
-
-                                                // Create new TeamStats since none exists
-                                                try {
-                                                    TeamStats newData = new TeamStats(t);
-                                                    TeamAtGame teamAtGame = new TeamAtGame(t, gameNum);
-                                                    updateGamePieceScored(teamAtGame);
-                                                    newData.addGame(teamAtGame);
-
-                                                    Log.d(TAG, "Created new TeamStats with 1 game");
-                                                    Log.d(TAG, "About to save to Firebase table: " + Constants.GAMES_TABLE_NAME);
-
-                                                    DataHelper.getInstance().replace(
-                                                            Constants.GAMES_TABLE_NAME,
-                                                            Integer.toString(t.getTeamNumber()),
-                                                            newData,
-                                                            new DataHelper.DatabaseCallback() {
-                                                                @Override
-                                                                public void onSuccess(String id) {
-                                                                    Log.d(TAG, "!!! FIREBASE SAVE SUCCESS (NEW) !!! Team ID: " + id);
-
-                                                                    runOnUiThread(() -> {
-                                                                        Toast.makeText(context, "Data saved successfully!", Toast.LENGTH_SHORT).show();
-                                                                        clearForm();
-                                                                    });
-                                                                }
-
-                                                                @Override
-                                                                public void onFailure(String error) {
-                                                                    Log.e(TAG, "!!! FIREBASE SAVE FAILED (NEW) !!! Error: " + error);
-
-                                                                    runOnUiThread(() -> {
-                                                                        Toast.makeText(context, "Failed to save: " + error, Toast.LENGTH_LONG).show();
-                                                                    });
-                                                                }
-                                                            }
-                                                    );
-                                                } catch (Exception e) {
-                                                    Log.e(TAG, "Error creating new data", e);
-                                                    runOnUiThread(() -> {
-                                                        Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                                                    });
-                                                }
+                                                Toast.makeText(context, "Wrong team number", Toast.LENGTH_SHORT);
                                             }
                                         }
                                 );

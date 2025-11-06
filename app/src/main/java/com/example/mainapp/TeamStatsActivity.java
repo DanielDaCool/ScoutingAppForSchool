@@ -25,35 +25,12 @@ import java.util.ArrayList;
 
 public class TeamStatsActivity extends AppCompatActivity {
     private Context context;
-    private RecyclerView recyclerView;
-    private TeamStatsAdapter adapter;
+    private static RecyclerView recyclerView;
+    private static TeamStatsAdapter adapter;
 
-    // CHANGE 1: The activity now holds the final, aggregated list
     private static ArrayList<TeamStats> allTeamsStats;
     private ArrayList<Team> teamsAtComp;
     private ValueEventListener teamStatsListener;
-
-//    private BroadcastReceiver teamStatsReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (FirebaseListenerService.ACTION_TEAM_STATS_UPDATED.equals(intent.getAction())) {
-//                String updateType = intent.getStringExtra(FirebaseListenerService.EXTRA_UPDATE_TYPE);
-//                int count = intent.getIntExtra(FirebaseListenerService.EXTRA_TEAM_STATS_COUNT, 0);
-//
-//                if (FirebaseListenerService.UPDATE_TYPE_SUCCESS.equals(updateType)) {
-//                    System.out.println("✅ Firebase updated: " + count + " teams");
-//                    runOnUiThread(() -> {
-//                        adapter.notifyDataSetChanged();
-//                        Toast.makeText(context, "נטענו " + count + " קבוצות", Toast.LENGTH_SHORT).show();
-//                    });
-//                } else {
-//                    System.err.println("❌ Firebase update error");
-//                    Toast.makeText(context, "שגיאה בעדכון נתונים", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        }
-//    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,15 +52,24 @@ public class TeamStatsActivity extends AppCompatActivity {
                 if(isEmpty) uploadDataFromAPIToDB();
             }
         });
-
     }
 
-//    private void startFirebaseService(){
-//        Intent listenerService = new Intent(this, FirebaseListenerService.class);
-//        startService(listenerService);
-//
-//        System.out.println("🚀 Firebase Service started");
-//    }
+
+    public static void notifyUpdateInDatabase(){
+        DataHelper.getInstance().readAllTeamStats(new DataHelper.DataCallback<ArrayList<TeamStats>>() {
+            @Override
+            public void onSuccess(ArrayList<TeamStats> data) {
+                adapter = new TeamStatsAdapter(data);
+                recyclerView.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+        });
+    }
 
     private void loadTeamsFromAPI() {
         try {
