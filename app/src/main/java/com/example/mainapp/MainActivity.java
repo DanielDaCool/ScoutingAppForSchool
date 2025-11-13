@@ -1,4 +1,7 @@
 package com.example.mainapp;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import com.example.mainapp.Utils.SharedPrefHelper;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
@@ -55,12 +58,27 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
 
+        context = MainActivity.this;
         gamesListButton = findViewById(R.id.buttonGamesList);
         formsButton = findViewById(R.id.buttonForms);
         loginButton = findViewById(R.id.buttonLogin);
         signupButton = findViewById(R.id.buttonSignup);
         statsButton = findViewById(R.id.buttonStats);
         welcomeText = findViewById(R.id.textViewWelcome);
-        context = MainActivity.this;
+
+
+        if(!SharedPrefHelper.getInstance(context).isUserLoggedIn()){
+            formsButton.setVisibility(GONE);
+            statsButton.setVisibility(GONE);
+            gamesListButton.setVisibility(GONE);
+
+        }
+        else{
+            loginButton.setVisibility(GONE);
+            signupButton.setVisibility(GONE);
+            formsButton.setVisibility(VISIBLE);
+            statsButton.setVisibility(VISIBLE);
+            gamesListButton.setVisibility(VISIBLE);
+        }
     }
 }

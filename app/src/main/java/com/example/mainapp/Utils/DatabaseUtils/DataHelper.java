@@ -10,7 +10,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -68,7 +67,7 @@ public class DataHelper {
     }
 
     public void createTeamStats(TeamStats data, DatabaseCallback callback) {
-        createWithId(Constants.GAMES_TABLE_NAME, Integer.toString(data.getTeam().getTeamNumber()), data, callback);
+        createWithId(Constants.TEAMS_TABLE_NAME, Integer.toString(data.getTeam().getTeamNumber()), data, callback);
     }
 
     public void createWithId(String tableName, String id, Object data, DatabaseCallback callback) {
@@ -188,7 +187,7 @@ public class DataHelper {
     }
 
     public void readTeamStats(String teamID, DataCallback<TeamStats> callback) {
-        rootRef.child(Constants.GAMES_TABLE_NAME).child(teamID).get()
+        rootRef.child(Constants.TEAMS_TABLE_NAME).child(teamID).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         DataSnapshot snapshot = task.getResult();
@@ -229,7 +228,7 @@ public class DataHelper {
 
     public void readAllTeamStats(DataCallback<ArrayList<TeamStats>> callback) {
         new Thread(() -> {
-            rootRef.child(Constants.GAMES_TABLE_NAME).get().addOnCompleteListener(task -> {
+            rootRef.child(Constants.TEAMS_TABLE_NAME).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DataSnapshot snapshot = task.getResult();
                     ArrayList<TeamStats> teamStatsList = new ArrayList<>();
@@ -265,6 +264,7 @@ public class DataHelper {
                                 if (callback != null) {
                                     callback.onSuccess(latestUserId);
                                 }
+
                                 return;
                             }
                         } else {
@@ -298,7 +298,7 @@ public class DataHelper {
     }
 
     public void countTeams(CountCallback callback) {
-        rootRef.child(Constants.GAMES_TABLE_NAME).get().addOnCompleteListener(task -> {
+        rootRef.child(Constants.TEAMS_TABLE_NAME).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DataSnapshot snapshot = task.getResult();
                 long count = snapshot.getChildrenCount();
@@ -338,7 +338,7 @@ public class DataHelper {
     }
 
     public void getCurrentTeamSnapshot(TeamSnapshotCallback callback){
-        rootRef.child(Constants.GAMES_TABLE_NAME).get().addOnCompleteListener(
+        rootRef.child(Constants.TEAMS_TABLE_NAME).get().addOnCompleteListener(
 
                 task -> {
                     if(task.isSuccessful()){
@@ -353,7 +353,7 @@ public class DataHelper {
 
 
     public void getUpdatedTeamsStats(DataCallback<ArrayList<TeamStats>> callback){
-        rootRef.child(Constants.GAMES_TABLE_NAME).addValueEventListener(new ValueEventListener() {
+        rootRef.child(Constants.TEAMS_TABLE_NAME).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<TeamStats> teamStatsList = new ArrayList<>();

@@ -83,12 +83,12 @@ public class FormsActivity extends AppCompatActivity {
                                                     data.addGame(teamAtGame);
 
                                                     Log.d(TAG, "TeamStats now has " + data.getGamesPlayed() + " games");
-                                                    Log.d(TAG, "About to save to Firebase table: " + Constants.GAMES_TABLE_NAME);
+                                                    Log.d(TAG, "About to save to Firebase table: " + Constants.TEAMS_TABLE_NAME);
                                                     Log.d(TAG, "Team ID: " + t.getTeamNumber());
 
                                                     // Save to database
                                                     DataHelper.getInstance().replace(
-                                                            Constants.GAMES_TABLE_NAME,
+                                                            Constants.TEAMS_TABLE_NAME,
                                                             Integer.toString(t.getTeamNumber()),
                                                             data,
                                                             new DataHelper.DatabaseCallback() {
