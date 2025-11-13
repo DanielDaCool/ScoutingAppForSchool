@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -348,6 +349,31 @@ public class DataHelper {
                     }
                 }
         );
+    }
+
+
+    public void getUpdatedTeamsStats(DataCallback<ArrayList<TeamStats>> callback){
+        rootRef.child(Constants.GAMES_TABLE_NAME).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<TeamStats> teamStatsList = new ArrayList<>();
+                if (snapshot.exists()) {
+                    for (DataSnapshot child : snapshot.getChildren()) {
+                        TeamStats teamStats = child.getValue(TeamStats.class);
+                        if (teamStats != null) {
+                            teamStatsList.add(teamStats);
+                        }
+                    }
+                }
+                callback.onSuccess(teamStatsList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     // ==================== CALLBACK INTERFACES ====================

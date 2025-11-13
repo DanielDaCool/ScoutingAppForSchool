@@ -1,6 +1,7 @@
 package com.example.mainapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -94,10 +95,12 @@ public class FormsActivity extends AppCompatActivity {
                                                                 @Override
                                                                 public void onSuccess(String id) {
                                                                     Log.d(TAG, "!!! FIREBASE SAVE SUCCESS !!! Team ID: " + id);
-                                                                    TeamStatsActivity.notifyUpdateInDatabase();
+
                                                                     runOnUiThread(() -> {
                                                                         Toast.makeText(context, "Data saved successfully!", Toast.LENGTH_SHORT).show();
                                                                         clearForm();
+                                                                        Intent intent = new Intent(FormsActivity.this, TeamStatsActivity.class);
+
                                                                     });
                                                                 }
 

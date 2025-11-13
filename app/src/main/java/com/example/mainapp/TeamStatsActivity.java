@@ -31,6 +31,7 @@ public class TeamStatsActivity extends AppCompatActivity {
     private static ArrayList<TeamStats> allTeamsStats;
     private ArrayList<Team> teamsAtComp;
     private ValueEventListener teamStatsListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,30 +47,18 @@ public class TeamStatsActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 //        startFirebaseService();
-        DataHelper.getInstance().isTableDataEmpty(new DataHelper.ExistsCallback() {
-            @Override
-            public void onResult(boolean isEmpty) {
-                if(isEmpty) uploadDataFromAPIToDB();
-            }
-        });
+
+        uploadDataFromAPIToDB();
+        uploadDataFromDBToAdapter();
+//        DataHelper.getInstance().isTableDataEmpty(new DataHelper.ExistsCallback() {
+//            @Override
+//            public void onResult(boolean isEmpty) {
+//                if (isEmpty) uploadDataFromAPIToDB();
+//                else uploadDataFromDBToAdapter();
+//            }
+//        });
     }
 
-
-    public static void notifyUpdateInDatabase(){
-        DataHelper.getInstance().readAllTeamStats(new DataHelper.DataCallback<ArrayList<TeamStats>>() {
-            @Override
-            public void onSuccess(ArrayList<TeamStats> data) {
-                adapter = new TeamStatsAdapter(data);
-                recyclerView.setAdapter(adapter);
-
-            }
-
-            @Override
-            public void onFailure(String error) {
-
-            }
-        });
-    }
 
     private void loadTeamsFromAPI() {
         try {
@@ -86,7 +75,7 @@ public class TeamStatsActivity extends AppCompatActivity {
                         for (Team team : teams) {
                             System.out.println("NUM: " + team.getTeamNumber() + " NAME: " + team.getTeamName());
                             allTeamsStats.add(new TeamStats(team));
-                           // allTeamsStats.add(new TeamStats(team));
+                            // allTeamsStats.add(new TeamStats(team));
                         }
                         adapter.notifyDataSetChanged();
 
@@ -110,9 +99,24 @@ public class TeamStatsActivity extends AppCompatActivity {
         }
     }
 
+    private void uploadDataFromDBToAdapter() {
+        DataHelper.getInstance().getUpdatedTeamsStats(new DataHelper.DataCallback<ArrayList<TeamStats>>() {
+            @Override
+            public void onSuccess(ArrayList<TeamStats> data) {
+                adapter.updateData(data);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+        });
+    }
+
     private void uploadDataFromAPIToDB() {
         loadTeamsFromAPI();
-        for (TeamStats teamStats : allTeamsStats){
+        for (TeamStats teamStats : allTeamsStats) {
             DataHelper.getInstance().createTeamStats(teamStats, new DataHelper.DatabaseCallback() {
                 @Override
                 public void onSuccess(String id) {
@@ -126,7 +130,6 @@ public class TeamStatsActivity extends AppCompatActivity {
             });
         }
     }
-
 
 
     private void init() {
