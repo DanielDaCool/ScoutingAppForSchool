@@ -1,9 +1,15 @@
 package com.example.mainapp;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,8 +20,10 @@ import com.example.mainapp.Adapters.TeamStatsAdapter;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
+import com.example.mainapp.Utils.Game;
 import com.example.mainapp.Utils.TeamUtils.Team;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
+import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
@@ -27,6 +35,7 @@ public class TeamStatsActivity extends AppCompatActivity {
     private Context context;
     private static RecyclerView recyclerView;
     private static TeamStatsAdapter adapter;
+    private EditText editText;
 
     private static ArrayList<TeamStats> allTeamsStats;
     private ArrayList<Team> teamsAtComp;
@@ -46,19 +55,64 @@ public class TeamStatsActivity extends AppCompatActivity {
         adapter = new TeamStatsAdapter(allTeamsStats);
         recyclerView.setAdapter(adapter);
 
-//        startFirebaseService();
-
         uploadDataFromAPIToDB();
         uploadDataFromDBToAdapter();
-//        DataHelper.getInstance().isTableDataEmpty(new DataHelper.ExistsCallback() {
-//            @Override
-//            public void onResult(boolean isEmpty) {
-//                if (isEmpty) uploadDataFromAPIToDB();
-//                else uploadDataFromDBToAdapter();
-//            }
-//        });
+
+        addFilterSearchTeam();
+
     }
 
+    private void addFilterSearchTeam() {
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    String input = editText.getText().toString().trim();
+
+                    if (input.isEmpty()) {
+                        adapter.updateData(allTeamsStats);
+                        adapter.notifyDataSetChanged();
+                        return true;
+                    }
+
+                    try {
+                        int teamNumber = Integer.parseInt(input);
+                        if (teamNumber < 0 || teamNumber > 10000) {
+                            Toast.makeText(context, "מספר קבוצה לא חוקי", LENGTH_SHORT).show();
+                            editText.setText("");
+                        } else {
+                            showFilteredTeam(teamNumber);
+                        }
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(context, "תכניס מספר אמיתי", LENGTH_SHORT).show();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+
+    private void showFilteredTeam(int teamNumber) {
+            DataHelper.getInstance().readTeamStats(Integer.toString(teamNumber), new DataHelper.DataCallback<TeamStats>() {
+            @Override
+            public void onSuccess(TeamStats data) {
+                ArrayList<TeamStats> t = new ArrayList<>();
+                t.add(data);
+                adapter.updateData(t);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(context, "no team number", LENGTH_SHORT);
+                adapter.updateData(allTeamsStats);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+    }
 
     private void loadTeamsFromAPI() {
         try {
@@ -137,6 +191,7 @@ public class TeamStatsActivity extends AppCompatActivity {
         context = TeamStatsActivity.this;
         allTeamsStats = new ArrayList<>();
         teamsAtComp = new ArrayList<>();
+        this.editText = findViewById(R.id.editTextTeamFilter);
     }
 
 }

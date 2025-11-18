@@ -28,6 +28,13 @@ public class SharedPrefHelper {
         return instance;
     }
 
+    public void logout(){
+        editor.putInt(KEY_USER_ID, -1);
+        editor.putString(KEY_USER_NAME, "");
+        editor.putString(KEY_FULL_NAME, "");
+        editor.putBoolean(KEY_IS_LOGGED_IN, false);
+        editor.apply();
+    }
     public void saveUser(int userId, String userName, String fullName) {
         editor.putInt(KEY_USER_ID, userId);
         editor.putString(KEY_USER_NAME, userName);
@@ -40,7 +47,7 @@ public class SharedPrefHelper {
         return  sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false);
     }
     public String getUserName(){
-        return isUserLoggedIn() ? sharedPreferences.getString(KEY_USER_NAME, "") : "שם";
+        return isUserLoggedIn() ? sharedPreferences.getString(KEY_USER_NAME, "") : "משתמש";
     }
 
 }

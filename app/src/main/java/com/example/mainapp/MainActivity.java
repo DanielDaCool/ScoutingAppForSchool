@@ -8,7 +8,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private Button loginButton;
     private Button signupButton;
     private Button statsButton;
+    private Button logoutButton;
     private TextView welcomeText;
     private Context context;
 
@@ -32,8 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseApp.initializeApp(this);
         FirebaseDatabase.getInstance("https://scoutingapp-7bb4e-default-rtdb.europe-west1.firebasedatabase.app")
-                .setPersistenceEnabled(true); // Optional: enable offline persistence
-
+                .setPersistenceEnabled(true);
         init();
         setOnClickListener(gamesListButton,GamesList.class);
         setOnClickListener(formsButton, FormsActivity.class);
@@ -41,8 +43,33 @@ public class MainActivity extends AppCompatActivity {
         setOnClickListener(loginButton, LoginScreen.class);
         setOnClickListener(statsButton, TeamStatsActivity.class);
         String userName = SharedPrefHelper.getInstance(context).getUserName();
+
         welcomeText.setText("שלום, " + userName);
 
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder b = new AlertDialog.Builder(context);
+                b.setMessage("אתה בטוח שאתה רוצה להתנתק?");
+                b.setPositiveButton("כן", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        SharedPrefHelper.getInstance(context).logout();
+                        activateLogout();
+                    }
+                });
+                b.setNegativeButton("לא, חזור למסך הראשי", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog dialog = b.create();
+                dialog.show();
+            }
+        });
     }
 
     private void setOnClickListener(Button btn, Class classToGo){
@@ -56,6 +83,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    private void activateLogout(){
+        formsButton.setVisibility(GONE);
+        statsButton.setVisibility(GONE);
+        gamesListButton.setVisibility(GONE);
+        logoutButton.setVisibility(GONE);
+        loginButton.setVisibility(VISIBLE);
+        signupButton.setVisibility(VISIBLE);
+        welcomeText.setText("שלום, משתמש" );
+    }
     private void init() {
 
         context = MainActivity.this;
@@ -65,12 +101,15 @@ public class MainActivity extends AppCompatActivity {
         signupButton = findViewById(R.id.buttonSignup);
         statsButton = findViewById(R.id.buttonStats);
         welcomeText = findViewById(R.id.textViewWelcome);
+        logoutButton = findViewById(R.id.buttonLogout);
+
 
 
         if(!SharedPrefHelper.getInstance(context).isUserLoggedIn()){
             formsButton.setVisibility(GONE);
             statsButton.setVisibility(GONE);
             gamesListButton.setVisibility(GONE);
+            logoutButton.setVisibility(GONE);
 
         }
         else{
@@ -79,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
             formsButton.setVisibility(VISIBLE);
             statsButton.setVisibility(VISIBLE);
             gamesListButton.setVisibility(VISIBLE);
+            logoutButton.setVisibility(VISIBLE);
         }
     }
 }

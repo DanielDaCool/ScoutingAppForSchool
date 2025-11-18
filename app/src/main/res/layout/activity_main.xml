@@ -9,7 +9,7 @@
     android:padding="60dp"
     tools:context=".MainActivity">
 
-    <!-- טקסט כותרת -->
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,18 +25,11 @@
         android:id="@+id/textViewWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="שלום, שם"
+        android:text="שלום, משתמש"
         android:textSize="22sp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="40dp" />
 
     <!-- מידע על המשחק הקרוב לסקאוטינג -->
-    <TextView
-        android:id="@+id/textViewNextMatch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="המשחק הבא שלך: משחק #42"
-        android:textSize="18sp"
-        android:layout_marginBottom="48dp" />
 
     <!-- כפתור למסך רשימת המשחקים -->
     <Button
@@ -95,6 +88,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="מידע על קבוצות"
+        android:layout_marginBottom="10dp"
+
+        android:textSize="16dp"
+
+        android:textStyle="bold"
+        android:backgroundTint="#9D00FF"
+        />
+
+    <Button
+        android:id="@+id/buttonLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="התנתקות"
         android:layout_marginBottom="10dp"
 
         android:textSize="16dp"
