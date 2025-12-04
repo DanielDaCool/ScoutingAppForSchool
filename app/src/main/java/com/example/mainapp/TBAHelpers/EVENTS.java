@@ -13,9 +13,5 @@ public enum EVENTS {
         this.eventKey = eventKey;
     }
 
-    @Override
-    public String toString() {
-        return eventKey;
-    }
 
 }
