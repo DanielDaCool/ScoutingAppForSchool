@@ -1,4 +1,6 @@
 package com.example.mainapp.TBAHelpers;
+import android.util.Log;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -12,7 +14,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class TBAApiManager {
@@ -53,7 +57,7 @@ public class TBAApiManager {
         ArrayList<Team> teams = new ArrayList<Team>();
         new Thread(() -> {
             try {
-                String json = fetchData("/event/" + eventKey + "/teams/simple");
+                String json = fetchData("/event/" + eventKey.getEventKey() + "/teams/simple");
                 System.out.println("JSON Response length: " + json.length());
 
                 JSONArray jsonArray = new JSONArray(json);
@@ -98,7 +102,7 @@ public class TBAApiManager {
     public void getEventGames(EVENTS eventKey, GameCallback callback) {
         new Thread(() -> {
             try {
-                String json = fetchData("/event/" + eventKey + "/matches");
+                String json = fetchData("/event/" + eventKey.getEventKey() + "/matches");
                 System.out.println("JSON Response length: " + json.length());
 
                 JSONArray jsonArray = new JSONArray(json);
@@ -156,6 +160,44 @@ public class TBAApiManager {
         }).start();
     }
 
+    public void getIsraeliTeams(TeamListCallback callback) {
+        new Thread(()->{
+            Set<Team> israeliTeams = new HashSet<>();
+
+            // Get teams from each Israeli district event
+            EVENTS[] israelEvents = {
+                    EVENTS.DISTRICT_1,
+                    EVENTS.DISTRICT_2,
+                    EVENTS.DISTRICT_3,
+                    EVENTS.DISTRICT_4,
+                    EVENTS.DCMP
+            };
+
+            for (EVENTS event : israelEvents) {
+                try {
+                    String json = fetchData("/event/" + event.getEventKey() + "/teams");
+                    JSONArray jsonArray = new JSONArray(json);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject teamJson = jsonArray.getJSONObject(i);
+                        Team team = JsonParser.parseToTeam(teamJson);
+                        israeliTeams.add(team);  // Set automatically handles duplicates
+                    }
+                } catch (Exception e) {
+                    Log.w("TBAApiManager", "Could not fetch teams from " + event.getEventKey());
+                }
+            }
+
+            ArrayList<Team> finalTeams = new ArrayList<>(israeliTeams);
+            callback.onSuccess(finalTeams);
+
+        }).start();
+    }
+
+    public interface TeamListCallback{
+        void onSuccess(ArrayList<Team> teams);
+
+    }
     // Callback interface
     public interface GameCallback {
         void onSuccess(ArrayList<Game> games);
@@ -173,13 +215,5 @@ public class TBAApiManager {
     public interface  CountCallback{
         void onSuccess(int count);
         void onError(Exception e);
-    }
-    // Get specific team info
-
-
-    // Get specific match info
-    public Game getMatch(String matchKey) throws IOException, JSONException {
-        String json = fetchData("/match/" + matchKey);
-        return JsonParser.parseToGame(new JSONObject(json));
     }
 }

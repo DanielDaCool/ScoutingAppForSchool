@@ -12,6 +12,7 @@ public enum EVENTS {
     EVENTS(String eventKey){
         this.eventKey = eventKey;
     }
+    public String getEventKey(){return this.eventKey;}
 
 
 }

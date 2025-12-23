@@ -1,5 +1,8 @@
 package com.example.mainapp;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -28,6 +32,7 @@ public class FormsActivity extends AppCompatActivity {
     private RadioGroup group;
     private Button sendBtn;
     private Context context;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,9 @@ public class FormsActivity extends AppCompatActivity {
                     Toast.makeText(context, "ENTER TEAM NUMBER", Toast.LENGTH_LONG).show();
                     return;
                 }
+                if(getInputFromEditText(teamNumber) < 0 || getInputFromEditText(teamNumber) > 12000){
+                    Toast.makeText(context, "ENTER CORRECT TEAM NUMBEr", Toast.LENGTH_SHORT).show();
+                }
 
                 if (gameNumber.getText().toString().trim().isEmpty()) {
                     Toast.makeText(context, "ENTER GAME NUMBER", Toast.LENGTH_LONG).show();
@@ -56,7 +64,7 @@ public class FormsActivity extends AppCompatActivity {
                     int gameNum = getInputFromEditText(gameNumber);
 
                     Log.d(TAG, "Team Number: " + teamNum + ", Game Number: " + gameNum);
-
+                    progressBar.setVisibility(VISIBLE);
                     TBAApiManager.getInstance().getTeam(teamNum, new TBAApiManager.SingleTeamCallback() {
                         @Override
                         public void onSuccess(Team t) {
@@ -98,8 +106,8 @@ public class FormsActivity extends AppCompatActivity {
 
                                                                     runOnUiThread(() -> {
                                                                         Toast.makeText(context, "Data saved successfully!", Toast.LENGTH_SHORT).show();
+                                                                        progressBar.setVisibility(GONE);
                                                                         clearForm();
-                                                                        Intent intent = new Intent(FormsActivity.this, TeamStatsActivity.class);
 
                                                                     });
                                                                 }
@@ -246,8 +254,8 @@ public class FormsActivity extends AppCompatActivity {
         this.gameNumber = findViewById(R.id.GameNumberEditText);
         this.sendBtn = findViewById(R.id.buttonSave);
         this.context = FormsActivity.this;
-
         this.group = findViewById(R.id.ClimbGroup);
+        this.progressBar = findViewById(R.id.progressBar);
 
         Log.d(TAG, "Forms activity initialized");
     }

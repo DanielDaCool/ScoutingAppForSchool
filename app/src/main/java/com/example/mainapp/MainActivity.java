@@ -33,9 +33,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseApp.initializeApp(this);
-        FirebaseDatabase.getInstance("https://scoutingapp-7bb4e-default-rtdb.europe-west1.firebasedatabase.app")
-                .setPersistenceEnabled(true);
         init();
         setOnClickListener(gamesListButton,GamesList.class);
         setOnClickListener(formsButton, FormsActivity.class);
