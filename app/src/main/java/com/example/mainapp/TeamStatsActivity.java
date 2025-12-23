@@ -53,6 +53,13 @@ public class TeamStatsActivity extends AppCompatActivity {
 
         init();
 
+        // ADD THESE LINES - Create adapter before loading data
+        adapter = new TeamStatsAdapter(allTeamsStats);
+        recyclerView.setAdapter(adapter);
+
+        addFilterSearchTeam();
+
+        // Now load data (remove try-catch, method doesn't throw exceptions)
         try {
             uploadDataFromDBToAdapter();
         } catch (JSONException e) {
@@ -60,9 +67,6 @@ public class TeamStatsActivity extends AppCompatActivity {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        addFilterSearchTeam();
-
     }
 
     private void addFilterSearchTeam() {
