@@ -1,10 +1,9 @@
-package com.example.mainapp;
+package com.example.mainapp.Screens;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mainapp.R;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.DatabaseUtils.CLIMB;
 import com.example.mainapp.Utils.Constants;

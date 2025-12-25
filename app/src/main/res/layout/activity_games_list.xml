@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".GamesList">
+    tools:context=".Screens.GamesList">
 
     <!-- כותרת המסך -->
     <TextView

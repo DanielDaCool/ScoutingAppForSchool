@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="60dp"
-    tools:context=".MainActivity">
+    tools:context=".Screens.MainActivity">
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="אפליקציית סקאוטינג"
+        android:text= "אפליקציית סקאוטינג"
         android:textSize="30sp"
         android:textStyle="bold"
         android:textColor="#9D00FF"
@@ -108,7 +107,18 @@
         android:textStyle="bold"
         android:backgroundTint="#9D00FF"
         />
+    <Button
+        android:id="@+id/predictButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ניחוש תוצאות משחק"
+        android:layout_marginBottom="10dp"
 
+        android:textSize="16dp"
+
+        android:textStyle="bold"
+        android:backgroundTint="#9D00FF"
+        />
 
 
 

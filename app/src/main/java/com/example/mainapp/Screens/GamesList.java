@@ -1,4 +1,4 @@
-package com.example.mainapp;
+package com.example.mainapp.Screens;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mainapp.Adapters.GameAdapter;
+import com.example.mainapp.R;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.Game;
@@ -44,7 +45,6 @@ public class GamesList extends AppCompatActivity {
             @Override
             public void onSuccess(ArrayList<Game> games) {
                 runOnUiThread(() -> {
-                    System.out.println("Successfully loaded " + games.size() + " games");
 
                     
 
@@ -55,7 +55,7 @@ public class GamesList extends AppCompatActivity {
 
                     gameAdapter.notifyDataSetChanged();
 
-                    Toast.makeText(context, "Loaded " + games.size() + " qualification matches", Toast.LENGTH_SHORT).show();
+
                 });
             }
 
@@ -126,9 +126,7 @@ public class GamesList extends AppCompatActivity {
         gameAdapter.setOnItemClickListener(new GameAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Game game, int position) {
-                Toast.makeText(context,
-                        "בחרת: " + game.getGameTitle(),
-                        Toast.LENGTH_SHORT).show();
+
             }
         });
 

@@ -1,4 +1,4 @@
-package com.example.mainapp;
+package com.example.mainapp.Screens;
 
 
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mainapp.R;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.DatabaseUtils.PasswordHasherUtils;
 import com.example.mainapp.Utils.SharedPrefHelper;

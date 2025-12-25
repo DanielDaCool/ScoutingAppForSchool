@@ -1,10 +1,11 @@
-package com.example.mainapp;
+package com.example.mainapp.Screens;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import com.example.mainapp.R;
+import com.example.mainapp.Screens.Predictions.GamePrediction;
+import com.example.mainapp.Screens.Predictions.PredictionScreen;
 import com.example.mainapp.Utils.SharedPrefHelper;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private Button signupButton;
     private Button statsButton;
     private Button logoutButton;
+
+    private Button predictButton;
     private TextView welcomeText;
     private Context context;
 
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setOnClickListener(signupButton, SignupScreen.class);
         setOnClickListener(loginButton, LoginScreen.class);
         setOnClickListener(statsButton, TeamStatsActivity.class);
+        setOnClickListener(predictButton, PredictionScreen.class);
         String userName = SharedPrefHelper.getInstance(context).getUserName();
 
         welcomeText.setText("שלום, " + userName);
@@ -85,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         statsButton.setVisibility(GONE);
         gamesListButton.setVisibility(GONE);
         logoutButton.setVisibility(GONE);
+        predictButton.setVisibility(GONE);
         loginButton.setVisibility(VISIBLE);
         signupButton.setVisibility(VISIBLE);
         welcomeText.setText("שלום, משתמש" );
@@ -99,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         statsButton = findViewById(R.id.buttonStats);
         welcomeText = findViewById(R.id.textViewWelcome);
         logoutButton = findViewById(R.id.buttonLogout);
+        predictButton = findViewById(R.id.predictButton);
 
 
 
@@ -107,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
             statsButton.setVisibility(GONE);
             gamesListButton.setVisibility(GONE);
             logoutButton.setVisibility(GONE);
+            predictButton.setVisibility(GONE);
 
         }
         else{
@@ -116,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
             statsButton.setVisibility(VISIBLE);
             gamesListButton.setVisibility(VISIBLE);
             logoutButton.setVisibility(VISIBLE);
+            predictButton.setVisibility(VISIBLE);
         }
     }
 }

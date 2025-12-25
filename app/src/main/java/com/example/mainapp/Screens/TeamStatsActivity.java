@@ -1,10 +1,8 @@
-package com.example.mainapp;
+package com.example.mainapp.Screens;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -18,13 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mainapp.Adapters.TeamStatsAdapter;
+import com.example.mainapp.R;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
-import com.example.mainapp.Utils.Game;
 import com.example.mainapp.Utils.TeamUtils.Team;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
-import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
@@ -82,6 +79,7 @@ public class TeamStatsActivity extends AppCompatActivity {
                         return true;
                     }
 
+
                     try {
                         int teamNumber = Integer.parseInt(input);
                         if (teamNumber < 0 || teamNumber > 10000) {
@@ -102,6 +100,7 @@ public class TeamStatsActivity extends AppCompatActivity {
 
 
     private void showFilteredTeam(int teamNumber) {
+
         DataHelper.getInstance().readTeamStats(Integer.toString(teamNumber), new DataHelper.DataCallback<TeamStats>() {
             @Override
             public void onSuccess(TeamStats data) {
