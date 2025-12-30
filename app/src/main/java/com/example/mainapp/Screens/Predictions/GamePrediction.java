@@ -1,6 +1,9 @@
 package com.example.mainapp.Screens.Predictions;
 
+import static android.view.View.TEXT_ALIGNMENT_CENTER;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -32,7 +35,7 @@ public class GamePrediction extends AppCompatActivity {
             public void onSuccess(ArrayList<Game> games) {
                 allGames = games;
 
-                initSpinner();
+                runOnUiThread(()->initSpinner());
             }
 
             @Override
@@ -42,21 +45,22 @@ public class GamePrediction extends AppCompatActivity {
         });
     }
     private void initSpinner(){
-
         ArrayList<String> gameNames = new ArrayList<>();
-        gameNames.add("בחר משחק"); // First item as placeholder
+        gameNames.add("בחר משחק");
 
-
-        for(Game game : allGames){
-
-            gameNames.add(game.getGameTitle() + " קבוצות: " + game.getDescription());
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    GamePrediction.this,
-                    android.R.layout.simple_spinner_item,
-                    gameNames
-            );
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerGames.setAdapter(adapter);
+        if(allGames != null) {
+            for(Game game : allGames){
+                String gameName = game.getGameTitle();
+                gameNames.add(gameName);
+            }
         }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                GamePrediction.this,
+                R.layout.simple_spinner_item,
+                gameNames
+        );
+        adapter.setDropDownViewResource(R.layout.simple_spinner_item);
+        spinnerGames.setAdapter(adapter);
     }
 }
