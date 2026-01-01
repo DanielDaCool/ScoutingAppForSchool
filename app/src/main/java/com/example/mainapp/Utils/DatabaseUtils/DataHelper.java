@@ -3,10 +3,15 @@ package com.example.mainapp.Utils.DatabaseUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.math.MathUtils;
 
 import com.example.mainapp.Utils.Constants;
+import com.example.mainapp.Utils.Game;
 import com.example.mainapp.Utils.TeamUtils.Team;
+import com.example.mainapp.Utils.TeamUtils.TeamAtGame;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -14,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -132,7 +138,6 @@ public class DataHelper {
     }
 
     public void readUserByUsername(String userName, DataCallback<User> callback) {
-        Log.d("DataHelper", "userName: " + userName);
         rootRef.child(Constants.USERS_TABLE_NAME)
                 .orderByChild("userName")
                 .equalTo(userName)
@@ -155,7 +160,6 @@ public class DataHelper {
 
                                     if (user.getUserName() != null && user.getUserName().equals(userName)) {
                                         foundUser = user;
-                                        android.util.Log.d("DataHelper", "Found matching user with ID: " + user.getUserID());
                                         break;
                                     }
                                 }
@@ -166,19 +170,16 @@ public class DataHelper {
                                     callback.onSuccess(foundUser);
                                 }
                             } else {
-                                android.util.Log.d("DataHelper", "No valid user found with userName field");
                                 if (callback != null) {
                                     callback.onFailure("User not found");
                                 }
                             }
                         } else {
-                            android.util.Log.d("DataHelper", "No matching user found");
-                            if (callback != null) {
+                             if (callback != null) {
                                 callback.onFailure("User not found");
                             }
                         }
                     } else {
-                        android.util.Log.e("DataHelper", "Query failed: " + task.getException());
                         if (callback != null) {
                             callback.onFailure(task.getException() != null ?
                                     task.getException().getMessage() : "Unknown error");
@@ -187,6 +188,29 @@ public class DataHelper {
                 });
     }
 
+    public void getAvgOfTeam(String teamID, int amount, DataCallback<Double> callback){
+        rootRef.child(Constants.TEAMS_TABLE_NAME).child(teamID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DataSnapshot snapshot = task.getResult();
+                    if (snapshot.exists()) {
+                        TeamStats t = snapshot.getValue(TeamStats.class);
+                        List<TeamAtGame> games = t.getAllGames();
+                        double avgPoints = 0;
+                        int amountInFunc = MathUtils.clamp(amount, 1, 3);
+                        if(amountInFunc > games.size()) amountInFunc = games.size();
+
+                        for(int i =0;i<MathUtils.clamp(amount, 1, 3); i++){
+                            avgPoints += (games.get(games.size() - 1 - i).calculatePoints()) * (1.0 / amount);
+                        }
+
+                        callback.onSuccess(avgPoints);
+                    }
+                }
+            }
+        });
+    }
     public void readTeamStats(String teamID, DataCallback<TeamStats> callback) {
         rootRef.child(Constants.TEAMS_TABLE_NAME).child(teamID).get()
                 .addOnCompleteListener(task -> {
