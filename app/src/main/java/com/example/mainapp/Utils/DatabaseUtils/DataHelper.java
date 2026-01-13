@@ -188,6 +188,9 @@ public class DataHelper {
                 });
     }
 
+    public void getAvgOfTeam(int teamNumber, int amount, DataCallback<Double> callback){
+        getAvgOfTeam(Integer.toString(teamNumber), amount, callback);
+    }
     public void getAvgOfTeam(String teamID, int amount, DataCallback<Double> callback){
         rootRef.child(Constants.TEAMS_TABLE_NAME).child(teamID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -197,11 +200,11 @@ public class DataHelper {
                     if (snapshot.exists()) {
                         TeamStats t = snapshot.getValue(TeamStats.class);
                         List<TeamAtGame> games = t.getAllGames();
-                        double avgPoints = 0;
+                        double avgPoints = 0.0;
                         int amountInFunc = MathUtils.clamp(amount, 1, 3);
                         if(amountInFunc > games.size()) amountInFunc = games.size();
 
-                        for(int i =0;i<MathUtils.clamp(amount, 1, 3); i++){
+                        for(int i =0;i<amountInFunc; i++){
                             avgPoints += (games.get(games.size() - 1 - i).calculatePoints()) * (1.0 / amount);
                         }
 
