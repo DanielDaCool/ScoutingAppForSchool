@@ -47,7 +47,7 @@ public class SplashScreen extends AppCompatActivity {
         // Set listener for event selection
         eventDropdown.setOnEventSelectedListener(event -> {
             Constants.CURRENT_EVENT_ON_APP = event;
-            Log.d("EVENT: ", event.toString());
+
             Handler handler = new Handler(Looper.getMainLooper());
 
             handler.postDelayed(() -> {
@@ -75,7 +75,6 @@ public class SplashScreen extends AppCompatActivity {
                             if(!exists){
                                 DataHelper.getInstance().createTeamStats(new TeamStats(t), null);
                                 temp.add(new TeamStats(t));
-                                Log.d("SplashScreen", "Added new team: " + t.getTeamNumber());
 
                             }
                         }

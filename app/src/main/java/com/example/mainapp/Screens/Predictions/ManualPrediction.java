@@ -1,6 +1,8 @@
 package com.example.mainapp.Screens.Predictions;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -13,7 +15,7 @@ import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.CountDownLatch;
 
 public class ManualPrediction extends AppCompatActivity {
 
@@ -24,7 +26,7 @@ public class ManualPrediction extends AppCompatActivity {
     private EditText edtBlueTeam1, edtBlueTeam2, edtBlueTeam3;
 
     private Button btnCalculate;
-    private TextView txtResult;
+    private TextView predictionTxt;
 
     private ArrayList<TeamStats> redAllianceStats;
     private ArrayList<TeamStats> blueAllianceStats;
@@ -48,7 +50,7 @@ public class ManualPrediction extends AppCompatActivity {
         edtBlueTeam3 = findViewById(R.id.edtBlueTeam3);
 
         btnCalculate = findViewById(R.id.btnCalculate);
-        txtResult = findViewById(R.id.txtResult);
+        predictionTxt = findViewById(R.id.txtResult);
 
         redAllianceStats = new ArrayList<>();
         blueAllianceStats = new ArrayList<>();
@@ -56,7 +58,9 @@ public class ManualPrediction extends AppCompatActivity {
 
     private void setupListeners() {
         btnCalculate.setOnClickListener(v -> {
+
             if (validateInputs()) {
+
                 loadTeamStatsAndCalculate();
             }
         });
@@ -92,7 +96,71 @@ public class ManualPrediction extends AppCompatActivity {
         return true;
     }
 
+    private void getAllTeamAverages(String[] redTeams, String[] blueTeams, GamePrediction.AllianceAvgCallback callback) {
+
+        CountDownLatch latch = new CountDownLatch(6);
+        final double[] teamAverages = new double[6];
+
+        // Get red alliance averages (indices 0, 1, 2)
+        for (int i = 0; i < 3; i++) {
+            final int indexRed = i;
+            final int indexBlue = i + 3;
+
+             DataHelper.getInstance().getAvgOfTeam(redTeams[i], 1, new DataHelper.DataCallback<Double>() {
+                @Override
+                public void onSuccess(Double data) {
+                    teamAverages[indexRed] = data;
+                    latch.countDown();
+                }
+
+                @Override
+                public void onFailure(String error) {
+                    Log.e("ManualPrediction", "Red team " + indexRed + " failed: " + error);
+                    teamAverages[indexRed] = 0;
+                    latch.countDown();
+                }
+            });
+
+           DataHelper.getInstance().getAvgOfTeam(blueTeams[i], 1, new DataHelper.DataCallback<Double>() {
+                @Override
+                public void onSuccess(Double data) {
+                    teamAverages[indexBlue] = data;
+                    latch.countDown();
+                }
+
+                @Override
+                public void onFailure(String error) {
+                    Log.e("ManualPrediction", "Blue team " + indexBlue + " failed: " + error);
+                    teamAverages[indexBlue] = 0;
+                    latch.countDown();
+                }
+            });
+        }
+
+        // Wait in background thread
+        new Thread(() -> {
+            try {
+                latch.await();
+
+                // Calculate sums
+                double redSum = (teamAverages[0] + teamAverages[1] + teamAverages[2]) / 3.0;
+                double blueSum = (teamAverages[3] + teamAverages[4] + teamAverages[5]) / 3.0;
+
+
+                // Return results via callback
+                callback.onSuccess(redSum, blueSum);
+
+            } catch (InterruptedException e) {
+               callback.onError(e);
+            }
+        }).start();
+    }
+
     private void loadTeamStatsAndCalculate() {
+
+        // Show loading
+        predictionTxt.setText("מחשב חיזוי...");
+        predictionTxt.setTextColor(Color.BLACK);
         redAllianceStats.clear();
         blueAllianceStats.clear();
 
@@ -108,96 +176,35 @@ public class ManualPrediction extends AppCompatActivity {
                 edtBlueTeam3.getText().toString().trim()
         };
 
-        final AtomicInteger loadedCount = new AtomicInteger(0);
-        final int totalTeams = 6;
+        getAllTeamAverages(redTeamNumbers, blueTeamNumbers, new GamePrediction.AllianceAvgCallback() {
+            @Override
+            public void onSuccess(double redAvg, double blueAvg) {
+                runOnUiThread(() -> {
 
-        // Load Red Alliance stats
-        for (String teamNumber : redTeamNumbers) {
-            DataHelper.getInstance().readTeamStats(teamNumber, new DataHelper.DataCallback<TeamStats>() {
-                @Override
-                public void onSuccess(TeamStats data) {
-                    synchronized (redAllianceStats) {
-                        redAllianceStats.add(data);
+                    String prediction;
+
+                    if (redAvg > blueAvg) {
+                        prediction = "חיזוי: הברית האדומה תנצח!\n";
+                        predictionTxt.setTextColor(Color.rgb(255, 0, 0));
+                    } else if (blueAvg > redAvg) {
+                        prediction = "חיזוי: הברית הכחולה תנצח!\n";
+                        predictionTxt.setTextColor(Color.rgb(0, 0, 255));
+                    } else {
+                        prediction = "חיזוי: תיקו!\n";
+                        predictionTxt.setTextColor(Color.BLACK);
                     }
-                    checkIfAllLoaded(loadedCount, totalTeams);
-                }
+                    prediction += String.format("אדום: %.2f | כחול: %.2f", redAvg, blueAvg);
 
-                @Override
-                public void onFailure(String error) {
-                    runOnUiThread(() ->
-                            Toast.makeText(ManualPrediction.this,
-                                    "לא נמצאה קבוצה אדומה: " + teamNumber,
-                                    Toast.LENGTH_SHORT).show()
-                    );
-                    checkIfAllLoaded(loadedCount, totalTeams);
-                }
-            });
-        }
-
-        // Load Blue Alliance stats
-        for (String teamNumber : blueTeamNumbers) {
-            DataHelper.getInstance().readTeamStats(teamNumber, new DataHelper.DataCallback<TeamStats>() {
-                @Override
-                public void onSuccess(TeamStats data) {
-                    synchronized (blueAllianceStats) {
-                        blueAllianceStats.add(data);
-                    }
-                    checkIfAllLoaded(loadedCount, totalTeams);
-                }
-
-                @Override
-                public void onFailure(String error) {
-                    runOnUiThread(() ->
-                            Toast.makeText(ManualPrediction.this,
-                                    "לא נמצאה קבוצה כחולה: " + teamNumber,
-                                    Toast.LENGTH_SHORT).show()
-                    );
-                    checkIfAllLoaded(loadedCount, totalTeams);
-                }
-            });
-        }
-    }
-
-    private void checkIfAllLoaded(AtomicInteger loadedCount, int totalTeams) {
-        if (loadedCount.incrementAndGet() == totalTeams) {
-            runOnUiThread(this::calculatePrediction);
-        }
-    }
-
-    private void calculatePrediction() {
-        if (redAllianceStats.size() != 3 || blueAllianceStats.size() != 3) {
-            Toast.makeText(this, "לא כל הקבוצות נמצאו במערכת", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        // TODO: Implement your prediction algorithm here
-        // This is a simple placeholder calculation
-        double redScore = calculateAllianceScore(redAllianceStats);
-        double blueScore = calculateAllianceScore(blueAllianceStats);
-
-        String winner = redScore > blueScore ? "הברית האדומה" : "הברית הכחולה";
-        String result = String.format(
-                "חיזוי:\n%s צפויה לנצח!\n\nניקוד צפוי:\nאדום: %.1f\nכחול: %.1f",
-                winner, redScore, blueScore
-        );
-
-        txtResult.setText(result);
-        txtResult.setVisibility(TextView.VISIBLE);
-    }
-
-    private double calculateAllianceScore(ArrayList<TeamStats> allianceStats) {
-        // TODO: Implement your actual scoring algorithm
-        // This is a placeholder that averages some stats
-        double totalScore = 0;
-
-        for (TeamStats stats : allianceStats) {
-            // Example: average points per game
-            if (stats.getGamesPlayed() > 0) {
-                // You'll need to implement proper scoring based on your TeamStats structure
-                totalScore += 50; // Placeholder value
+                    predictionTxt.setText(prediction);
+                });
             }
-        }
 
-        return totalScore;
+            @Override
+            public void onError(Exception e) {
+                Log.d("ManualPrediction", "error: " + e.toString());
+            }
+        });
     }
+
+
 }

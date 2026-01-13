@@ -175,7 +175,7 @@ public class DataHelper {
                                 }
                             }
                         } else {
-                             if (callback != null) {
+                            if (callback != null) {
                                 callback.onFailure("User not found");
                             }
                         }
@@ -188,32 +188,51 @@ public class DataHelper {
                 });
     }
 
-    public void getAvgOfTeam(int teamNumber, int amount, DataCallback<Double> callback){
+    public void getAvgOfTeam(int teamNumber, int amount, DataCallback<Double> callback) {
         getAvgOfTeam(Integer.toString(teamNumber), amount, callback);
     }
-    public void getAvgOfTeam(String teamID, int amount, DataCallback<Double> callback){
+
+    public void getAvgOfTeam(String teamID, int amount, DataCallback<Double> callback) {
         rootRef.child(Constants.TEAMS_TABLE_NAME).child(teamID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (task.isSuccessful()) {
                     DataSnapshot snapshot = task.getResult();
+
                     if (snapshot.exists()) {
                         TeamStats t = snapshot.getValue(TeamStats.class);
+
+
+                        if (t == null || t.getAllGames() == null || t.getAllGames().isEmpty()) {
+
+                            callback.onSuccess(0.0);
+                            return;
+                        }
+
                         List<TeamAtGame> games = t.getAllGames();
                         double avgPoints = 0.0;
                         int amountInFunc = MathUtils.clamp(amount, 1, 3);
-                        if(amountInFunc > games.size()) amountInFunc = games.size();
+                        if (amountInFunc > games.size()) amountInFunc = games.size();
 
-                        for(int i =0;i<amountInFunc; i++){
+                        for (int i = 0; i < amountInFunc; i++) {
                             avgPoints += (games.get(games.size() - 1 - i).calculatePoints()) * (1.0 / amount);
                         }
 
                         callback.onSuccess(avgPoints);
+                    } else {
+
+                        callback.onSuccess(0.0);
                     }
+                } else {
+                    // TASK FAILED
+                    Log.e("DataHelper", "Failed to fetch team " + teamID + ": " + task.getException());
+                    callback.onFailure(task.getException() != null ?
+                            task.getException().getMessage() : "Unknown error");
                 }
             }
         });
     }
+
     public void readTeamStats(String teamID, DataCallback<TeamStats> callback) {
         rootRef.child(Constants.TEAMS_TABLE_NAME).child(teamID).get()
                 .addOnCompleteListener(task -> {

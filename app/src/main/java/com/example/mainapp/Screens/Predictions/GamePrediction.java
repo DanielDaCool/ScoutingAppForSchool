@@ -213,7 +213,6 @@ public class GamePrediction extends AppCompatActivity {
 
                     runOnUiThread(() -> {
                         currentGameID = position - 1;
-                        Log.d("GamePrediction", Integer.toString(position));
                         Game wantedGame = allGames.get(position - 1);
                         blueAllianceTeams = wantedGame.getBlueAlliance();
                         redAllianceTeams = wantedGame.getRedAlliance();

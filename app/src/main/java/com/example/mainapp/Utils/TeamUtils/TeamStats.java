@@ -2,11 +2,12 @@ package com.example.mainapp.Utils.TeamUtils;
 
 import com.example.mainapp.Utils.DatabaseUtils.CLIMB;
 import com.example.mainapp.Utils.GamePiece;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
+@IgnoreExtraProperties
 public class TeamStats implements Serializable {
 
     private ArrayList<TeamAtGame> allGames;

@@ -68,10 +68,11 @@ public class TeamAtGame implements Serializable {
     public void setGamePieceCount(Map<String, Integer> gamePieceCount) {
         this.gamePieceCount = gamePieceCount;
     }
-    public void addClimb(CLIMB c){
+    public void setClimb(CLIMB c){
         this.c = c;
     }
     public CLIMB getClimb(){return this.c;}
+
 
     public void addGamePieceScored(GamePiece gamePiece, Boolean isScoredInAuto) {
         if (this.gamePiecesScored == null) {

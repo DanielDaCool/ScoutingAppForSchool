@@ -43,7 +43,6 @@ public class FormsActivity extends AppCompatActivity {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "=== Send button clicked ===");
 
                 // Validate inputs
                 if (teamNumber.getText().toString().trim().isEmpty()) {
@@ -63,12 +62,10 @@ public class FormsActivity extends AppCompatActivity {
                     int teamNum = getInputFromEditText(teamNumber);
                     int gameNum = getInputFromEditText(gameNumber);
 
-                    Log.d(TAG, "Team Number: " + teamNum + ", Game Number: " + gameNum);
                     progressBar.setVisibility(VISIBLE);
                     TBAApiManager.getInstance().getTeam(teamNum, new TBAApiManager.SingleTeamCallback() {
                         @Override
                         public void onSuccess(Team t) {
-                            Log.d(TAG, "TBA API Success: Got team " + t.getTeamNumber());
 
                             runOnUiThread(() -> {
                                 DataHelper.getInstance().readTeamStats(
@@ -76,7 +73,6 @@ public class FormsActivity extends AppCompatActivity {
                                         new DataHelper.DataCallback<TeamStats>() {
                                             @Override
                                             public void onSuccess(TeamStats data) {
-                                                Log.d(TAG, "Read existing TeamStats for team " + t.getTeamNumber());
 
                                                 try {
                                                     // Create new team at game
@@ -85,14 +81,10 @@ public class FormsActivity extends AppCompatActivity {
 
                                                     // Add game to stats
                                                     if (data == null) {
-                                                        Log.d(TAG, "Creating new TeamStats");
                                                         data = new TeamStats(t);
                                                     }
                                                     data.addGame(teamAtGame);
 
-                                                    Log.d(TAG, "TeamStats now has " + data.getGamesPlayed() + " games");
-                                                    Log.d(TAG, "About to save to Firebase table: " + Constants.TEAMS_TABLE_NAME);
-                                                    Log.d(TAG, "Team ID: " + t.getTeamNumber());
 
                                                     // Save to database
                                                     DataHelper.getInstance().replace(
@@ -102,7 +94,6 @@ public class FormsActivity extends AppCompatActivity {
                                                             new DataHelper.DatabaseCallback() {
                                                                 @Override
                                                                 public void onSuccess(String id) {
-                                                                    Log.d(TAG, "!!! FIREBASE SAVE SUCCESS !!! Team ID: " + id);
 
                                                                     runOnUiThread(() -> {
                                                                         Toast.makeText(context, "Data saved successfully!", Toast.LENGTH_SHORT).show();
@@ -132,8 +123,7 @@ public class FormsActivity extends AppCompatActivity {
 
                                             @Override
                                             public void onFailure(String error) {
-                                                Log.d(TAG, "No existing TeamStats found (this is OK for first game): " + error);
-                                                Toast.makeText(context, "Wrong team number", Toast.LENGTH_SHORT);
+                                                 Toast.makeText(context, "Wrong team number", Toast.LENGTH_SHORT);
                                             }
                                         }
                                 );
@@ -160,7 +150,6 @@ public class FormsActivity extends AppCompatActivity {
     }
 
     private void updateGamePieceScored(TeamAtGame teamAtGame) {
-        Log.d(TAG, "Updating game pieces scored");
 
         // Auto period
         for (int i = 0; i < getInputFromEditText(autoL1); i++) {
@@ -195,8 +184,7 @@ public class FormsActivity extends AppCompatActivity {
         for (int i = 0; i < getInputFromEditText(teleProc); i++) {
             teamAtGame.addGamePieceScored(GamePiece.PROCESSOR, false);
         }
-        Log.d(TAG, "ADDED CLIMB: " + checkClimb());
-        teamAtGame.addClimb(checkClimb());
+        teamAtGame.setClimb(checkClimb());
     }
 
     private CLIMB checkClimb(){
@@ -257,6 +245,6 @@ public class FormsActivity extends AppCompatActivity {
         this.group = findViewById(R.id.ClimbGroup);
         this.progressBar = findViewById(R.id.progressBar);
 
-        Log.d(TAG, "Forms activity initialized");
+
     }
 }
