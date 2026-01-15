@@ -46,15 +46,15 @@ public class FormsActivity extends AppCompatActivity {
 
                 // Validate inputs
                 if (teamNumber.getText().toString().trim().isEmpty()) {
-                    Toast.makeText(context, "ENTER TEAM NUMBER", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "הכנס מספר קבוצה", Toast.LENGTH_LONG).show();
                     return;
                 }
-                if(getInputFromEditText(teamNumber) < 0 || getInputFromEditText(teamNumber) > 12000){
-                    Toast.makeText(context, "ENTER CORRECT TEAM NUMBEr", Toast.LENGTH_SHORT).show();
+                if (getInputFromEditText(teamNumber) < 0 || getInputFromEditText(teamNumber) > 12000) {
+                    Toast.makeText(context, "הכנס מספר קבוצה תקין", Toast.LENGTH_SHORT).show();
                 }
 
                 if (gameNumber.getText().toString().trim().isEmpty()) {
-                    Toast.makeText(context, "ENTER GAME NUMBER", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "הכנס מספר משחק", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -96,7 +96,6 @@ public class FormsActivity extends AppCompatActivity {
                                                                 public void onSuccess(String id) {
 
                                                                     runOnUiThread(() -> {
-                                                                        Toast.makeText(context, "Data saved successfully!", Toast.LENGTH_SHORT).show();
                                                                         progressBar.setVisibility(GONE);
                                                                         clearForm();
 
@@ -105,25 +104,19 @@ public class FormsActivity extends AppCompatActivity {
 
                                                                 @Override
                                                                 public void onFailure(String error) {
-                                                                    Log.e(TAG, "!!! FIREBASE SAVE FAILED !!! Error: " + error);
 
                                                                     runOnUiThread(() -> {
-                                                                        Toast.makeText(context, "Failed to save: " + error, Toast.LENGTH_LONG).show();
+                                                                        Toast.makeText(context, "שגיאה בשמירת הנתונים", Toast.LENGTH_LONG).show();
                                                                     });
                                                                 }
                                                             }
                                                     );
-                                                } catch (Exception e) {
-                                                    Log.e(TAG, "Error processing data", e);
-                                                    runOnUiThread(() -> {
-                                                        Toast.makeText(context, "Error processing data: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                                                    });
-                                                }
+                                                } catch (Exception e) {}
                                             }
 
                                             @Override
                                             public void onFailure(String error) {
-                                                 Toast.makeText(context, "Wrong team number", Toast.LENGTH_SHORT);
+                                                Toast.makeText(context, "מספר הקבוצה לא תקין", Toast.LENGTH_SHORT);
                                             }
                                         }
                                 );
@@ -132,18 +125,11 @@ public class FormsActivity extends AppCompatActivity {
 
                         @Override
                         public void onError(Exception e) {
-                            Log.e(TAG, "TBA API Error", e);
-                            runOnUiThread(() -> {
-                                Toast.makeText(context, "Failed to fetch team: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                            });
+
                         }
                     });
-                } catch (NumberFormatException e) {
-                    Log.e(TAG, "Number format error", e);
-                    Toast.makeText(context, "Invalid number format", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
-                    Log.e(TAG, "General error", e);
-                    Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+
                 }
             }
         });
@@ -187,16 +173,16 @@ public class FormsActivity extends AppCompatActivity {
         teamAtGame.setClimb(checkClimb());
     }
 
-    private CLIMB checkClimb(){
+    private CLIMB checkClimb() {
 
 
         int climb = group.getCheckedRadioButtonId();
-        if(climb == -1) return CLIMB.DIDNT_TRY;
+        if (climb == -1) return CLIMB.DIDNT_TRY;
 
 
-        if(climb == R.id.ClimbHigh) return CLIMB.HIGH;
-        if(climb == R.id.ClimbLow) return  CLIMB.LOW;
-        if(climb == R.id.ClimbFailed) return CLIMB.FAILED;
+        if (climb == R.id.ClimbHigh) return CLIMB.HIGH;
+        if (climb == R.id.ClimbLow) return CLIMB.LOW;
+        if (climb == R.id.ClimbFailed) return CLIMB.FAILED;
         return CLIMB.DIDNT_TRY;
     }
 
