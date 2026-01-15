@@ -224,10 +224,8 @@ public class DataHelper {
                         callback.onSuccess(0.0);
                     }
                 } else {
-                    // TASK FAILED
-                    Log.e("DataHelper", "Failed to fetch team " + teamID + ": " + task.getException());
                     callback.onFailure(task.getException() != null ?
-                            task.getException().getMessage() : "Unknown error");
+                            task.getException().getMessage() : "שגיאה לא ידועה");
                 }
             }
         });
@@ -246,7 +244,7 @@ public class DataHelper {
                         } else {
                             if (callback != null) {
 
-                                callback.onFailure("User not found, create new TeamStats");
+                                callback.onFailure("קבוצה לא קיימת, איתחול מידע");
                             }
                         }
                     } else {

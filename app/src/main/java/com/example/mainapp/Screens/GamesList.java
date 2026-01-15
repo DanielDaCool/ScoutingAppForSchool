@@ -17,6 +17,7 @@ import com.example.mainapp.R;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.Game;
+import com.example.mainapp.Utils.InternetUtils;
 import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 
 import java.util.ArrayList;
@@ -34,7 +35,6 @@ public class GamesList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_games_list);
-
         init();
 
         // FIXED: Setup RecyclerView BEFORE loading data

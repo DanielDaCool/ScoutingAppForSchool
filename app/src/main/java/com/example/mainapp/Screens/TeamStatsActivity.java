@@ -79,7 +79,6 @@ public class TeamStatsActivity extends AppCompatActivity {
                         return true;
                     }
 
-
                     try {
                         int teamNumber = Integer.parseInt(input);
                         if (teamNumber < 0 || teamNumber > 10000) {

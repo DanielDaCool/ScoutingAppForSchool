@@ -1,10 +1,12 @@
 package com.example.mainapp.Screens;
+
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import com.example.mainapp.R;
 import com.example.mainapp.Screens.Predictions.GamePrediction;
 import com.example.mainapp.Screens.Predictions.PredictionScreen;
+import com.example.mainapp.Utils.InternetUtils;
 import com.example.mainapp.Utils.SharedPrefHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         init();
-        setOnClickListener(gamesListButton,GamesList.class);
+        setOnClickListener(gamesListButton, GamesList.class);
         setOnClickListener(formsButton, FormsActivity.class);
         setOnClickListener(signupButton, SignupScreen.class);
         setOnClickListener(loginButton, LoginScreen.class);
@@ -72,19 +74,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    private void setOnClickListener(Button btn, Class classToGo){
+    private void setOnClickListener(Button btn, Class classToGo) {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(context, classToGo));
+                if(InternetUtils.isInternetConnectedWithAlert(context) || btn.getId() == logoutButton.getId()) startActivity(new Intent(context, classToGo));
             }
         });
     }
 
 
-
-    private void activateLogout(){
+    private void activateLogout() {
         formsButton.setVisibility(GONE);
         statsButton.setVisibility(GONE);
         gamesListButton.setVisibility(GONE);
@@ -92,8 +92,9 @@ public class MainActivity extends AppCompatActivity {
         predictButton.setVisibility(GONE);
         loginButton.setVisibility(VISIBLE);
         signupButton.setVisibility(VISIBLE);
-        welcomeText.setText("שלום, משתמש" );
+        welcomeText.setText("שלום, משתמש");
     }
+
     private void init() {
 
         context = MainActivity.this;
@@ -107,16 +108,14 @@ public class MainActivity extends AppCompatActivity {
         predictButton = findViewById(R.id.predictButton);
 
 
-
-        if(!SharedPrefHelper.getInstance(context).isUserLoggedIn()){
+        if (!SharedPrefHelper.getInstance(context).isUserLoggedIn()) {
             formsButton.setVisibility(GONE);
             statsButton.setVisibility(GONE);
             gamesListButton.setVisibility(GONE);
             logoutButton.setVisibility(GONE);
             predictButton.setVisibility(GONE);
 
-        }
-        else{
+        } else {
             loginButton.setVisibility(GONE);
             signupButton.setVisibility(GONE);
             formsButton.setVisibility(VISIBLE);

@@ -1,7 +1,11 @@
 package com.example.mainapp.Screens;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,6 +20,7 @@ import com.example.mainapp.R;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
+import com.example.mainapp.Utils.InternetReciver;
 import com.example.mainapp.Utils.SharedPrefHelper;
 import com.example.mainapp.Utils.TeamUtils.Team;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
@@ -28,12 +33,15 @@ public class SplashScreen extends AppCompatActivity {
 
     private EventDropdown eventDropdown;
     private TextView selectedEventText;
+    private InternetReciver internetReciver;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
+        internetReciver = new InternetReciver();
 
         FirebaseApp.initializeApp(this);
         FirebaseDatabase.getInstance("https://scoutingapp-7bb4e-default-rtdb.europe-west1.firebasedatabase.app")
@@ -55,11 +63,17 @@ public class SplashScreen extends AppCompatActivity {
 
             }, 1000);
         });
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
 
+        // REGISTER the BroadcastReceiver - now it will monitor WiFi changes
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(internetReciver, intentFilter);
 
     }
-
-
 
 
     private void initTeams() {
@@ -68,11 +82,11 @@ public class SplashScreen extends AppCompatActivity {
         TBAApiManager.getInstance().getIsraeliTeams(new TBAApiManager.TeamListCallback() {
             @Override
             public void onSuccess(ArrayList<Team> teams) {
-                for(Team t : teams){
+                for (Team t : teams) {
                     DataHelper.getInstance().isTeamDataExists(t, new DataHelper.ExistsCallback() {
                         @Override
                         public void onResult(boolean exists) {
-                            if(!exists){
+                            if (!exists) {
                                 DataHelper.getInstance().createTeamStats(new TeamStats(t), null);
                                 temp.add(new TeamStats(t));
 
@@ -80,17 +94,18 @@ public class SplashScreen extends AppCompatActivity {
                         }
                     });
                 }
-                for(TeamStats teamStats : temp){
+                for (TeamStats teamStats : temp) {
                     DataHelper.getInstance().createTeamStats(teamStats, null);
                 }
             }
         });
 
     }
-    private void goToMain(){
+
+    private void goToMain() {
         boolean isUserLogged = SharedPrefHelper.getInstance(SplashScreen.this).isUserLoggedIn();
         Intent i;
-        if(isUserLogged) i = new Intent(SplashScreen.this, MainActivity.class);
+        if (isUserLogged) i = new Intent(SplashScreen.this, MainActivity.class);
         else i = new Intent(SplashScreen.this, LoginScreen.class);
         startActivity(i);
 

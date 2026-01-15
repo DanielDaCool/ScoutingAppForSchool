@@ -2,6 +2,7 @@ package com.example.mainapp.Screens;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static android.widget.Toast.LENGTH_SHORT;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -50,7 +51,7 @@ public class FormsActivity extends AppCompatActivity {
                     return;
                 }
                 if (getInputFromEditText(teamNumber) < 0 || getInputFromEditText(teamNumber) > 12000) {
-                    Toast.makeText(context, "הכנס מספר קבוצה תקין", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "הכנס מספר קבוצה תקין", LENGTH_SHORT).show();
                 }
 
                 if (gameNumber.getText().toString().trim().isEmpty()) {
@@ -98,6 +99,7 @@ public class FormsActivity extends AppCompatActivity {
                                                                     runOnUiThread(() -> {
                                                                         progressBar.setVisibility(GONE);
                                                                         clearForm();
+                                                                        Toast.makeText(FormsActivity.this, "המידע נשמר בהצלחה", LENGTH_SHORT);
 
                                                                     });
                                                                 }
@@ -116,7 +118,7 @@ public class FormsActivity extends AppCompatActivity {
 
                                             @Override
                                             public void onFailure(String error) {
-                                                Toast.makeText(context, "מספר הקבוצה לא תקין", Toast.LENGTH_SHORT);
+                                                Toast.makeText(context, "מספר הקבוצה לא תקין", LENGTH_SHORT);
                                             }
                                         }
                                 );
