@@ -19,6 +19,7 @@ import com.example.mainapp.Adapters.TeamStatsAdapter;
 import com.example.mainapp.R;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
+import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.TeamUtils.Team;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
@@ -35,9 +36,8 @@ public class TeamStatsActivity extends AppCompatActivity {
     private static RecyclerView recyclerView;
     private static TeamStatsAdapter adapter;
     private EditText editText;
+    ArrayList<TeamStats> cachedStats;
 
-    private static ArrayList<TeamStats> allTeamsStats;
-    private ArrayList<Team> teamsAtComp;
     private ValueEventListener teamStatsListener;
 
     @Override
@@ -50,20 +50,26 @@ public class TeamStatsActivity extends AppCompatActivity {
 
         init();
 
-        // ADD THESE LINES - Create adapter before loading data
-        adapter = new TeamStatsAdapter(allTeamsStats);
+        cachedStats = AppCache.getInstance().getAllTeamStats();
+        if(cachedStats != null){
+
+            adapter = new TeamStatsAdapter(cachedStats);
+
+        }
         recyclerView.setAdapter(adapter);
 
         addFilterSearchTeam();
+        DataHelper.getInstance().getUpdatedTeamsStats(new DataHelper.DataCallback<ArrayList<TeamStats>>() {
+            @Override
+            public void onSuccess(ArrayList<TeamStats> fresh) {
+                AppCache.getInstance().setAllTeamStats(fresh); // keep cache in sync
+                runOnUiThread(() -> updateUI(fresh));
+            }
+            @Override
+            public void onFailure(String error) {}
+        });
 
-        // Now load data (remove try-catch, method doesn't throw exceptions)
-        try {
-            uploadDataFromDBToAdapter();
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
     private void addFilterSearchTeam() {
@@ -74,8 +80,7 @@ public class TeamStatsActivity extends AppCompatActivity {
                     String input = editText.getText().toString().trim();
 
                     if (input.isEmpty()) {
-                        adapter.updateData(allTeamsStats);
-                        adapter.notifyDataSetChanged();
+                        updateUI(cachedStats);
                         return true;
                     }
 
@@ -105,88 +110,28 @@ public class TeamStatsActivity extends AppCompatActivity {
             public void onSuccess(TeamStats data) {
                 ArrayList<TeamStats> t = new ArrayList<>();
                 t.add(data);
-                adapter.updateData(t);
-                adapter.notifyDataSetChanged();
+                updateUI(t);
             }
 
             @Override
             public void onFailure(String error) {
                 Toast.makeText(context, "no team number", LENGTH_SHORT);
-                adapter.updateData(allTeamsStats);
-                adapter.notifyDataSetChanged();
+                updateUI(cachedStats);
             }
         });
 
     }
 
+    private void updateUI(ArrayList<TeamStats> newStats){
+        adapter.updateData(newStats);
+        adapter.notifyDataSetChanged();
 
-    private void uploadDataFromDBToAdapter() throws JSONException, IOException {
-        allTeamsStats.clear();
 
-        TBAApiManager.getInstance().getEventTeams(Constants.CURRENT_EVENT_ON_APP,
-                new TBAApiManager.TeamCallback() {
-                    @Override
-                    public void onSuccess(ArrayList<Team> teams) {
-                        if (teams.isEmpty()) {
-                            runOnUiThread(() -> {
-                                Toast.makeText(context, "No teams found", LENGTH_SHORT).show();
-                            });
-                            return;
-                        }
-
-                        final int totalTeams = teams.size();
-                        final AtomicInteger loadedCount = new AtomicInteger(0);
-
-                        for (Team t : teams) {
-                            DataHelper.getInstance().getUpdatedTeamStats(t,
-                                    new DataHelper.DataCallback<TeamStats>() {
-                                        @Override
-                                        public void onSuccess(TeamStats data) {
-                                            synchronized (allTeamsStats) {
-                                                allTeamsStats.add(data);
-                                            }
-
-                                            // Check if all teams are loaded
-                                            if (loadedCount.incrementAndGet() == totalTeams) {
-                                                runOnUiThread(() -> {
-                                                    adapter.updateData(allTeamsStats);
-                                                    adapter.notifyDataSetChanged();
-                                                });
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onFailure(String error) {
-                                            Log.e("TeamStatsActivity", "Failed to load team: " + error);
-
-                                            // Still increment counter even on failure
-                                            if (loadedCount.incrementAndGet() == totalTeams) {
-                                                runOnUiThread(() -> {
-                                                    adapter.updateData(allTeamsStats);
-                                                    adapter.notifyDataSetChanged();
-                                                });
-                                            }
-                                        }
-                                    });
-                        }
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        runOnUiThread(() -> {
-                            Toast.makeText(context, "Failed to load teams: " + e.getMessage(),
-                                    LENGTH_SHORT).show();
-                        });
-                    }
-                });
     }
-
 
     private void init() {
         // Get all team games (the flat list of every game played by every team)
         context = TeamStatsActivity.this;
-        allTeamsStats = new ArrayList<>();
-        teamsAtComp = new ArrayList<>();
         this.editText = findViewById(R.id.editTextTeamFilter);
     }
 

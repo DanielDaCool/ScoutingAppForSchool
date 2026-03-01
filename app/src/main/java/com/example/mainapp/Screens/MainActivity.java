@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.mainapp.R;
 import com.example.mainapp.Screens.AuthenticationScreens.LoginScreen;
 import com.example.mainapp.Screens.Predictions.PredictionScreen;
+import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.DatabaseUtils.User;
 import com.example.mainapp.Utils.InternetUtils;
@@ -22,12 +23,15 @@ import com.example.mainapp.Utils.SharedPrefHelper;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView textViewWelcome, tvTeamCount, tvGamesCount;
+    private static TextView textViewWelcome, tvTeamCount, tvGamesCount;
     private TextView tvProfileName, tvProfileEmail;
     private ScrollView panelHome;
     private LinearLayout panelProfile;
@@ -62,34 +66,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void loadDashboardStats() {
-        // Load team count
-        DataHelper.getInstance().countTeams(count -> {
-            runOnUiThread(() -> tvTeamCount.setText(String.valueOf(count)));
-        });
+    public static void loadDashboardStats() {
+        // Read from cache — already loaded in LoadingScreen
+        AppCache cache = AppCache.getInstance();
 
-        // Load total games scouted across all teams
+        long teamCount = cache.getTeamCount();
+        int totalGames = cache.getTotalGames();
 
-        DataHelper.getInstance().readAllTeamStats(new DataHelper.DataCallback<ArrayList<TeamStats>>() {
-            @Override
-            public void onSuccess(ArrayList<TeamStats> data) {
-                AtomicInteger totalGames = new AtomicInteger(0);
-                if (data != null) {
-                    for (com.example.mainapp.Utils.TeamUtils.TeamStats t : data) {
-                        if (t.getAllGames() != null) {
-                            totalGames.addAndGet(t.getAllGames().size());
-                        }
-                    }
-                }
-                runOnUiThread(() -> tvGamesCount.setText(String.valueOf(totalGames.get())));
-
-            }
-
-            @Override
-            public void onFailure(String error) {
-                runOnUiThread(() -> tvGamesCount.setText("0"));
-            }
-        });
+        tvTeamCount.setText(teamCount > 0 ? String.valueOf(teamCount) : "—");
+        tvGamesCount.setText(totalGames > 0 ? String.valueOf(totalGames) : "—");
     }
 
     private void setupBottomNav() {
@@ -171,7 +156,8 @@ public class MainActivity extends AppCompatActivity {
         String email    = prefs.getEmail();
 
         textViewWelcome.setText("שלום, " + firstName);
-        tvProfileName.setText(firstName);
+        tvProfileName.setText(prefs.getFullName());
         tvProfileEmail.setText(email);
+
     }
 }

@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginBottom="18dp"
-            android:hint="ישראל ישראלי"
+            android:hint="שם מלא"
             android:textColor="#F0E6FF"
             android:textSize="15sp"
             android:inputType="text"

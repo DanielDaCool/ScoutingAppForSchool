@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mainapp.R;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
+import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.DatabaseUtils.CLIMB;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
@@ -99,8 +100,9 @@ public class FormsActivity extends AppCompatActivity {
                                                                     runOnUiThread(() -> {
                                                                         progressBar.setVisibility(GONE);
                                                                         clearForm();
-                                                                        Toast.makeText(FormsActivity.this, "המידע נשמר בהצלחה", LENGTH_SHORT);
-
+                                                                        Toast.makeText(FormsActivity.this, "המידע נשמר בהצלחה", LENGTH_SHORT).show();
+                                                                        AppCache.getInstance().setTotalGames(AppCache.getInstance().getTotalGames() + 1);
+                                                                        MainActivity.loadDashboardStats();
                                                                     });
                                                                 }
 

@@ -48,9 +48,10 @@
         <activity
             android:name=".Screens.AuthenticationScreens.SignupScreen"
             android:exported="false" />
+        <activity android:name=".Screens.LoadingScreen" />
         <activity
             android:name=".Screens.MainActivity"
-            android:exported="false"></activity>
+            android:exported="false"/>
     </application>
 
 </manifest>

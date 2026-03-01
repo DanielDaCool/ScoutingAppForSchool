@@ -16,7 +16,7 @@
             android:id="@+id/dropdownButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="תבחר תחרות"
+            android:text="בחר/י תחרות"
             android:textSize="16sp"
             android:textColor="@color/primary_text"
             android:padding="16dp"

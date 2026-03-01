@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#0A0A0F"
     tools:context=".Screens.FormsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layoutDirection="rtl"
-
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
         <!-- כותרת המסך -->
         <TextView
@@ -20,230 +20,285 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="20dp"
             android:text="טופס סקאוטינג"
-            android:textColor="#9D00FF"
+            android:textColor="#F0E6FF"
             android:textSize="24sp"
             android:textStyle="bold" />
 
+        <!-- מספר קבוצה ומספר משחק -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layoutDirection="rtl">
-            <!-- מספר קבוצה ומספר משחק -->
+            android:layoutDirection="rtl"
+            android:background="@drawable/card_bg_dark"
+            android:padding="12dp"
+            android:layout_marginBottom="20dp">
+
             <TextView
-                android:layout_marginHorizontal="6dp"
                 android:id="@+id/teamText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:text="קבוצה:"
-                android:textSize="18sp" />
-            <EditText
-
                 android:layout_marginHorizontal="6dp"
+                android:text="קבוצה:"
+                android:textColor="#C084FC"
+                android:textSize="18sp" />
+
+            <EditText
                 android:id="@+id/TeamNumberEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="מספר קבוצה"></EditText>
-            <TextView
-
                 android:layout_marginHorizontal="6dp"
+                android:hint="מספר קבוצה"
+                android:textColor="#F0E6FF"
+                android:textColorHint="#4A3F5C"
+                android:backgroundTint="#2A1F3D" />
+
+            <TextView
                 android:id="@+id/gameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:text="משחק:"
-                android:textSize="18sp" />
-            <EditText
-
                 android:layout_marginHorizontal="6dp"
+                android:text="משחק:"
+                android:textColor="#C084FC"
+                android:textSize="18sp" />
+
+            <EditText
                 android:id="@+id/GameNumberEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="מספר משחק"></EditText>
+                android:layout_marginHorizontal="6dp"
+                android:hint="מספר משחק"
+                android:textColor="#F0E6FF"
+                android:textColorHint="#4A3F5C"
+                android:backgroundTint="#2A1F3D" />
         </LinearLayout>
 
-        <!-- Middle text on the right -->
+        <!-- Autonomous Section -->
         <TextView
             android:id="@+id/AutonomousText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="10dp"
             android:text="Autonomous"
-            android:textSize="24dp" />
+            android:textColor="#C084FC"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="35dp"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/card_bg_dark"
+            android:gravity="center"
+            android:padding="12dp">
 
             <EditText
                 android:id="@+id/AutoL4Count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="L4"
-                android:padding="20dp"></EditText>
+                android:padding="16dp"
+                android:textColor="#F0E6FF"
+                android:textColorHint="#4A3F5C"
+                android:backgroundTint="#2A1F3D" />
 
             <EditText
                 android:id="@+id/AutoL3Count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="L3"
-                android:padding="20dp"></EditText>
+                android:padding="16dp"
+                android:textColor="#F0E6FF"
+                android:textColorHint="#4A3F5C"
+                android:backgroundTint="#2A1F3D" />
 
             <EditText
                 android:id="@+id/AutoL2Count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="L2"
-                android:padding="20dp"></EditText>
+                android:padding="16dp"
+                android:textColor="#F0E6FF"
+                android:textColorHint="#4A3F5C"
+                android:backgroundTint="#2A1F3D" />
 
             <EditText
                 android:id="@+id/AutoL1Count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="L1"
-                android:padding="20dp"></EditText>
-
-
+                android:padding="16dp"
+                android:textColor="#F0E6FF"
+                android:textColorHint="#4A3F5C"
+                android:backgroundTint="#2A1F3D" />
         </LinearLayout>
-        <!-- First Group of Items -->
 
-        <!-- Bottom text on the right -->
+        <!-- Teleop Section -->
         <TextView
             android:id="@+id/middleRightText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="10dp"
             android:text="Teleop"
-            android:textSize="24dp" />
+            android:textColor="#C084FC"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_bg_dark"
+            android:gravity="center"
+            android:padding="12dp"
+            android:layout_marginBottom="24dp">
 
             <EditText
                 android:id="@+id/TeleopL4Count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="L4"
-                android:padding="15dp"></EditText>
+                android:padding="12dp"
+                android:textColor="#F0E6FF"
+                android:textColorHint="#4A3F5C"
+                android:backgroundTint="#2A1F3D" />
 
             <EditText
                 android:id="@+id/TeleopL3Count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="L3"
-                android:padding="15dp"></EditText>
+                android:padding="12dp"
+                android:textColor="#F0E6FF"
+                android:textColorHint="#4A3F5C"
+                android:backgroundTint="#2A1F3D" />
 
             <EditText
                 android:id="@+id/TeleopL2Count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="L2"
-                android:padding="15dp"></EditText>
-
+                android:padding="12dp"
+                android:textColor="#F0E6FF"
+                android:textColorHint="#4A3F5C"
+                android:backgroundTint="#2A1F3D" />
 
             <EditText
                 android:id="@+id/TeleopL1Count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="L1"
-                android:padding="15dp"></EditText>
+                android:padding="12dp"
+                android:textColor="#F0E6FF"
+                android:textColorHint="#4A3F5C"
+                android:backgroundTint="#2A1F3D" />
 
             <EditText
                 android:id="@+id/TeleopNetCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="NET"
-                android:padding="15dp"></EditText>
+                android:padding="12dp"
+                android:textColor="#F0E6FF"
+                android:textColorHint="#4A3F5C"
+                android:backgroundTint="#2A1F3D" />
 
             <EditText
                 android:id="@+id/TeleopProCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="PROC"
-                android:padding="15dp"></EditText>
-
-
+                android:padding="12dp"
+                android:textColor="#F0E6FF"
+                android:textColorHint="#4A3F5C"
+                android:backgroundTint="#2A1F3D" />
         </LinearLayout>
 
+        <!-- End Game Section -->
         <TextView
             android:id="@+id/EndGameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="10dp"
             android:text="End Game"
-            android:textSize="24dp" />
+            android:textColor="#C084FC"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <RadioGroup
             android:id="@+id/ClimbGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/card_bg_dark"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <RadioButton
                 android:id="@+id/ClimbHigh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                android:text="HIGH" />
+                android:text="HIGH"
+                android:textColor="#F0E6FF"
+                android:buttonTint="#C084FC" />
 
             <RadioButton
                 android:id="@+id/ClimbLow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                android:text="LOW" />
+                android:text="LOW"
+                android:textColor="#F0E6FF"
+                android:buttonTint="#C084FC" />
 
             <RadioButton
                 android:id="@+id/ClimbFailed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                android:text="FAILED" />
+                android:text="FAILED"
+                android:textColor="#F0E6FF"
+                android:buttonTint="#C084FC" />
 
             <RadioButton
                 android:id="@+id/ClimbDidntTry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                android:text="DIDNT TRY" />
+                android:text="DIDNT TRY"
+                android:textColor="#F0E6FF"
+                android:buttonTint="#C084FC" />
         </RadioGroup>
-
 
         <Button
             android:id="@+id/buttonSave"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:backgroundTint="#9D00FF"
-            android:text="שמור ועדכן" />
-
+            android:layout_height="58dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/btn_primary"
+            android:stateListAnimator="@null"
+            android:text="שמור ועדכן"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/buttonSave"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:indeterminateTint="#C084FC"
+            android:visibility="gone" />
 
     </LinearLayout>
 </ScrollView>
-
