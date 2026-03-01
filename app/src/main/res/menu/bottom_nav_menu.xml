@@ -12,11 +12,6 @@
         android:title="משחקים" />
 
     <item
-        android:id="@+id/nav_forms"
-        android:icon="@android:drawable/ic_menu_edit"
-        android:title="טפסים" />
-
-    <item
         android:id="@+id/nav_stats"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         android:title="סטטיסטיקות" />

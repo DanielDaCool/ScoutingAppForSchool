@@ -48,5 +48,10 @@ public class SharedPrefHelper {
     public String getFullName() {
         return isUserLoggedIn() ? sharedPreferences.getString(KEY_FULL_NAME, "") : "משתמש";
     }
-
+    public String getEmail(){
+        return isUserLoggedIn() ? sharedPreferences.getString(KEY_EMAIL, "") : "";
+    }
+    public String getFirstName(){
+        return getFullName().split(" ", 2)[0];
+    }
 }

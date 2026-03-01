@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0A0A0F">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Red alliance card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_bg_dark"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🔴  ברית אדומה"
+                android:textSize="14sp"
+                android:textColor="#FF5050"
+                android:textStyle="bold"
+                android:layout_marginBottom="14dp" />
+
+            <EditText
+                android:id="@+id/edtRedTeam1"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:hint="קבוצה 1"
+                android:textColor="#F0E6FF"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:padding="12dp"
+                android:background="@drawable/input_bg_dark" />
+
+            <EditText
+                android:id="@+id/edtRedTeam2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:hint="קבוצה 2"
+                android:textColor="#F0E6FF"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:padding="12dp"
+                android:background="@drawable/input_bg_dark" />
+
+            <EditText
+                android:id="@+id/edtRedTeam3"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="קבוצה 3"
+                android:textColor="#F0E6FF"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:padding="12dp"
+                android:background="@drawable/input_bg_dark" />
+        </LinearLayout>
+
+        <!-- Blue alliance card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_bg_dark"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🔵  ברית כחולה"
+                android:textSize="14sp"
+                android:textColor="#508CFF"
+                android:textStyle="bold"
+                android:layout_marginBottom="14dp" />
+
+            <EditText
+                android:id="@+id/edtBlueTeam1"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:hint="קבוצה 1"
+                android:textColor="#F0E6FF"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:padding="12dp"
+                android:background="@drawable/input_bg_dark" />
+
+            <EditText
+                android:id="@+id/edtBlueTeam2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:hint="קבוצה 2"
+                android:textColor="#F0E6FF"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:padding="12dp"
+                android:background="@drawable/input_bg_dark" />
+
+            <EditText
+                android:id="@+id/edtBlueTeam3"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="קבוצה 3"
+                android:textColor="#F0E6FF"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:padding="12dp"
+                android:background="@drawable/input_bg_dark" />
+        </LinearLayout>
+
+        <!-- Calculate button -->
+        <Button
+            android:id="@+id/btnCalculate"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="16dp"
+            android:text="חשב חיזוי"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:background="@drawable/btn_primary"
+            android:stateListAnimator="@null" />
+
+        <!-- Result card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_bg_dark"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="תוצאת חיזוי"
+                android:textSize="12sp"
+                android:textColor="#4A3F5C"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:id="@+id/txtResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="הזן קבוצות וחשב חיזוי"
+                android:textSize="15sp"
+                android:textColor="#7C6F8E" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
