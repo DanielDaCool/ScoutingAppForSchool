@@ -15,6 +15,7 @@ public class AppCache {
     private ArrayList<Team> israeliTeams;
     private long teamCount;
     private int totalGames;
+    private Team[] teamsAtEvent;
     private  AppCache(){}
 
     public ArrayList<TeamStats> getAllTeamStats() { return allTeamStats; }
@@ -36,6 +37,12 @@ public class AppCache {
     public void setTotalGames(int totalGames) { this.totalGames = totalGames; }
 
 
+    public Team[] getTeamAtEvent(){
+        return this.teamsAtEvent;
+    }
+    public void setTeamsAtEvent(Team[] teamsAtEvent){
+        this.teamsAtEvent = teamsAtEvent;
+    }
 
 
     public static AppCache getInstance(){

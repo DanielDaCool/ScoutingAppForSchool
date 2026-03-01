@@ -8,6 +8,12 @@ import java.util.Map;
 
 public class TeamUtils {
 
+    public static boolean containsTeam(Team[] teams, int teamNumber){
+        for(Team t : teams){
+            if(t.getTeamNumber() == teamNumber) return  true;
+        }
+        return false;
+    }
     public static int getTotalScoredGamePieces(ArrayList<TeamAtGame> allGamesOfTeam) {
         if (allGamesOfTeam == null || allGamesOfTeam.isEmpty()) {
             return 0;

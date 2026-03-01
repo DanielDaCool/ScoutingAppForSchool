@@ -17,8 +17,12 @@ import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.SharedPrefHelper;
+import com.example.mainapp.Utils.TeamUtils.Team;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -44,11 +48,30 @@ public class LoadingScreen extends AppCompatActivity {
         progressBar.setMax(100);
         setProgress(0, "מאתחל...");
 
-        startLoading();
+        try {
+            startLoading();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void startLoading() {
+    private void startLoading() throws JSONException, IOException {
         // Step 1: Load all team stats
+
+        TBAApiManager.getInstance().getEventTeams(Constants.CURRENT_EVENT_ON_APP, new TBAApiManager.TeamCallback() {
+            @Override
+            public void onSuccess(ArrayList<Team> teams) {
+                AppCache.getInstance().setTeamsAtEvent(teams.toArray(new Team[teams.size()]));
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+
         setProgress(5, "טוען נתוני קבוצות...");
         DataHelper.getInstance().readAllTeamStats(new DataHelper.DataCallback<ArrayList<TeamStats>>() {
             @Override

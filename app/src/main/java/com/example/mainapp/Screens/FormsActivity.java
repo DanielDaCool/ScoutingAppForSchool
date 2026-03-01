@@ -26,6 +26,7 @@ import com.example.mainapp.Utils.GamePiece;
 import com.example.mainapp.Utils.TeamUtils.Team;
 import com.example.mainapp.Utils.TeamUtils.TeamAtGame;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
+import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 
 public class FormsActivity extends AppCompatActivity {
     private static final String TAG = "FormsActivity";
@@ -53,8 +54,12 @@ public class FormsActivity extends AppCompatActivity {
                 }
                 if (getInputFromEditText(teamNumber) < 0 || getInputFromEditText(teamNumber) > 12000) {
                     Toast.makeText(context, "הכנס מספר קבוצה תקין", LENGTH_SHORT).show();
+                    return;
                 }
-
+                if (!TeamUtils.containsTeam(AppCache.getInstance().getTeamAtEvent(), getInputFromEditText(teamNumber))) {
+                    Toast.makeText(context, "הכנס קבוצה שמתחרה בתחרות שבחרת", LENGTH_SHORT).show();
+                    return;
+                }
                 if (gameNumber.getText().toString().trim().isEmpty()) {
                     Toast.makeText(context, "הכנס מספר משחק", Toast.LENGTH_LONG).show();
                     return;
@@ -115,7 +120,8 @@ public class FormsActivity extends AppCompatActivity {
                                                                 }
                                                             }
                                                     );
-                                                } catch (Exception e) {}
+                                                } catch (Exception e) {
+                                                }
                                             }
 
                                             @Override

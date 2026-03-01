@@ -1,10 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="#16102A">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,11 +14,12 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- Team number + name row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="10dp">
 
             <TextView
                 android:id="@+id/teamNumberTextView"
@@ -26,7 +29,7 @@
                 android:text="1234"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black" />
+                android:textColor="#C084FC" />
 
             <TextView
                 android:id="@+id/teamNameTextView"
@@ -34,15 +37,21 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="team name"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textAlignment="viewEnd"
-                android:textColor="@android:color/black"
-
-
+                android:textColor="#F0E6FF"
                 android:layout_marginStart="8dp" />
 
         </LinearLayout>
 
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#2E2248"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Stats row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,26 +69,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ממוצע נקודות: 12.5"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray" />
+                    android:textSize="13sp"
+                    android:textColor="#7C6F8E" />
 
                 <TextView
                     android:id="@+id/avgGamePiecesTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ממוצע חלקי משחק: 10"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray"
-                    android:layout_marginTop="2dp" />
+                    android:textSize="13sp"
+                    android:textColor="#7C6F8E"
+                    android:layout_marginTop="3dp" />
 
                 <TextView
                     android:id="@+id/gamesPlayedTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="משחקים: 10"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray"
-                    android:layout_marginTop="2dp" />
+                    android:textSize="13sp"
+                    android:textColor="#7C6F8E"
+                    android:layout_marginTop="3dp" />
 
             </LinearLayout>
 
@@ -90,9 +99,8 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:text="גובה הנחה ממוצע: L2"
-
-                android:textColor="@android:color/darker_gray"
-                android:textSize="18sp" />
+                android:textColor="#9B7EC8"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
