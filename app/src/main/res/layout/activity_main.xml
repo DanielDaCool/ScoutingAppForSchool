@@ -18,15 +18,18 @@
         android:background="#0D0D14">
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="ScoutingApp"
             android:textSize="18sp"
             android:textStyle="bold"
             android:letterSpacing="0.04"
-            android:gravity="left"
             android:textColor="#F0E6FF" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textViewWelcome"
@@ -34,9 +37,10 @@
             android:layout_height="wrap_content"
             android:text="שלום, משתמש"
             android:textSize="13sp"
-            android:textColor="#7C6F8E" />
+            android:textColor="#7C6F8E"
+            android:maxLines="1"
+            android:ellipsize="end" />
     </LinearLayout>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -128,7 +132,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="קבוצות"
+                            android:text="מספר קבוצות בתחרות"
                             android:textSize="11sp"
                             android:textColor="#7C6F8E" />
                     </LinearLayout>
@@ -154,7 +158,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="משחקים סכולים"
+                            android:text="משחקים שנעשה להם סקאוטינג"
                             android:textSize="11sp"
                             android:textColor="#7C6F8E" />
                     </LinearLayout>
@@ -286,6 +290,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#0D0D14"
+
         app:itemIconTint="@color/bottom_nav_colors"
         app:itemTextColor="@color/bottom_nav_colors"
         app:itemActiveIndicatorStyle="@null"
