@@ -45,11 +45,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.google.code.gson:gson:2.10.1")
 
-    // 🔥 Add Firebase BoM (Bill of Materials)
-    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
-
-    // 🔥 Add at least one Firebase SDK (choose one)
-    implementation("com.google.firebase:firebase-database")  // Realtime Database
-    // OR
-    // implementation("com.google.firebase:firebase-firestore")  // Cloud Firestore
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-auth")
 }

@@ -1,98 +1,182 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#0A0A0F"
+    android:fillViewport="true">
 
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:padding="32dp">
-
-
-    <!-- כותרת -->
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="40dp"
-        android:gravity="center"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingStart="28dp"
+        android:paddingEnd="28dp"
+        android:paddingTop="48dp"
+        android:paddingBottom="40dp">
 
-        android:textColor="#9D00FF"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:text="הרשמה לאפליקציה"/>
+        <!-- Back / logo row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="32dp">
 
-    <!-- שם מלא -->
-    <EditText
-        android:id="@+id/etFullName"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="16dp"
-        android:hint="שם מלא"
-        android:inputType="textPersonName"
-        android:padding="12dp" />
+            <TextView
+                android:id="@+id/tvLoginLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="→ חזרה"
+                android:textColor="#7C6F8E"
+                android:textSize="14sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="4dp" />
 
-    <!-- מזהה משתמש -->
-    <EditText
-        android:id="@+id/etUserId"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="16dp"
-        android:hint="שם משתמש"
-        android:inputType="text"
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
 
-        android:padding="12dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ScoutingApp"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#4A3F5C"
+                android:letterSpacing="0.05" />
+        </LinearLayout>
 
+        <!-- Heading -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="יצירת חשבון"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="#F0E6FF"
+            android:letterSpacing="0.02"
+            android:layout_marginBottom="6dp" />
 
-    <!-- סיסמא -->
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="16dp"
-        android:hint="סיסמא (לפחות 6 תווים)"
-        android:textAlignment="textEnd"
-        android:inputType="textPassword"
-        android:padding="12dp"
-        android:textDirection="rtl" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="מלא את הפרטים כדי להתחיל"
+            android:textSize="13sp"
+            android:textColor="#7C6F8E"
+            android:layout_marginBottom="36dp" />
 
-    <!-- אישור סיסמא -->
-    <EditText
-        android:id="@+id/etConfirmPassword"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="24dp"
+        <!-- Full Name -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="שם מלא"
+            android:textSize="12sp"
+            android:textColor="#9B7EC8"
+            android:textStyle="bold"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="6dp" />
 
-        android:hint="אישור סיסמא"
-        android:inputType="textPassword"
-        android:padding="12dp"
+        <EditText
+            android:id="@+id/etFullName"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="18dp"
+            android:hint="ישראל ישראלי"
+            android:textColor="#F0E6FF"
+            android:textSize="15sp"
+            android:inputType="text"
+            android:padding="14dp"
+            android:background="@drawable/input_bg_dark"
+            android:textDirection="rtl"
+            android:textAlignment="textEnd" />
 
-        android:textAlignment="textEnd"
-        android:textDirection="rtl" />
+        <!-- Email -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="אימייל"
+            android:textSize="12sp"
+            android:textColor="#9B7EC8"
+            android:textStyle="bold"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="6dp" />
 
-    <!-- כפתור הרשמה -->
-    <Button
-        android:id="@+id/btnSignup"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="#9D00FF"
-        android:text="הירשם"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp" />
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="18dp"
+            android:hint="your@email.com"
+            android:textColor="#F0E6FF"
+            android:textSize="15sp"
+            android:inputType="textEmailAddress"
+            android:padding="14dp"
+            android:background="@drawable/input_bg_dark"
+            android:textDirection="ltr"
+            android:textAlignment="textStart" />
 
-    <!-- קישור להתחברות -->
-    <TextView
-        android:id="@+id/tvLoginLink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:padding="8dp"
+        <!-- Password -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="סיסמא"
+            android:textSize="12sp"
+            android:textColor="#9B7EC8"
+            android:textStyle="bold"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="6dp" />
 
-        android:text="לחץ כאן להתחברות"
-        android:textColor="#9D00FF"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="18dp"
+            android:hint="לפחות 6 תווים"
+            android:textColor="#F0E6FF"
+            android:textSize="15sp"
+            android:inputType="textPassword"
+            android:padding="14dp"
+            android:background="@drawable/input_bg_dark"
+            android:textDirection="rtl"
+            android:textAlignment="textEnd" />
 
-</LinearLayout>
+        <!-- Confirm Password -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="אישור סיסמא"
+            android:textSize="12sp"
+            android:textColor="#9B7EC8"
+            android:textStyle="bold"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="6dp" />
+
+        <EditText
+            android:id="@+id/etConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="32dp"
+            android:hint="הכנס סיסמא שוב"
+            android:textColor="#F0E6FF"
+            android:textSize="15sp"
+            android:inputType="textPassword"
+            android:padding="14dp"
+            android:background="@drawable/input_bg_dark"
+            android:textDirection="rtl"
+            android:textAlignment="textEnd" />
+
+        <!-- Signup button -->
+        <Button
+            android:id="@+id/btnSignup"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="הירשם"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:letterSpacing="0.05"
+            android:background="@drawable/btn_primary"
+            android:stateListAnimator="@null" />
+
+    </LinearLayout>
+</ScrollView>

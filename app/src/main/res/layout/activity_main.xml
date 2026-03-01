@@ -1,126 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="60dp"
-    tools:context=".Screens.MainActivity">
+    android:background="#0A0A0F">
+
+    <!-- Main content area -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="72dp">
+
+        <!-- Top header bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:background="#0D0D14">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⬡"
+                android:textSize="20sp"
+                android:textColor="#C084FC"
+                android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="ScoutingApp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#F0E6FF"
+                android:letterSpacing="0.04" />
+
+            <TextView
+                android:id="@+id/textViewWelcome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="שלום, משתמש"
+                android:textSize="13sp"
+                android:textColor="#7C6F8E" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#16102A" />
+
+        <!-- Content frame — swap visibility per tab -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp">
+
+            <!-- HOME panel -->
+            <LinearLayout
+                android:id="@+id/panelHome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ברוך הבא"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:textColor="#F0E6FF"
+                    android:layout_marginBottom="6dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="בחר פעולה מהתפריט למטה"
+                    android:textSize="14sp"
+                    android:textColor="#7C6F8E"
+                    android:layout_marginBottom="32dp" />
+
+                <!-- Quick action cards -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <Button
+                        android:id="@+id/buttonGamesList"
+                        android:layout_width="0dp"
+                        android:layout_height="90dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:text="רשימת\nמשחקים"
+                        android:textColor="#F0E6FF"
+                        android:textSize="13sp"
+                        android:background="@drawable/card_bg_dark"
+                        android:stateListAnimator="@null" />
+
+                    <Button
+                        android:id="@+id/buttonForms"
+                        android:layout_width="0dp"
+                        android:layout_height="90dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:text="טפסים"
+                        android:textColor="#F0E6FF"
+                        android:textSize="13sp"
+                        android:background="@drawable/card_bg_dark"
+                        android:stateListAnimator="@null" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/buttonStats"
+                        android:layout_width="0dp"
+                        android:layout_height="90dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:text="סטטיסטיקות"
+                        android:textColor="#F0E6FF"
+                        android:textSize="13sp"
+                        android:background="@drawable/card_bg_dark"
+                        android:stateListAnimator="@null" />
+
+                    <Button
+                        android:id="@+id/predictButton"
+                        android:layout_width="0dp"
+                        android:layout_height="90dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:text="תחזיות"
+                        android:textColor="#F0E6FF"
+                        android:textSize="13sp"
+                        android:background="@drawable/card_bg_dark"
+                        android:stateListAnimator="@null" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- PROFILE panel -->
+            <LinearLayout
+                android:id="@+id/panelProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:paddingTop="24dp"
+                android:visibility="gone">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text= "אפליקציית סקאוטינג"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:textColor="#9D00FF"
-        android:layout_marginBottom="20dp"
-        android:gravity="center" />
+                <TextView
+                    android:id="@+id/tvProfileName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="שם משתמש"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#F0E6FF"
+                    android:layout_marginBottom="6dp" />
 
-    <!-- טקסט ברוכים הבאים -->
-    <TextView
-        android:id="@+id/textViewWelcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="שלום, משתמש"
-        android:textSize="22sp"
-        android:layout_marginBottom="40dp" />
+                <TextView
+                    android:id="@+id/tvProfileEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="email@example.com"
+                    android:textSize="13sp"
+                    android:textColor="#7C6F8E"
+                    android:layout_marginBottom="40dp" />
 
-    <!-- מידע על המשחק הקרוב לסקאוטינג -->
+                <Button
+                    android:id="@+id/buttonLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:text="התנתק"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#FF6B6B"
+                    android:background="@drawable/btn_danger"
+                    android:stateListAnimator="@null" />
+            </LinearLayout>
 
-    <!-- כפתור למסך רשימת המשחקים -->
-    <Button
-        android:id="@+id/buttonGamesList"
+        </FrameLayout>
+    </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="רשימת משחקים"
-        android:layout_marginBottom="10dp"
+        android:layout_gravity="bottom"
+        android:background="#0D0D14"
+        app:itemIconTint="@color/bottom_nav_colors"
+        app:itemTextColor="@color/bottom_nav_colors"
+        app:itemActiveIndicatorStyle="@null"
+        app:menu="@menu/bottom_nav_menu" />
 
-        android:textSize="16dp"
-
-        android:textStyle="bold"
-        android:backgroundTint="#9D00FF"
-        />
-
-
-    <Button
-        android:id="@+id/buttonForms"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="מילוי טופס סקאוטינג"
-        android:layout_marginBottom="10dp"
-
-        android:textSize="16dp"
-
-        android:textStyle="bold"
-        android:backgroundTint="#9D00FF"
-        />
-    <Button
-        android:id="@+id/buttonLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="לחץ להתחברות"
-        android:layout_marginBottom="10dp"
-
-        android:textSize="16dp"
-
-        android:textStyle="bold"
-        android:backgroundTint="#9D00FF"
-        />
-    <Button
-        android:id="@+id/buttonSignup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="לחץ להרשמה"
-        android:layout_marginBottom="10dp"
-
-        android:textSize="16dp"
-
-        android:textStyle="bold"
-        android:backgroundTint="#9D00FF"
-        />
-
-    <Button
-        android:id="@+id/buttonStats"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="מידע על קבוצות"
-        android:layout_marginBottom="10dp"
-
-        android:textSize="16dp"
-
-        android:textStyle="bold"
-        android:backgroundTint="#9D00FF"
-        />
-
-    <Button
-        android:id="@+id/buttonLogout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="התנתקות"
-        android:layout_marginBottom="10dp"
-
-        android:textSize="16dp"
-
-        android:textStyle="bold"
-        android:backgroundTint="#9D00FF"
-        />
-    <Button
-        android:id="@+id/predictButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ניחוש תוצאות משחק"
-        android:layout_marginBottom="10dp"
-
-        android:textSize="16dp"
-
-        android:textStyle="bold"
-        android:backgroundTint="#9D00FF"
-        />
-
-
-
-
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

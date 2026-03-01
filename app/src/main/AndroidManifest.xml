@@ -43,10 +43,10 @@
             android:name=".Screens.GamesList"
             android:exported="false" />
         <activity
-            android:name=".Screens.LoginScreen"
+            android:name=".Screens.AuthenticationScreens.LoginScreen"
             android:exported="false" />
         <activity
-            android:name=".Screens.SignupScreen"
+            android:name=".Screens.AuthenticationScreens.SignupScreen"
             android:exported="false" />
         <activity
             android:name=".Screens.MainActivity"

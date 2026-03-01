@@ -1,128 +1,149 @@
 package com.example.mainapp.Screens;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
-import com.example.mainapp.R;
-import com.example.mainapp.Screens.Predictions.GamePrediction;
-import com.example.mainapp.Screens.Predictions.PredictionScreen;
-import com.example.mainapp.Utils.InternetUtils;
-import com.example.mainapp.Utils.SharedPrefHelper;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import com.example.mainapp.R;
+import com.example.mainapp.Screens.AuthenticationScreens.LoginScreen;
+import com.example.mainapp.Screens.Predictions.PredictionScreen;
+import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
+import com.example.mainapp.Utils.InternetUtils;
+import com.example.mainapp.Utils.SharedPrefHelper;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button gamesListButton;
-    private Button formsButton;
-    private Button loginButton;
-    private Button signupButton;
-    private Button statsButton;
-    private Button logoutButton;
-
-    private Button predictButton;
-    private TextView welcomeText;
+    private Button buttonGamesList, buttonForms, buttonStats, predictButton, buttonLogout;
+    private TextView textViewWelcome, tvProfileName, tvProfileEmail;
+    private LinearLayout panelHome, panelProfile;
+    private BottomNavigationView bottomNav;
     private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Redirect to login if not logged in
+        if (!SharedPrefHelper.getInstance(this).isUserLoggedIn()) {
+            startActivity(new Intent(this, LoginScreen.class));
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_main);
-
         init();
-        setOnClickListener(gamesListButton, GamesList.class);
-        setOnClickListener(formsButton, FormsActivity.class);
-        setOnClickListener(signupButton, SignupScreen.class);
-        setOnClickListener(loginButton, LoginScreen.class);
-        setOnClickListener(statsButton, TeamStatsActivity.class);
-        setOnClickListener(predictButton, PredictionScreen.class);
-        String userName = SharedPrefHelper.getInstance(context).getUserName();
+        setupBottomNav();
+        setupButtons();
+    }
 
-        welcomeText.setText("שלום, " + userName);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Re-check login state when returning to this screen
+        if (!SharedPrefHelper.getInstance(this).isUserLoggedIn()) {
+            startActivity(new Intent(this, LoginScreen.class));
+            finish();
+        }
+    }
 
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder b = new AlertDialog.Builder(context);
-                b.setMessage("אתה בטוח שאתה רוצה להתנתק?");
-                b.setPositiveButton("כן", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+    private void setupBottomNav() {
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
 
+            if (id == R.id.nav_home) {
+                showPanel(panelHome);
+                return true;
+            } else if (id == R.id.nav_games) {
+                if (InternetUtils.isInternetConnectedWithAlert(context))
+                    startActivity(new Intent(context, GamesList.class));
+                return true;
+            } else if (id == R.id.nav_forms) {
+                if (InternetUtils.isInternetConnectedWithAlert(context))
+                    startActivity(new Intent(context, FormsActivity.class));
+                return true;
+            } else if (id == R.id.nav_stats) {
+                if (InternetUtils.isInternetConnectedWithAlert(context))
+                    startActivity(new Intent(context, TeamStatsActivity.class));
+                return true;
+            } else if (id == R.id.nav_profile) {
+                showPanel(panelProfile);
+                return true;
+            }
+            return false;
+        });
+
+        // Start on home tab
+        bottomNav.setSelectedItemId(R.id.nav_home);
+    }
+
+    private void setupButtons() {
+        // Home panel quick-action buttons
+        buttonGamesList.setOnClickListener(v -> {
+            if (InternetUtils.isInternetConnectedWithAlert(context))
+                startActivity(new Intent(context, GamesList.class));
+        });
+        buttonForms.setOnClickListener(v -> {
+            if (InternetUtils.isInternetConnectedWithAlert(context))
+                startActivity(new Intent(context, FormsActivity.class));
+        });
+        buttonStats.setOnClickListener(v -> {
+            if (InternetUtils.isInternetConnectedWithAlert(context))
+                startActivity(new Intent(context, TeamStatsActivity.class));
+        });
+        predictButton.setOnClickListener(v -> {
+            if (InternetUtils.isInternetConnectedWithAlert(context))
+                startActivity(new Intent(context, PredictionScreen.class));
+        });
+
+        // Logout button on profile panel
+        buttonLogout.setOnClickListener(v -> {
+            new AlertDialog.Builder(context)
+                    .setMessage("אתה בטוח שאתה רוצה להתנתק?")
+                    .setPositiveButton("כן", (dialog, which) -> {
+                        DataHelper.getInstance().logoutUser();
                         SharedPrefHelper.getInstance(context).logout();
-                        activateLogout();
-                    }
-                });
-                b.setNegativeButton("לא, חזור למסך הראשי", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                AlertDialog dialog = b.create();
-                dialog.show();
-            }
-        });
-    }
-    private void setOnClickListener(Button btn, Class classToGo) {
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(InternetUtils.isInternetConnectedWithAlert(context) || btn.getId() == logoutButton.getId()) startActivity(new Intent(context, classToGo));
-            }
+                        startActivity(new Intent(context, LoginScreen.class));
+                        finish();
+                    })
+                    .setNegativeButton("לא, חזור", (dialog, which) -> dialog.cancel())
+                    .show();
         });
     }
 
-
-    private void activateLogout() {
-        formsButton.setVisibility(GONE);
-        statsButton.setVisibility(GONE);
-        gamesListButton.setVisibility(GONE);
-        logoutButton.setVisibility(GONE);
-        predictButton.setVisibility(GONE);
-        loginButton.setVisibility(VISIBLE);
-        signupButton.setVisibility(VISIBLE);
-        welcomeText.setText("שלום, משתמש");
+    private void showPanel(LinearLayout panel) {
+        panelHome.setVisibility(android.view.View.GONE);
+        panelProfile.setVisibility(android.view.View.GONE);
+        panel.setVisibility(android.view.View.VISIBLE);
     }
 
     private void init() {
-
         context = MainActivity.this;
-        gamesListButton = findViewById(R.id.buttonGamesList);
-        formsButton = findViewById(R.id.buttonForms);
-        loginButton = findViewById(R.id.buttonLogin);
-        signupButton = findViewById(R.id.buttonSignup);
-        statsButton = findViewById(R.id.buttonStats);
-        welcomeText = findViewById(R.id.textViewWelcome);
-        logoutButton = findViewById(R.id.buttonLogout);
-        predictButton = findViewById(R.id.predictButton);
 
+        bottomNav       = findViewById(R.id.bottomNav);
+        textViewWelcome = findViewById(R.id.textViewWelcome);
+        tvProfileName   = findViewById(R.id.tvProfileName);
+        tvProfileEmail  = findViewById(R.id.tvProfileEmail);
+        panelHome       = findViewById(R.id.panelHome);
+        panelProfile    = findViewById(R.id.panelProfile);
+        buttonGamesList = findViewById(R.id.buttonGamesList);
+        buttonForms     = findViewById(R.id.buttonForms);
+        buttonStats     = findViewById(R.id.buttonStats);
+        predictButton   = findViewById(R.id.predictButton);
+        buttonLogout    = findViewById(R.id.buttonLogout);
 
-        if (!SharedPrefHelper.getInstance(context).isUserLoggedIn()) {
-            formsButton.setVisibility(GONE);
-            statsButton.setVisibility(GONE);
-            gamesListButton.setVisibility(GONE);
-            logoutButton.setVisibility(GONE);
-            predictButton.setVisibility(GONE);
+        // Populate user info from SharedPrefs
+        String fullName = SharedPrefHelper.getInstance(context).getFullName();
+        String email    = SharedPrefHelper.getInstance(context).getFullName(); // userName stores email now
 
-        } else {
-            loginButton.setVisibility(GONE);
-            signupButton.setVisibility(GONE);
-            formsButton.setVisibility(VISIBLE);
-            statsButton.setVisibility(VISIBLE);
-            gamesListButton.setVisibility(VISIBLE);
-            logoutButton.setVisibility(VISIBLE);
-            predictButton.setVisibility(VISIBLE);
-        }
+        textViewWelcome.setText("שלום, " + fullName);
+        tvProfileName.setText(fullName);
+        tvProfileEmail.setText(email);
     }
 }

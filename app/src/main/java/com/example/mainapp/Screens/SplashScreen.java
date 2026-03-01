@@ -1,7 +1,5 @@
 package com.example.mainapp.Screens;
 
-import static android.content.ContentValues.TAG;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -9,7 +7,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mainapp.Adapters.EventDropdown;
 import com.example.mainapp.R;
+import com.example.mainapp.Screens.AuthenticationScreens.LoginScreen;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;

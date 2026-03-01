@@ -2,24 +2,17 @@ package com.example.mainapp.Utils.DatabaseUtils;
 
 public class User {
     private String fullName;
-    private int userID;
-    private String password;
-    private String userName;
+    private String email;
 
-    public User(){}
-    public User(String fullName, int userID, String password, String userName){
+    public User() {}
+
+    public User(String fullName, String email) {
         this.fullName = fullName;
-        this.userID = userID;
-        this.password = password;
-        this.userName = userName;
+        this.email = email;
     }
-    public void setFullName(String fullName){this.fullName = fullName;}
-    private void setUserID(int userID){this.userID = userID;}
-    private void setPassword(String password){this.password = password;}
-    public void setUserName(String userName){this.userName = userName;}
 
-    public String getFullName(){return this.fullName;}
-    public int getUserID(){return this.userID;}
-    public String getPassword(){return this.password;}
-    public String getUserName(){return  this.userName;}
+    public String getFullName() { return fullName; }
+    public String getEmail() { return email; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+    public void setEmail(String email) { this.email = email; }
 }
