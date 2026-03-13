@@ -3,6 +3,7 @@ package com.example.mainapp.Utils.TeamUtils;
 import java.io.Serializable;
 
 public class Team implements Serializable {
+    public static Team kDefaultTeam = new Team(-1, "Error");
     private int teamNumber;
     private String teamName;
 

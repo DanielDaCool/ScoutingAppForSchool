@@ -44,7 +44,7 @@ public class TeamStats implements Serializable {
 
     public double calculateAvgClimbPerGame(){
         if (allGames == null || allGames.isEmpty()) {
-            return 0.0;  // ✅ Return 0 instead of NaN
+            return 0.0;
         }
 
         int count = 0;
@@ -55,7 +55,7 @@ public class TeamStats implements Serializable {
     }
     public double calculateAvgPoints() {
         if (allGames == null || allGames.isEmpty()) {
-            return 0.0;  // ✅ Return 0 instead of NaN
+            return 0.0;
         }
         int total = 0;
         for (TeamAtGame t : allGames) {
@@ -75,12 +75,6 @@ public class TeamStats implements Serializable {
         return TeamUtils.getMostScoredGamePiece(allGames);
     }
 
-    public int getTotalGamePieceCount() {
-        if (allGames == null || allGames.isEmpty()) {
-            return 0;
-        }
-        return TeamUtils.getTotalScoredGamePieces(allGames);
-    }
 
     public double getAvgGamePieceCount() {
         if (allGames == null || allGames.isEmpty()) {

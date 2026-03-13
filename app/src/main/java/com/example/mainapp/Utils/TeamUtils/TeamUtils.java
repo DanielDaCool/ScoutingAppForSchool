@@ -8,6 +8,13 @@ import java.util.Map;
 
 public class TeamUtils {
 
+    public static Team getTeamFromArray(Team[] teams, int teamNumber){
+        for(Team t : teams){
+            if(t.getTeamNumber() == teamNumber) return t;
+        }
+        return Team.kDefaultTeam;
+    }
+
     public static boolean containsTeam(Team[] teams, int teamNumber){
         for(Team t : teams){
             if(t.getTeamNumber() == teamNumber) return  true;
@@ -44,19 +51,7 @@ public class TeamUtils {
         return (double) c / allGamesOfTeam.size();
     }
 
-    public static boolean ContainsTeam(Team[] arr, int teamNumber) {
-        if (arr == null) {
-            return false;
-        }
-        for (Team t : arr) {
-            if (t != null && t.getTeamNumber() == teamNumber) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean ContainsTeam(int[] arr, int teamNumber) {
+    public static boolean containsTeam(int[] arr, int teamNumber) {
         if (arr == null) {
             return false;
         }
