@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0A0A0F">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Header -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:id="@+id/tvBackBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="← חזרה"
+                android:textColor="#7C6F8E"
+                android:textSize="14sp"
+                android:padding="8dp" />
+
+            <TextView
+                android:id="@+id/tvGameTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="משחק"
+                android:textColor="#F0E6FF"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <!-- Alliance cards side by side -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <!-- ===== RED ALLIANCE CARD ===== -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                app:cardBackgroundColor="#140A0A"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <!-- Red header -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🔴 ברית אדומה"
+                        android:textColor="#FF5050"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Red Team 1 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="#1F0A0A"
+                        android:padding="10dp"
+                        android:layout_marginBottom="6dp">
+
+                        <TextView
+                            android:id="@+id/tvRedTeam1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="#0000"
+                            android:textColor="#FF8080"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:id="@+id/tvRedPoints1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="נק׳: —"
+                            android:textColor="#F0E6FF"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvRedHeight1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="גובה: —"
+                            android:textColor="#C084FC"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvRedClimb1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="טיפוס: —"
+                            android:textColor="#F0E6FF"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvRedGames1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="משחקים: 0"
+                            android:textColor="#7C6F8E"
+                            android:textSize="11sp"
+                            android:gravity="center" />
+
+                    </LinearLayout>
+
+                    <!-- Red Team 2 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="#1F0A0A"
+                        android:padding="10dp"
+                        android:layout_marginBottom="6dp">
+
+                        <TextView
+                            android:id="@+id/tvRedTeam2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="#0000"
+                            android:textColor="#FF8080"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:id="@+id/tvRedPoints2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="נק׳: —"
+                            android:textColor="#F0E6FF"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvRedHeight2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="גובה: —"
+                            android:textColor="#C084FC"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvRedClimb2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="טיפוס: —"
+                            android:textColor="#F0E6FF"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvRedGames2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="משחקים: 0"
+                            android:textColor="#7C6F8E"
+                            android:textSize="11sp"
+                            android:gravity="center" />
+
+                    </LinearLayout>
+
+                    <!-- Red Team 3 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="#1F0A0A"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/tvRedTeam3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="#0000"
+                            android:textColor="#FF8080"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:id="@+id/tvRedPoints3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="נק׳: —"
+                            android:textColor="#F0E6FF"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvRedHeight3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="גובה: —"
+                            android:textColor="#C084FC"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvRedClimb3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="טיפוס: —"
+                            android:textColor="#F0E6FF"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvRedGames3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="משחקים: 0"
+                            android:textColor="#7C6F8E"
+                            android:textSize="11sp"
+                            android:gravity="center" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- ===== BLUE ALLIANCE CARD ===== -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                app:cardBackgroundColor="#0A0A14"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <!-- Blue header -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🔵 ברית כחולה"
+                        android:textColor="#508CFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Blue Team 1 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="#0A0A1F"
+                        android:padding="10dp"
+                        android:layout_marginBottom="6dp">
+
+                        <TextView
+                            android:id="@+id/tvBlueTeam1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="#0000"
+                            android:textColor="#80AAFF"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:id="@+id/tvBluePoints1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="נק׳: —"
+                            android:textColor="#F0E6FF"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvBlueHeight1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="גובה: —"
+                            android:textColor="#C084FC"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvBlueClimb1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="טיפוס: —"
+                            android:textColor="#F0E6FF"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvBlueGames1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="משחקים: 0"
+                            android:textColor="#7C6F8E"
+                            android:textSize="11sp"
+                            android:gravity="center" />
+
+                    </LinearLayout>
+
+                    <!-- Blue Team 2 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="#0A0A1F"
+                        android:padding="10dp"
+                        android:layout_marginBottom="6dp">
+
+                        <TextView
+                            android:id="@+id/tvBlueTeam2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="#0000"
+                            android:textColor="#80AAFF"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:id="@+id/tvBluePoints2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="נק׳: —"
+                            android:textColor="#F0E6FF"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvBlueHeight2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="גובה: —"
+                            android:textColor="#C084FC"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvBlueClimb2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="טיפוס: —"
+                            android:textColor="#F0E6FF"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvBlueGames2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="משחקים: 0"
+                            android:textColor="#7C6F8E"
+                            android:textSize="11sp"
+                            android:gravity="center" />
+
+                    </LinearLayout>
+
+                    <!-- Blue Team 3 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="#0A0A1F"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/tvBlueTeam3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="#0000"
+                            android:textColor="#80AAFF"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:id="@+id/tvBluePoints3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="נק׳: —"
+                            android:textColor="#F0E6FF"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvBlueHeight3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="גובה: —"
+                            android:textColor="#C084FC"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvBlueClimb3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="טיפוס: —"
+                            android:textColor="#F0E6FF"
+                            android:textSize="12sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tvBlueGames3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="משחקים: 0"
+                            android:textColor="#7C6F8E"
+                            android:textSize="11sp"
+                            android:gravity="center" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

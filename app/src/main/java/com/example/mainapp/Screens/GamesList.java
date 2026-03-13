@@ -1,6 +1,7 @@
 package com.example.mainapp.Screens;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
@@ -104,7 +105,15 @@ public class GamesList extends AppCompatActivity {
         gameAdapter.setOnItemClickListener(new GameAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Game game, int position) {
-
+                Intent intent = new Intent(context, GameDetailActivity.class);
+                intent.putExtra("gameNumber", game.getGameNumber());
+                intent.putExtra("redTeam1", game.getRedAlliance()[0].getTeamNumber());
+                intent.putExtra("redTeam2", game.getRedAlliance()[1].getTeamNumber());
+                intent.putExtra("redTeam3", game.getRedAlliance()[2].getTeamNumber());
+                intent.putExtra("blueTeam1", game.getBlueAlliance()[0].getTeamNumber());
+                intent.putExtra("blueTeam2", game.getBlueAlliance()[1].getTeamNumber());
+                intent.putExtra("blueTeam3", game.getBlueAlliance()[2].getTeamNumber());
+                startActivity(intent);
             }
         });
 
