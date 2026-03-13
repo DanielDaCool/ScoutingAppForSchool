@@ -64,10 +64,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginScreen.class));
             finish();
         }
+        loadDashboardStats();
     }
 
-    public static void loadDashboardStats() {
-        // Read from cache — already loaded in LoadingScreen
+    private void loadDashboardStats() {
+
         AppCache cache = AppCache.getInstance();
 
         long teamCount = cache.getTeamCount();
@@ -149,4 +150,6 @@ public class MainActivity extends AppCompatActivity {
         tvProfileEmail.setText(email);
 
     }
+
+
 }

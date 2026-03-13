@@ -14,11 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mainapp.Adapters.GameAdapter;
 import com.example.mainapp.R;
-import com.example.mainapp.TBAHelpers.TBAApiManager;
-import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.Game;
-import com.example.mainapp.Utils.InternetUtils;
 import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 
 import java.util.ArrayList;
@@ -84,7 +81,7 @@ public class GamesList extends AppCompatActivity {
     private void showFilteredGames(int teamNumber){
         filteredGameList.clear();
         for (Game game : gameList) {
-            if (TeamUtils.ContainsTeam(game.getPlayingTeamsNumbers(), teamNumber)) {
+            if (TeamUtils.containsTeam(game.getPlayingTeamsNumbers(), teamNumber)) {
                 filteredGameList.add(game);
             }
         }
