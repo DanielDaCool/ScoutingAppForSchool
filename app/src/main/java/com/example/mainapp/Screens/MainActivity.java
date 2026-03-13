@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvProfileName, tvProfileEmail;
     private ScrollView panelHome;
     private LinearLayout panelProfile;
-    private Button btnForms, btnPredictAuto, btnPredictManual, buttonLogout;
+    private Button btnForms, btnPrediction, buttonLogout;
     private BottomNavigationView bottomNav;
     private Context context;
 
@@ -101,18 +101,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(context, FormsActivity.class));
         });
 
-        btnPredictAuto.setOnClickListener(v -> {
+       btnPrediction.setOnClickListener(v -> {
             if (InternetUtils.isInternetConnectedWithAlert(context)) {
                 Intent intent = new Intent(context, PredictionScreen.class);
-                intent.putExtra("mode", "auto");
-                startActivity(intent);
-            }
-        });
-
-        btnPredictManual.setOnClickListener(v -> {
-            if (InternetUtils.isInternetConnectedWithAlert(context)) {
-                Intent intent = new Intent(context, PredictionScreen.class);
-                intent.putExtra("mode", "manual");
                 startActivity(intent);
             }
         });
@@ -138,22 +129,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        textViewWelcome  = findViewById(R.id.textViewWelcome);
-        tvTeamCount      = findViewById(R.id.tvTeamCount);
-        tvGamesCount     = findViewById(R.id.tvGamesCount);
-        tvProfileName    = findViewById(R.id.tvProfileName);
-        tvProfileEmail   = findViewById(R.id.tvProfileEmail);
-        panelHome        = findViewById(R.id.panelHome);
-        panelProfile     = findViewById(R.id.panelProfile);
-        btnForms         = findViewById(R.id.btnForms);
-        btnPredictAuto   = findViewById(R.id.btnPredictAuto);
-        btnPredictManual = findViewById(R.id.btnPredictManual);
-        buttonLogout     = findViewById(R.id.buttonLogout);
-        bottomNav        = findViewById(R.id.bottomNav);
-
+        textViewWelcome = findViewById(R.id.textViewWelcome);
+        tvTeamCount = findViewById(R.id.tvTeamCount);
+        tvGamesCount = findViewById(R.id.tvGamesCount);
+        tvProfileName = findViewById(R.id.tvProfileName);
+        tvProfileEmail = findViewById(R.id.tvProfileEmail);
+        panelHome = findViewById(R.id.panelHome);
+        panelProfile = findViewById(R.id.panelProfile);
+        btnForms = findViewById(R.id.btnForms);
+        buttonLogout = findViewById(R.id.buttonLogout);
+        bottomNav = findViewById(R.id.bottomNav);
+        btnPrediction = findViewById(R.id.btnPrediction);
         SharedPrefHelper prefs = SharedPrefHelper.getInstance(context);
         String firstName = prefs.getFirstName();
-        String email    = prefs.getEmail();
+        String email = prefs.getEmail();
 
         textViewWelcome.setText("שלום, " + firstName);
         tvProfileName.setText(prefs.getFullName());
