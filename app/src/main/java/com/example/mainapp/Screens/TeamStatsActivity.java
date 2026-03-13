@@ -125,8 +125,6 @@ public class TeamStatsActivity extends AppCompatActivity {
     private void updateUI(ArrayList<TeamStats> newStats){
         adapter.updateData(newStats);
         adapter.notifyDataSetChanged();
-
-
     }
 
     private void init() {
