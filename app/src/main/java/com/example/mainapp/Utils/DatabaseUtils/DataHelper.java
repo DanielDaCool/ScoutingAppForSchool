@@ -37,23 +37,15 @@ public class DataHelper {
         auth = FirebaseAuth.getInstance();
     }
 
-    public DatabaseReference getRootRef() {
-        return this.rootRef;
-    }
 
-    public static DataHelper getInstance() {
+    public static synchronized DataHelper getInstance() {
         if (instance == null) {
             instance = new DataHelper();
         }
         return instance;
     }
 
-    // ==================== AUTH METHODS ====================
 
-    /**
-     * Register a new user with Firebase Authentication.
-     * fullName is stored in the Auth profile's displayName.
-     */
     public void registerUser(String fullName, String email, String password, DataCallback<User> callback) {
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
@@ -77,9 +69,6 @@ public class DataHelper {
                 });
     }
 
-    /**
-     * Sign in an existing user with Firebase Authentication.
-     */
     public void loginUser(String email, String password, DataCallback<User> callback) {
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
@@ -107,21 +96,10 @@ public class DataHelper {
                 });
     }
 
-    /**
-     * Sign out the current user.
-     */
     public void logoutUser() {
         auth.signOut();
     }
 
-    /**
-     * Returns the currently signed-in FirebaseUser, or null if not logged in.
-     */
-    public FirebaseUser getCurrentFirebaseUser() {
-        return auth.getCurrentUser();
-    }
-
-    // ==================== TEAM METHODS (unchanged) ====================
 
     public void createTeamStats(TeamStats data, DatabaseCallback callback) {
         createWithId(Constants.TEAMS_TABLE_NAME, Integer.toString(data.getTeam().getTeamNumber()), data, callback);
@@ -144,7 +122,7 @@ public class DataHelper {
     }
 
     public void getAvgOfTeam(String teamID, int amount, DataCallback<Double> callback) {
-        rootRef.child(Constants.TEAMS_TABLE_NAME).child(teamID).get()
+        new Thread(()->rootRef.child(Constants.TEAMS_TABLE_NAME).child(teamID).get()
                 .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -172,11 +150,11 @@ public class DataHelper {
                                     ? task.getException().getMessage() : "שגיאה לא ידועה");
                         }
                     }
-                });
+                })).start();
     }
 
     public void readTeamStats(String teamID, DataCallback<TeamStats> callback) {
-        rootRef.child(Constants.TEAMS_TABLE_NAME).child(teamID).get()
+        new Thread(()->rootRef.child(Constants.TEAMS_TABLE_NAME).child(teamID).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         DataSnapshot snapshot = task.getResult();
@@ -189,7 +167,7 @@ public class DataHelper {
                     } else {
                         if (callback != null) callback.onFailure(task.getException().getMessage());
                     }
-                });
+                })).start();
     }
 
     public void isTeamDataExists(Team t, ExistsCallback callback) {
@@ -203,23 +181,6 @@ public class DataHelper {
             public void onFailure(String error) {
                 callback.onResult(false);
             }
-        });
-    }
-
-    public void isTableDataEmpty(ExistsCallback callback) {
-        readAllTeamStats(new DataCallback<ArrayList<TeamStats>>() {
-            @Override
-            public void onSuccess(ArrayList<TeamStats> data) {
-                for (TeamStats t : data) {
-                    if (t.getAllGames().size() != 0) {
-                        callback.onResult(false);
-                        return;
-                    }
-                }
-                callback.onResult(true);
-            }
-            @Override
-            public void onFailure(String error) {}
         });
     }
 
@@ -242,7 +203,7 @@ public class DataHelper {
     }
 
     public void countTeams(CountCallback callback) {
-        rootRef.child(Constants.TEAMS_TABLE_NAME).get().addOnCompleteListener(task -> {
+        new Thread(()->rootRef.child(Constants.TEAMS_TABLE_NAME).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DataSnapshot snapshot = task.getResult();
                 long count = snapshot.getChildrenCount();
@@ -250,62 +211,31 @@ public class DataHelper {
             } else {
                 if (callback != null) callback.onResult(0);
             }
-        });
+        })).start();
     }
 
     public void update(String tableName, String id, Map<String, Object> updates, DatabaseCallback callback) {
-        rootRef.child(tableName).child(id).updateChildren(updates)
+        new Thread(()->rootRef.child(tableName).child(id).updateChildren(updates)
                 .addOnSuccessListener(aVoid -> {
                     if (callback != null) callback.onSuccess(id);
                 })
                 .addOnFailureListener(e -> {
                     if (callback != null) callback.onFailure(e.getMessage());
-                });
+                })).start();
     }
 
     public void replace(String tableName, String id, Object data, DatabaseCallback callback) {
-        rootRef.child(tableName).child(id).setValue(data)
+        new Thread(()->rootRef.child(tableName).child(id).setValue(data)
                 .addOnSuccessListener(aVoid -> {
                     if (callback != null) callback.onSuccess(id);
                 })
                 .addOnFailureListener(e -> {
                     if (callback != null) callback.onFailure(e.getMessage());
-                });
-    }
-
-    public void getCurrentTeamSnapshot(TeamSnapshotCallback callback) {
-        rootRef.child(Constants.TEAMS_TABLE_NAME).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                callback.onSuccess(task.getResult());
-            } else {
-                callback.onFailure(new Exception("Task not successful"));
-            }
-        });
-    }
-
-    public void getUpdatedTeamStats(Team t, DataCallback<TeamStats> callback) {
-        rootRef.child(Constants.TEAMS_TABLE_NAME)
-                .child(Integer.toString(t.getTeamNumber()))
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            TeamStats teamStats = snapshot.getValue(TeamStats.class);
-                            if (teamStats != null) callback.onSuccess(teamStats);
-                            else callback.onFailure("Failed to parse team stats");
-                        } else {
-                            callback.onFailure("Team not found");
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        callback.onFailure(error.getMessage());
-                    }
-                });
+                })).start();
     }
 
     public void getUpdatedTeamsStats(DataCallback<ArrayList<TeamStats>> callback) {
-        rootRef.child(Constants.TEAMS_TABLE_NAME).addValueEventListener(new ValueEventListener() {
+        new Thread(()->rootRef.child(Constants.TEAMS_TABLE_NAME).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<TeamStats> teamStatsList = new ArrayList<>();
@@ -319,10 +249,10 @@ public class DataHelper {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
-        });
+        })).start();
     }
 
-    // ==================== CALLBACK INTERFACES ====================
+
 
     public interface DatabaseCallback {
         void onSuccess(String id);
@@ -340,10 +270,5 @@ public class DataHelper {
 
     public interface CountCallback {
         void onResult(long count);
-    }
-
-    public interface TeamSnapshotCallback {
-        void onSuccess(DataSnapshot snapshot);
-        void onFailure(Exception e);
     }
 }
