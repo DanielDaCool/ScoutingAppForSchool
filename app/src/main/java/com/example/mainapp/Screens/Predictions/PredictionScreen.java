@@ -28,12 +28,12 @@ public class PredictionScreen extends AppCompatActivity {
         // Set up adapter with 2 fragments
         PredictionPagerAdapter adapter = new PredictionPagerAdapter(this);
         viewPager.setAdapter(adapter);
-
-        // If launched from MainActivity with a mode extra, jump to the right page
-        String mode = getIntent().getStringExtra("mode");
-        if ("manual".equals(mode)) {
-            viewPager.setCurrentItem(1, false);
-        }
+//
+//        // If launched from MainActivity with a mode extra, jump to the right page
+//        String mode = getIntent().getStringExtra("mode");
+//        if ("manual".equals(mode)) {
+//            viewPager.setCurrentItem(1, false);
+//        }
 
         // Update header + tab highlight when page changes
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
