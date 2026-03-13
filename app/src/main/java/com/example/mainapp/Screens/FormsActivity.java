@@ -43,105 +43,104 @@ public class FormsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forms);
         init();
 
-        sendBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        sendBtn.setOnClickListener(view -> handleSendBtnClick());
 
-                // Validate inputs
-                if (teamNumber.getText().toString().trim().isEmpty()) {
-                    Toast.makeText(context, "הכנס מספר קבוצה", Toast.LENGTH_LONG).show();
-                    return;
+
+    }
+
+    private void handleSendBtnClick() {
+
+        // Validate inputs
+        if (teamNumber.getText().toString().trim().isEmpty()) {
+            Toast.makeText(context, "הכנס מספר קבוצה", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (getInputFromEditText(teamNumber) < 0 || getInputFromEditText(teamNumber) > 12000) {
+            Toast.makeText(context, "הכנס מספר קבוצה תקין", LENGTH_SHORT).show();
+            return;
+        }
+        if (!TeamUtils.containsTeam(AppCache.getInstance().getTeamAtEvent(), getInputFromEditText(teamNumber))) {
+            Toast.makeText(context, "הכנס קבוצה שמתחרה בתחרות שבחרת", LENGTH_SHORT).show();
+            return;
+        }
+        if (gameNumber.getText().toString().trim().isEmpty()) {
+            Toast.makeText(context, "הכנס מספר משחק", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        int teamNum = getInputFromEditText(teamNumber);
+        int gameNum = getInputFromEditText(gameNumber);
+
+        // Get team directly from cache — no API call needed
+        Team t = TeamUtils.getTeamFromArray(AppCache.getInstance().getTeamAtEvent(), teamNum);
+        if (t == null) {
+            showError("קבוצה לא נמצאה");
+            return;
+        }
+
+        progressBar.setVisibility(VISIBLE);
+        sendBtn.setEnabled(false);
+        fetchStatsAndSave(t, gameNum);
+    };
+
+    private void fetchStatsAndSave(Team t, int gameNum) {
+        DataHelper.getInstance().readTeamStats(
+                Integer.toString(t.getTeamNumber()),
+                new DataHelper.DataCallback<TeamStats>() {
+                    @Override
+                    public void onSuccess(TeamStats data) {
+                        if (data == null) data = new TeamStats(t);
+                        saveGameData(t, gameNum, data);
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+                        // Team not in DB yet — create fresh stats
+                        saveGameData(t, gameNum, new TeamStats(t));
+                    }
                 }
-                if (getInputFromEditText(teamNumber) < 0 || getInputFromEditText(teamNumber) > 12000) {
-                    Toast.makeText(context, "הכנס מספר קבוצה תקין", LENGTH_SHORT).show();
-                    return;
+        );
+
+
+    }
+
+    private void saveGameData(Team t, int gameNum, TeamStats stats) {
+        TeamAtGame teamAtGame = new TeamAtGame(t, gameNum);
+        updateGamePieceScored(teamAtGame);
+        stats.addGame(teamAtGame);
+
+        DataHelper.getInstance().replace(
+                Constants.TEAMS_TABLE_NAME,
+                Integer.toString(t.getTeamNumber()),
+                stats,
+                new DataHelper.DatabaseCallback() {
+                    @Override
+                    public void onSuccess(String id) {
+                        runOnUiThread(() -> onSaveSuccess());
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+                        showError("שגיאה בשמירת הנתונים: " + error);
+                    }
                 }
-                if (!TeamUtils.containsTeam(AppCache.getInstance().getTeamAtEvent(), getInputFromEditText(teamNumber))) {
-                    Toast.makeText(context, "הכנס קבוצה שמתחרה בתחרות שבחרת", LENGTH_SHORT).show();
-                    return;
-                }
-                if (gameNumber.getText().toString().trim().isEmpty()) {
-                    Toast.makeText(context, "הכנס מספר משחק", Toast.LENGTH_LONG).show();
-                    return;
-                }
+        );
+    }
 
-                try {
-                    int teamNum = getInputFromEditText(teamNumber);
-                    int gameNum = getInputFromEditText(gameNumber);
+    private void onSaveSuccess() {
+        progressBar.setVisibility(GONE);
+        sendBtn.setEnabled(true);
+        clearForm();
+        Toast.makeText(this, "המידע נשמר בהצלחה", LENGTH_SHORT).show();
+        AppCache.getInstance().setTotalGames(AppCache.getInstance().getTotalGames() + 1);
 
-                    progressBar.setVisibility(VISIBLE);
-                    TBAApiManager.getInstance().getTeam(teamNum, new TBAApiManager.SingleTeamCallback() {
-                        @Override
-                        public void onSuccess(Team t) {
+    }
 
-                            runOnUiThread(() -> {
-                                DataHelper.getInstance().readTeamStats(
-                                        Integer.toString(t.getTeamNumber()),
-                                        new DataHelper.DataCallback<TeamStats>() {
-                                            @Override
-                                            public void onSuccess(TeamStats data) {
-
-                                                try {
-                                                    // Create new team at game
-                                                    TeamAtGame teamAtGame = new TeamAtGame(t, gameNum);
-                                                    updateGamePieceScored(teamAtGame);
-
-                                                    // Add game to stats
-                                                    if (data == null) {
-                                                        data = new TeamStats(t);
-                                                    }
-                                                    data.addGame(teamAtGame);
-
-
-                                                    // Save to database
-                                                    DataHelper.getInstance().replace(
-                                                            Constants.TEAMS_TABLE_NAME,
-                                                            Integer.toString(t.getTeamNumber()),
-                                                            data,
-                                                            new DataHelper.DatabaseCallback() {
-                                                                @Override
-                                                                public void onSuccess(String id) {
-
-                                                                    runOnUiThread(() -> {
-                                                                        progressBar.setVisibility(GONE);
-                                                                        clearForm();
-                                                                        Toast.makeText(FormsActivity.this, "המידע נשמר בהצלחה", LENGTH_SHORT).show();
-                                                                        AppCache.getInstance().setTotalGames(AppCache.getInstance().getTotalGames() + 1);
-                                                                        MainActivity.loadDashboardStats();
-                                                                    });
-                                                                }
-
-                                                                @Override
-                                                                public void onFailure(String error) {
-
-                                                                    runOnUiThread(() -> {
-                                                                        Toast.makeText(context, "שגיאה בשמירת הנתונים", Toast.LENGTH_LONG).show();
-                                                                    });
-                                                                }
-                                                            }
-                                                    );
-                                                } catch (Exception e) {
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(String error) {
-                                                Toast.makeText(context, "מספר הקבוצה לא תקין", LENGTH_SHORT);
-                                            }
-                                        }
-                                );
-                            });
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-
-                        }
-                    });
-                } catch (Exception e) {
-
-                }
-            }
+    private void showError(String message) {
+        runOnUiThread(() -> {
+            progressBar.setVisibility(GONE);
+            sendBtn.setEnabled(true);
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
         });
     }
 
