@@ -1,6 +1,5 @@
 package com.example.mainapp.Screens;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,34 +9,46 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mainapp.Adapters.AssignmentAdapter;
 import com.example.mainapp.R;
 import com.example.mainapp.Screens.AuthenticationScreens.LoginScreen;
 import com.example.mainapp.Screens.Predictions.PredictionScreen;
-import com.example.mainapp.Utils.DatabaseUtils.AppCache;
+import com.example.mainapp.Utils.DatabaseUtils.Assignment;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
-import com.example.mainapp.Utils.DatabaseUtils.User;
+import com.example.mainapp.Utils.DatabaseUtils.UserRole;
 import com.example.mainapp.Utils.InternetUtils;
+import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.SharedPrefHelper;
-import com.example.mainapp.Utils.TeamUtils.TeamStats;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static TextView textViewWelcome, tvTeamCount, tvGamesCount;
-    private TextView tvProfileName, tvProfileEmail;
+    // Home panel
+    private TextView textViewWelcome, tvTeamCount, tvGamesCount;
+    private Button btnForms, btnPrediction;
+
+    // Profile panel
+    private TextView tvProfileName, tvProfileEmail, tvProfileRole;
+    private Button buttonLogout, btnAdminPanel;
+    private LinearLayout layoutAssignments;   // shown for SCOUTER
+    private RecyclerView rvAssignments;
+    private TextView tvNoAssignments;
+    private AssignmentAdapter assignmentAdapter;
+    private ArrayList<Assignment> assignmentList = new ArrayList<>();
+
+    // Navigation
     private ScrollView panelHome;
     private LinearLayout panelProfile;
-    private Button btnForms, btnPrediction, buttonLogout;
-    private BottomNavigationView bottomNav;
+    private com.google.android.material.bottomnavigation.BottomNavigationView bottomNav;
+
     private Context context;
+    private SharedPrefHelper prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,32 +62,95 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         context = this;
+        prefs   = SharedPrefHelper.getInstance(context);
+
         init();
-        loadDashboardStats();
         setupBottomNav();
         setupButtons();
+        setupProfilePanel();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (!SharedPrefHelper.getInstance(this).isUserLoggedIn()) {
+        if (!prefs.isUserLoggedIn()) {
             startActivity(new Intent(this, LoginScreen.class));
             finish();
+            return;
         }
         loadDashboardStats();
     }
 
+    // ==================== DASHBOARD ====================
+
     private void loadDashboardStats() {
-
         AppCache cache = AppCache.getInstance();
-
-        long teamCount = cache.getTeamCount();
-        int totalGames = cache.getTotalGames();
-
-        tvTeamCount.setText(teamCount > 0 ? String.valueOf(teamCount) : "—");
+        long teamCount  = cache.getTeamCount();
+        int totalGames  = cache.getTotalGames();
+        tvTeamCount.setText(teamCount  > 0 ? String.valueOf(teamCount)  : "—");
         tvGamesCount.setText(totalGames > 0 ? String.valueOf(totalGames) : "—");
     }
+
+    // ==================== PROFILE PANEL ====================
+
+    private void setupProfilePanel() {
+        tvProfileName.setText(prefs.getFullName());
+        tvProfileEmail.setText(prefs.getEmail());
+
+        if (prefs.isAdmin()) {
+            // ADMIN — show admin panel button, hide assignment list
+            tvProfileRole.setText("🔑 Admin");
+            tvProfileRole.setTextColor(0xFFC084FC);
+            btnAdminPanel.setVisibility(View.VISIBLE);
+            layoutAssignments.setVisibility(View.GONE);
+        } else {
+            // SCOUTER — show assignment list, hide admin button
+            tvProfileRole.setText("👤 Scouter");
+            tvProfileRole.setTextColor(0xFF7C6F8E);
+            btnAdminPanel.setVisibility(View.GONE);
+            layoutAssignments.setVisibility(View.VISIBLE);
+            setupAssignmentList();
+        }
+    }
+
+    private void setupAssignmentList() {
+        for(int i = 0; i < 10; i++){
+            assignmentList.add(new Assignment(50 + i, 5635));
+        }
+        assignmentAdapter = new AssignmentAdapter(assignmentList);
+        rvAssignments.setLayoutManager(new LinearLayoutManager(context));
+        rvAssignments.setAdapter(assignmentAdapter);
+
+        // Tap assignment → open FormsActivity pre-filled
+        assignmentAdapter.setOnAssignmentClickListener(assignment -> {
+            Intent intent = new Intent(context, FormsActivity.class);
+            intent.putExtra("teamNumber", assignment.getTeamNumber());
+            intent.putExtra("gameNumber", assignment.getGameNumber());
+            intent.putExtra("assignmentKey", assignment.getKey());
+            startActivity(intent);
+        });
+
+        // Live listener — updates automatically when admin assigns tasks
+        DataHelper.getInstance().listenToPendingAssignments(
+                prefs.getUserId(),
+                new DataHelper.DataCallback<ArrayList<Assignment>>() {
+                    @Override
+                    public void onSuccess(ArrayList<Assignment> data) {
+                        runOnUiThread(() -> {
+                            assignmentList.clear();
+                            assignmentList.addAll(data);
+                            assignmentAdapter.notifyDataSetChanged();
+                            tvNoAssignments.setVisibility(
+                                    data.isEmpty() ? View.VISIBLE : View.GONE);
+                        });
+                    }
+                    @Override
+                    public void onFailure(String error) {}
+                }
+        );
+    }
+
+    // ==================== NAVIGATION ====================
 
     private void setupBottomNav() {
         bottomNav.setOnItemSelectedListener(item -> {
@@ -96,25 +170,35 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void showPanel(View panel) {
+        panelHome.setVisibility(View.GONE);
+        panelProfile.setVisibility(View.GONE);
+        panel.setVisibility(View.VISIBLE);
+    }
+
+    // ==================== BUTTONS ====================
+
     private void setupButtons() {
         btnForms.setOnClickListener(v -> {
             if (InternetUtils.isInternetConnectedWithAlert(context))
                 startActivity(new Intent(context, FormsActivity.class));
         });
 
-       btnPrediction.setOnClickListener(v -> {
-            if (InternetUtils.isInternetConnectedWithAlert(context)) {
-                Intent intent = new Intent(context, PredictionScreen.class);
-                startActivity(intent);
-            }
+        btnPrediction.setOnClickListener(v -> {
+            if (InternetUtils.isInternetConnectedWithAlert(context))
+                startActivity(new Intent(context, PredictionScreen.class));
         });
+
+//        btnAdminPanel.setOnClickListener(v ->
+//                startActivity(new Intent(context, AdminPanelActivity.class))
+//        );
 
         buttonLogout.setOnClickListener(v ->
                 new AlertDialog.Builder(context)
                         .setMessage("אתה בטוח שאתה רוצה להתנתק?")
                         .setPositiveButton("כן", (dialog, which) -> {
                             DataHelper.getInstance().logoutUser();
-                            SharedPrefHelper.getInstance(context).logout();
+                            prefs.logout();
                             startActivity(new Intent(context, LoginScreen.class));
                             finish();
                         })
@@ -123,33 +207,29 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    private void showPanel(View panel) {
-        panelHome.setVisibility(View.GONE);
-        panelProfile.setVisibility(View.GONE);
-        panel.setVisibility(View.VISIBLE);
-    }
+    // ==================== INIT ====================
 
     private void init() {
+        // Home panel
         textViewWelcome = findViewById(R.id.textViewWelcome);
-        tvTeamCount = findViewById(R.id.tvTeamCount);
-        tvGamesCount = findViewById(R.id.tvGamesCount);
-        tvProfileName = findViewById(R.id.tvProfileName);
-        tvProfileEmail = findViewById(R.id.tvProfileEmail);
-        panelHome = findViewById(R.id.panelHome);
-        panelProfile = findViewById(R.id.panelProfile);
-        btnForms = findViewById(R.id.btnForms);
-        buttonLogout = findViewById(R.id.buttonLogout);
-        bottomNav = findViewById(R.id.bottomNav);
-        btnPrediction = findViewById(R.id.btnPrediction);
-        SharedPrefHelper prefs = SharedPrefHelper.getInstance(context);
-        String firstName = prefs.getFirstName();
-        String email = prefs.getEmail();
+        tvTeamCount     = findViewById(R.id.tvTeamCount);
+        tvGamesCount    = findViewById(R.id.tvGamesCount);
+        btnForms        = findViewById(R.id.btnForms);
+        btnPrediction   = findViewById(R.id.btnPrediction);
+        panelHome       = findViewById(R.id.panelHome);
 
-        textViewWelcome.setText("שלום, " + firstName);
-        tvProfileName.setText(prefs.getFullName());
-        tvProfileEmail.setText(email);
+        // Profile panel
+        panelProfile      = findViewById(R.id.panelProfile);
+        tvProfileName     = findViewById(R.id.tvProfileName);
+        tvProfileEmail    = findViewById(R.id.tvProfileEmail);
+        tvProfileRole     = findViewById(R.id.tvProfileRole);
+        buttonLogout      = findViewById(R.id.buttonLogout);
+        btnAdminPanel     = findViewById(R.id.btnAdminPanel);
+        layoutAssignments = findViewById(R.id.layoutAssignments);
+        rvAssignments     = findViewById(R.id.rvAssignments);
+        tvNoAssignments   = findViewById(R.id.tvNoAssignments);
+        bottomNav         = findViewById(R.id.bottomNav);
 
+        textViewWelcome.setText("שלום, " + prefs.getFirstName());
     }
-
-
 }

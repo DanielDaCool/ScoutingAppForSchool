@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="#1A1025"
+    android:padding="14dp"
+    android:layout_marginBottom="6dp">
+
+    <!-- Game number -->
+    <TextView
+        android:id="@+id/tvAssignmentGame"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="משחק 1"
+        android:textColor="#F0E6FF"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <!-- Arrow -->
+    <TextView
+        android:id="@+id/tvAssignmentArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="←"
+        android:textColor="#7C6F8E"
+        android:textSize="16sp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp" />
+
+    <!-- Team number -->
+    <TextView
+        android:id="@+id/tvAssignmentTeam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="#5635"
+        android:textColor="#C084FC"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <!-- Tap hint -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" ›"
+        android:textColor="#4A3F5C"
+        android:textSize="18sp"
+        android:layout_marginStart="12dp" />
+
+</LinearLayout>

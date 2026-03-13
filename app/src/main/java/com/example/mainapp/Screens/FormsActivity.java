@@ -36,6 +36,8 @@ public class FormsActivity extends AppCompatActivity {
     private Button sendBtn;
     private Context context;
     private ProgressBar progressBar;
+    private int teamNumberValue;
+    private int gameNumberValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,14 @@ public class FormsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forms);
         init();
 
+        if(getIntent().getExtras() != null){
+
+            teamNumberValue = (Integer)getIntent().getExtras().get("teamNumber");
+            gameNumberValue = (Integer)getIntent().getExtras().get("gameNumber");
+        }
+
+        if(teamNumberValue != 0) teamNumber.setText(String.valueOf(teamNumberValue));
+        if(gameNumberValue != 0) gameNumber.setText(String.valueOf(gameNumberValue));
         sendBtn.setOnClickListener(view -> handleSendBtnClick());
 
 
@@ -239,6 +249,9 @@ public class FormsActivity extends AppCompatActivity {
         this.context = FormsActivity.this;
         this.group = findViewById(R.id.ClimbGroup);
         this.progressBar = findViewById(R.id.progressBar);
+        this.teamNumberValue = 0;
+        this.gameNumberValue = 0;
+
 
 
     }

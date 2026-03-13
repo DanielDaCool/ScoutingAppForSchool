@@ -3,7 +3,6 @@ package com.example.mainapp.Screens.AuthenticationScreens;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -12,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mainapp.R;
+import com.example.mainapp.Screens.LoadingScreen;
 import com.example.mainapp.Screens.MainActivity;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.DatabaseUtils.User;
@@ -55,11 +55,17 @@ public class LoginScreen extends AppCompatActivity {
             public void onSuccess(User user) {
                 runOnUiThread(() -> {
                     btnLogin.setEnabled(true);
+                    // Save full user info including userId and role
+                    SharedPrefHelper.getInstance(context).saveUser(
+                            user.getFullName(),
+                            user.getEmail(),
+                            user.getUserId(),
+                            user.getRole()
+                    );
                     Toast.makeText(context,
                             "התחברת בהצלחה! ברוך הבא " + user.getFullName(),
                             Toast.LENGTH_SHORT).show();
-                    SharedPrefHelper.getInstance(context)
-                            .saveUser(user.getFullName(), user.getEmail());
+
                     startActivity(new Intent(context, MainActivity.class));
                     finish();
                 });
@@ -86,10 +92,10 @@ public class LoginScreen extends AppCompatActivity {
     }
 
     private void init() {
-        etEmail    = findViewById(R.id.etEmail);
-        etPassword = findViewById(R.id.etPassword);
-        btnLogin   = findViewById(R.id.btnLogin);
+        etEmail      = findViewById(R.id.etEmail);
+        etPassword   = findViewById(R.id.etPassword);
+        btnLogin     = findViewById(R.id.btnLogin);
         tvSignupLink = findViewById(R.id.tvSignupLink);
-        context    = LoginScreen.this;
+        context      = LoginScreen.this;
     }
 }
