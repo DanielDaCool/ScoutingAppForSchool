@@ -16,6 +16,7 @@
         android:textColor="#F0E6FF"
         android:layout_marginBottom="16dp" />
 
+    <!-- Filter + Sort row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,9 +24,8 @@
         android:gravity="center_vertical"
         android:background="@drawable/card_bg_dark"
         android:padding="4dp"
-        android:layout_marginBottom="12dp">
+        android:layout_marginBottom="8dp">
 
-        <!-- שדה סינון לפי מספר קבוצה -->
         <EditText
             android:id="@+id/editTextTeamFilter"
             android:layout_width="0dp"
@@ -40,7 +40,34 @@
             android:padding="12dp"
             android:layout_marginEnd="8dp" />
 
+        <!-- Sort button -->
+        <Button
+            android:id="@+id/btnSort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⇅ מיין"
+            android:textColor="#F0E6FF"
+            android:textSize="13sp"
+            android:backgroundTint="#2A1F3D"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginStart="4dp" />
+
     </LinearLayout>
+
+    <!-- Active sort indicator -->
+    <TextView
+        android:id="@+id/tvSortIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ממוין לפי: ממוצע נקודות"
+        android:textColor="#7C6F8E"
+        android:textSize="12sp"
+        android:gravity="end"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="4dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
