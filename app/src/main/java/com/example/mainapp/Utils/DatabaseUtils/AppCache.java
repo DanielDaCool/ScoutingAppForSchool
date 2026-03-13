@@ -45,7 +45,7 @@ public class AppCache {
     }
 
 
-    public static AppCache getInstance(){
+    public static synchronized AppCache getInstance(){
         if(instance == null) instance = new AppCache();
         return instance;
     }

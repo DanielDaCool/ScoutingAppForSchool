@@ -16,6 +16,7 @@ import com.example.mainapp.Adapters.GameAdapter;
 import com.example.mainapp.R;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
+import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.Game;
 import com.example.mainapp.Utils.InternetUtils;
 import com.example.mainapp.Utils.TeamUtils.TeamUtils;
@@ -37,37 +38,8 @@ public class GamesList extends AppCompatActivity {
         setContentView(R.layout.activity_games_list);
         init();
 
-        // FIXED: Setup RecyclerView BEFORE loading data
         setupRecyclerView();
-
-        // Load games from API
-        TBAApiManager.getInstance().getEventGames(Constants.CURRENT_EVENT_ON_APP, new TBAApiManager.GameCallback() {
-            @Override
-            public void onSuccess(ArrayList<Game> games) {
-                runOnUiThread(() -> {
-
-                    
-
-                    gameList.clear();
-                    gameList.addAll(games);
-                    filteredGameList.clear();
-                    filteredGameList.addAll(games);
-
-                    gameAdapter.notifyDataSetChanged();
-
-
-                });
-            }
-
-            @Override
-            public void onError(Exception e) {
-                runOnUiThread(() -> {
-                    System.err.println("Error loading games: " + e.getMessage());
-                    e.printStackTrace();
-                    Toast.makeText(context, "Error loading games: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
-            }
-        });
+        initGamesFromCache();
 
         listFilter.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -100,6 +72,15 @@ public class GamesList extends AppCompatActivity {
         });
     }
 
+    private void initGamesFromCache(){
+        gameList.clear();
+        gameList.addAll(AppCache.getInstance().getGamesList());
+
+        filteredGameList.clear();
+        filteredGameList.addAll(gameList);
+
+        gameAdapter.notifyDataSetChanged();
+    }
     private void showFilteredGames(int teamNumber){
         filteredGameList.clear();
         for (Game game : gameList) {
