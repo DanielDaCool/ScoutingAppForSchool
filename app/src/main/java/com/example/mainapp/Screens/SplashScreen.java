@@ -33,13 +33,14 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseApp.initializeApp(this);
+        FirebaseDatabase.getInstance("https://scoutingapp-7bb4e-default-rtdb.europe-west1.firebasedatabase.app")
+                .setPersistenceEnabled(true);
         setContentView(R.layout.activity_splash_screen);
 
         internetReciver = new InternetReciver();
 
-        FirebaseApp.initializeApp(this);
-        FirebaseDatabase.getInstance("https://scoutingapp-7bb4e-default-rtdb.europe-west1.firebasedatabase.app")
-                .setPersistenceEnabled(true);
+
 
         View dropdownView = findViewById(R.id.eventDropdown);
         eventDropdown = new EventDropdown(this, dropdownView);

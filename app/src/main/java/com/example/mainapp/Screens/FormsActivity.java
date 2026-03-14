@@ -6,6 +6,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mainapp.R;
@@ -22,11 +24,17 @@ import com.example.mainapp.Utils.DatabaseUtils.CLIMB;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.GamePiece;
+import com.example.mainapp.Utils.InternetUtils;
+import com.example.mainapp.Utils.LocalDatabase;
+import com.example.mainapp.Utils.OfflineFormData;
 import com.example.mainapp.Utils.SharedPrefHelper;
 import com.example.mainapp.Utils.TeamUtils.Team;
 import com.example.mainapp.Utils.TeamUtils.TeamAtGame;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import com.example.mainapp.Utils.TeamUtils.TeamUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class FormsActivity extends AppCompatActivity {
 
@@ -40,7 +48,10 @@ public class FormsActivity extends AppCompatActivity {
 
     private int teamNumberValue = 0;
     private int gameNumberValue = 0;
-    private String assignmentKey = null; // set if launched from assignment list
+    private String assignmentKey = null;
+
+    // Show offline warning only once per session
+    private static boolean offlineWarningShown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +59,12 @@ public class FormsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forms);
         init();
 
-        // Read extras from intent
         if (getIntent().getExtras() != null) {
             teamNumberValue = (Integer) getIntent().getExtras().get("teamNumber");
             gameNumberValue = (Integer) getIntent().getExtras().get("gameNumber");
             assignmentKey   = getIntent().getStringExtra("assignmentKey");
         }
 
-        // Pre-fill and lock fields if launched from assignment
         if (teamNumberValue != 0) {
             teamNumber.setText(String.valueOf(teamNumberValue));
             teamNumber.setEnabled(false);
@@ -67,7 +76,23 @@ public class FormsActivity extends AppCompatActivity {
             gameNumber.setAlpha(0.6f);
         }
 
+        // Show offline warning once per session
+        if (!InternetUtils.isInternetConnected(context) && !offlineWarningShown) {
+            offlineWarningShown = true;
+            new AlertDialog.Builder(context)
+                    .setTitle("אין חיבור לאינטרנט")
+                    .setMessage("הנתונים יישמרו מקומית ויסונכרנו אוטומטית כשתחזור לאינטרנט")
+                    .setPositiveButton("הבנתי", null)
+                    .show();
+        }
+
         sendBtn.setOnClickListener(view -> handleSendBtnClick());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        offlineWarningShown = false;
     }
 
     // ==================== BUTTON CLICK ====================
@@ -102,10 +127,15 @@ public class FormsActivity extends AppCompatActivity {
 
         progressBar.setVisibility(VISIBLE);
         sendBtn.setEnabled(false);
-        fetchStatsAndSave(t, gameNum);
+
+        if (InternetUtils.isInternetConnected(context)) {
+            fetchStatsAndSave(t, gameNum);
+        } else {
+            saveLocally(t, gameNum);
+        }
     }
 
-    // ==================== SAVE FLOW ====================
+    // ==================== ONLINE FLOW ====================
 
     private void fetchStatsAndSave(Team t, int gameNum) {
         DataHelper.getInstance().readTeamStats(
@@ -137,25 +167,17 @@ public class FormsActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String id) {
                         if (assignmentKey != null) {
-                            // Launched from assignment — mark it complete then go back
                             String userId = SharedPrefHelper.getInstance(context).getUserId();
                             Assignment assignment = new Assignment(gameNum, t.getTeamNumber());
                             DataHelper.getInstance().completeAssignment(userId, assignment,
                                     new DataHelper.DatabaseCallback() {
                                         @Override
                                         public void onSuccess(String id) {
-                                            runOnUiThread(() -> {
-                                                onSaveSuccess();
-                                                finish();
-                                            });
+                                            runOnUiThread(() -> { onSaveSuccess(); finish(); });
                                         }
                                         @Override
                                         public void onFailure(String error) {
-                                            // Data saved — still show success even if move failed
-                                            runOnUiThread(() -> {
-                                                onSaveSuccess();
-                                                finish();
-                                            });
+                                            runOnUiThread(() -> { onSaveSuccess(); finish(); });
                                         }
                                     }
                             );
@@ -171,12 +193,72 @@ public class FormsActivity extends AppCompatActivity {
         );
     }
 
+    // ==================== OFFLINE FLOW ====================
+
+    private void saveLocally(Team t, int gameNum) {
+        new Thread(() -> {
+            try {
+                TeamAtGame teamAtGame = new TeamAtGame(t, gameNum);
+                updateGamePieceScored(teamAtGame);
+
+                String piecesJson = serializeGamePieces(teamAtGame);
+                String climbName  = teamAtGame.getClimb().name();
+
+                OfflineFormData formData = new OfflineFormData(
+                        t.getTeamNumber(),
+                        gameNum,
+                        piecesJson,
+                        climbName,
+                        System.currentTimeMillis()
+                );
+
+                long rowId = LocalDatabase.getInstance(context).saveForm(formData);
+                Log.d("OFFLINE", "Saved locally — rowId: " + rowId
+                        + " team: " + t.getTeamNumber()
+                        + " game: " + gameNum);
+                runOnUiThread(() -> {
+                    if (rowId != -1) {
+                        onOfflineSaveSuccess();
+                    } else {
+                        showError("שגיאה בשמירה מקומית");
+                    }
+                });
+            } catch (Exception e) {
+                showError("שגיאה בשמירה מקומית: " + e.getMessage());
+            }
+        }).start();
+    }
+
+    private String serializeGamePieces(TeamAtGame teamAtGame) throws Exception {
+        JSONArray array = new JSONArray();
+        for (TeamAtGame.GamePieceScore score : teamAtGame.getGamePiecesScored()) {
+            JSONObject obj = new JSONObject();
+            obj.put("piece", score.getPiece());
+            obj.put("inAuto", score.isInAuto());
+            array.put(obj);
+        }
+        return array.toString();
+    }
+
+    // ==================== SUCCESS HANDLERS ====================
+
     private void onSaveSuccess() {
         progressBar.setVisibility(GONE);
         sendBtn.setEnabled(true);
         clearForm();
         Toast.makeText(this, "המידע נשמר בהצלחה ✓", LENGTH_SHORT).show();
         AppCache.getInstance().setTotalGames(AppCache.getInstance().getTotalGames() + 1);
+    }
+
+    private void onOfflineSaveSuccess() {
+        progressBar.setVisibility(GONE);
+        sendBtn.setEnabled(true);
+        clearForm();
+        Toast.makeText(this,
+                "נשמר מקומית ✓ — יסונכרן כשתחזור לאינטרנט",
+                Toast.LENGTH_LONG).show();
+        AppCache.getInstance().setTotalGames(AppCache.getInstance().getTotalGames() + 1);
+        if (assignmentKey != null) finish();
     }
 
     private void showError(String message) {
@@ -238,7 +320,6 @@ public class FormsActivity extends AppCompatActivity {
         teleL1.setText(""); teleL2.setText("");
         teleL3.setText(""); teleL4.setText("");
         teleNet.setText(""); teleProc.setText("");
-        // Only clear team/game if NOT launched from assignment
         if (assignmentKey == null) {
             teamNumber.setText("");
             gameNumber.setText("");

@@ -18,11 +18,9 @@ import com.example.mainapp.Adapters.AssignmentAdapter;
 import com.example.mainapp.R;
 import com.example.mainapp.Screens.AuthenticationScreens.LoginScreen;
 import com.example.mainapp.Screens.Predictions.PredictionScreen;
+import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.DatabaseUtils.Assignment;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
-import com.example.mainapp.Utils.DatabaseUtils.UserRole;
-import com.example.mainapp.Utils.InternetUtils;
-import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.SharedPrefHelper;
 
 import java.util.ArrayList;
@@ -36,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     // Profile panel
     private TextView tvProfileName, tvProfileEmail, tvProfileRole;
     private Button buttonLogout, btnAdminPanel;
-    private LinearLayout layoutAssignments;   // shown for SCOUTER
+    private LinearLayout layoutAssignments;
     private RecyclerView rvAssignments;
     private TextView tvNoAssignments;
     private AssignmentAdapter assignmentAdapter;
@@ -98,13 +96,11 @@ public class MainActivity extends AppCompatActivity {
         tvProfileEmail.setText(prefs.getEmail());
 
         if (prefs.isAdmin()) {
-            // ADMIN — show admin panel button, hide assignment list
             tvProfileRole.setText("🔑 Admin");
             tvProfileRole.setTextColor(0xFFC084FC);
             btnAdminPanel.setVisibility(View.VISIBLE);
             layoutAssignments.setVisibility(View.GONE);
         } else {
-            // SCOUTER — show assignment list, hide admin button
             tvProfileRole.setText("👤 Scouter");
             tvProfileRole.setTextColor(0xFF7C6F8E);
             btnAdminPanel.setVisibility(View.GONE);
@@ -114,14 +110,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupAssignmentList() {
-        for(int i = 0; i < 10; i++){
-            assignmentList.add(new Assignment(50 + i, 5635));
-        }
         assignmentAdapter = new AssignmentAdapter(assignmentList);
         rvAssignments.setLayoutManager(new LinearLayoutManager(context));
         rvAssignments.setAdapter(assignmentAdapter);
 
-        // Tap assignment → open FormsActivity pre-filled
         assignmentAdapter.setOnAssignmentClickListener(assignment -> {
             Intent intent = new Intent(context, FormsActivity.class);
             intent.putExtra("teamNumber", assignment.getTeamNumber());
@@ -130,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Live listener — updates automatically when admin assigns tasks
         DataHelper.getInstance().listenToPendingAssignments(
                 prefs.getUserId(),
                 new DataHelper.DataCallback<ArrayList<Assignment>>() {
@@ -158,11 +149,9 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.nav_home) {
                 showPanel(panelHome);
             } else if (id == R.id.nav_games) {
-                if (InternetUtils.isInternetConnectedWithAlert(context))
-                    startActivity(new Intent(context, GamesList.class));
+                startActivity(new Intent(context, GamesList.class));
             } else if (id == R.id.nav_stats) {
-                if (InternetUtils.isInternetConnectedWithAlert(context))
-                    startActivity(new Intent(context, TeamStatsActivity.class));
+                startActivity(new Intent(context, TeamStatsActivity.class));
             } else if (id == R.id.nav_profile) {
                 showPanel(panelProfile);
             }
@@ -179,15 +168,13 @@ public class MainActivity extends AppCompatActivity {
     // ==================== BUTTONS ====================
 
     private void setupButtons() {
-        btnForms.setOnClickListener(v -> {
-            if (InternetUtils.isInternetConnectedWithAlert(context))
-                startActivity(new Intent(context, FormsActivity.class));
-        });
+        btnForms.setOnClickListener(v ->
+                startActivity(new Intent(context, FormsActivity.class))
+        );
 
-        btnPrediction.setOnClickListener(v -> {
-            if (InternetUtils.isInternetConnectedWithAlert(context))
-                startActivity(new Intent(context, PredictionScreen.class));
-        });
+        btnPrediction.setOnClickListener(v ->
+                startActivity(new Intent(context, PredictionScreen.class))
+        );
 
         btnAdminPanel.setOnClickListener(v ->
                 startActivity(new Intent(context, AdminPanelActivity.class))
@@ -210,15 +197,12 @@ public class MainActivity extends AppCompatActivity {
     // ==================== INIT ====================
 
     private void init() {
-        // Home panel
-        textViewWelcome = findViewById(R.id.textViewWelcome);
-        tvTeamCount     = findViewById(R.id.tvTeamCount);
-        tvGamesCount    = findViewById(R.id.tvGamesCount);
-        btnForms        = findViewById(R.id.btnForms);
-        btnPrediction   = findViewById(R.id.btnPrediction);
-        panelHome       = findViewById(R.id.panelHome);
-
-        // Profile panel
+        textViewWelcome   = findViewById(R.id.textViewWelcome);
+        tvTeamCount       = findViewById(R.id.tvTeamCount);
+        tvGamesCount      = findViewById(R.id.tvGamesCount);
+        btnForms          = findViewById(R.id.btnForms);
+        btnPrediction     = findViewById(R.id.btnPrediction);
+        panelHome         = findViewById(R.id.panelHome);
         panelProfile      = findViewById(R.id.panelProfile);
         tvProfileName     = findViewById(R.id.tvProfileName);
         tvProfileEmail    = findViewById(R.id.tvProfileEmail);

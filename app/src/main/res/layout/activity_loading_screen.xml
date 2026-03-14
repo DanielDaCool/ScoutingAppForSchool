@@ -5,70 +5,66 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="#0A0A0F"
-    android:padding="40dp">
+    android:padding="32dp">
 
-
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-
-        android:src="@drawable/demacia_logo">
-
-    </ImageView>
-    <!-- App name -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ScoutingApp"
-        android:textSize="26sp"
-        android:textStyle="bold"
+        android:text="Scouting App"
         android:textColor="#F0E6FF"
-        android:letterSpacing="0.05"
-        android:layout_marginBottom="4dp" />
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="48dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="טוען נתונים..."
-        android:textSize="13sp"
-        android:textColor="#4A3F5C"
-        android:layout_marginBottom="56dp" />
-
-    <!-- Progress bar -->
+    <!-- Loading state -->
     <ProgressBar
         android:id="@+id/progressBar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:layout_marginBottom="16dp"
-        android:progressDrawable="@drawable/progress_bar"
-        android:progress="0"
-        android:max="100" />
-
-    <!-- Status row -->
-    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginBottom="16dp"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:progressTint="#C084FC"
+        android:max="100" />
 
-        <TextView
-            android:id="@+id/tvStatus"
-            android:layout_marginRight="10dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="מאתחל..."
-            android:textSize="13sp"
-            android:textColor="#7C6F8E" />
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="מאתחל..."
+        android:textColor="#7C6F8E"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="8dp" />
 
-        <TextView
-            android:id="@+id/tvPercent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0%"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:textColor="#C084FC" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tvPercent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0%"
+        android:textColor="#C084FC"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center" />
+
+    <!-- No internet state — hidden by default -->
+    <TextView
+        android:id="@+id/tvNoInternet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="אין חיבור לאינטרנט &#10;&#10;נדרש חיבור לאינטרנט בכניסה הראשונה לאפליקציה"
+        android:textColor="#F0E6FF"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btnRetry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="נסה שוב"
+        android:textColor="#F0E6FF"
+        android:backgroundTint="#2A1F3D"
+        android:visibility="gone" />
 
 </LinearLayout>
