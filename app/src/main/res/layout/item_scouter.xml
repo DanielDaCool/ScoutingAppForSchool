@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="#1A1025"
+    android:padding="14dp"
+    android:layout_marginBottom="6dp">
+
+    <!-- Left: name + email -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvScouterName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="שם סקאוטר"
+            android:textColor="#F0E6FF"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvScouterEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="email@example.com"
+            android:textColor="#7C6F8E"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <!-- Right: pending count -->
+    <TextView
+        android:id="@+id/tvPendingCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 משימות"
+        android:textColor="#C084FC"
+        android:textSize="12sp"
+        android:layout_marginEnd="8dp" />
+
+    <!-- Arrow -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="›"
+        android:textColor="#4A3F5C"
+        android:textSize="20sp" />
+
+</LinearLayout>

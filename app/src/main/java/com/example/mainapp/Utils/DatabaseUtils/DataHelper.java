@@ -83,8 +83,8 @@ public class DataHelper {
 
     /**
      * Register a new user.
-     * Saves role: "SCOUTER" to users/userId/role in Realtime DB.
-     * Admin can manually change this to "ADMIN" in Firebase Console.
+     * Saves full User object to users/userId in Realtime DB.
+     * Role defaults to SCOUTER — admin changes manually in Firebase Console.
      */
     public void registerUser(String fullName, String email, String password, DataCallback<User> callback) {
         Thread t = new Thread(() ->
@@ -92,24 +92,22 @@ public class DataHelper {
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 FirebaseUser firebaseUser = auth.getCurrentUser();
-                                // Save display name to Auth profile
                                 UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
                                         .setDisplayName(fullName)
                                         .build();
                                 firebaseUser.updateProfile(profileUpdate)
                                         .addOnCompleteListener(profileTask -> {
-                                            // Save only the role to DB — everything else lives in Auth
+                                            // Save full user object so getAllUsers() can read name/email
+                                            User user = new User(
+                                                    fullName,
+                                                    email,
+                                                    UserRole.SCOUTER,
+                                                    firebaseUser.getUid());
                                             rootRef.child(Constants.USERS_TABLE_NAME)
                                                     .child(firebaseUser.getUid())
-                                                    .child("role")
-                                                    .setValue(UserRole.SCOUTER.name())
-                                                    .addOnCompleteListener(roleTask -> {
-                                                        if (callback != null)
-                                                            callback.onSuccess(new User(
-                                                                    fullName,
-                                                                    email,
-                                                                    UserRole.SCOUTER,
-                                                                    firebaseUser.getUid()));
+                                                    .setValue(user)
+                                                    .addOnCompleteListener(dbTask -> {
+                                                        if (callback != null) callback.onSuccess(user);
                                                     });
                                         });
                             } else {
@@ -125,7 +123,7 @@ public class DataHelper {
 
     /**
      * Login user.
-     * Reads role from users/userId/role — everything else comes from Firebase Auth.
+     * Reads full User object from users/userId — includes role, name, email.
      */
     public void loginUser(String email, String password, DataCallback<User> callback) {
         Thread t = new Thread(() ->
@@ -135,28 +133,31 @@ public class DataHelper {
                                 FirebaseUser firebaseUser = auth.getCurrentUser();
                                 String fullName = firebaseUser.getDisplayName() != null
                                         ? firebaseUser.getDisplayName() : "";
-                                // Read role from DB
-                                getUserRole(firebaseUser.getUid(), new DataCallback<UserRole>() {
-                                    @Override
-                                    public void onSuccess(UserRole role) {
-                                        if (callback != null)
-                                            callback.onSuccess(new User(
-                                                    fullName,
-                                                    firebaseUser.getEmail(),
-                                                    role,
-                                                    firebaseUser.getUid()));
-                                    }
-                                    @Override
-                                    public void onFailure(String error) {
-                                        // Default to SCOUTER if role not found
-                                        if (callback != null)
-                                            callback.onSuccess(new User(
-                                                    fullName,
-                                                    firebaseUser.getEmail(),
-                                                    UserRole.SCOUTER,
-                                                    firebaseUser.getUid()));
-                                    }
-                                });
+                                // Fetch full user object to get role
+                                fetchNode(
+                                        Constants.USERS_TABLE_NAME + "/" + firebaseUser.getUid(),
+                                        User.class,
+                                        new DataCallback<User>() {
+                                            @Override
+                                            public void onSuccess(User user) {
+                                                // Make sure userId is set (older registrations may not have it)
+                                                if (user.getUserId() == null) {
+                                                    user.setUserId(firebaseUser.getUid());
+                                                }
+                                                if (callback != null) callback.onSuccess(user);
+                                            }
+                                            @Override
+                                            public void onFailure(String error) {
+                                                // Fallback — default to SCOUTER if DB read fails
+                                                if (callback != null)
+                                                    callback.onSuccess(new User(
+                                                            fullName,
+                                                            firebaseUser.getEmail(),
+                                                            UserRole.SCOUTER,
+                                                            firebaseUser.getUid()));
+                                            }
+                                        }
+                                );
                             } else {
                                 if (callback != null) {
                                     String msg = task.getException() != null
@@ -176,29 +177,6 @@ public class DataHelper {
         t.start();
     }
 
-    /**
-     * Reads role from users/userId/role.
-     * Returns SCOUTER by default if not found.
-     */
-    public void getUserRole(String userId, DataCallback<UserRole> callback) {
-        fetchNode(Constants.USERS_TABLE_NAME + "/" + userId + "/role",
-                String.class,
-                new DataCallback<String>() {
-                    @Override
-                    public void onSuccess(String role) {
-                        try {
-                            callback.onSuccess(UserRole.valueOf(role));
-                        } catch (IllegalArgumentException e) {
-                            callback.onSuccess(UserRole.SCOUTER); // fallback
-                        }
-                    }
-                    @Override
-                    public void onFailure(String error) {
-                        callback.onSuccess(UserRole.SCOUTER); // fallback
-                    }
-                });
-    }
-
     public void logoutUser() {
         auth.signOut();
     }
@@ -210,6 +188,63 @@ public class DataHelper {
     public String getCurrentUserId() {
         FirebaseUser user = auth.getCurrentUser();
         return user != null ? user.getUid() : null;
+    }
+
+    // ==================== USER METHODS ====================
+
+    /**
+     * Fetches all users from users/ — used in AdminPanelActivity.
+     */
+    public void getAllUsers(DataCallback<ArrayList<User>> callback) {
+        Thread t = new Thread(() ->
+                rootRef.child(Constants.USERS_TABLE_NAME).get().addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        if (callback != null)
+                            callback.onFailure(task.getException() != null
+                                    ? task.getException().getMessage() : "Unknown error");
+                        return;
+                    }
+                    ArrayList<User> users = new ArrayList<>();
+                    DataSnapshot snapshot = task.getResult();
+                    if (snapshot.exists()) {
+                        for (DataSnapshot child : snapshot.getChildren()) {
+                            User user = child.getValue(User.class);
+                            // Ensure userId is always set from the DB key
+                            if (user != null) {
+                                if (user.getUserId() == null) user.setUserId(child.getKey());
+                                users.add(user);
+                            }
+                        }
+                    }
+                    if (callback != null) callback.onSuccess(users);
+                })
+        );
+        t.setName("firebase-get-all-users");
+        t.start();
+    }
+
+    /**
+     * Reads role from users/userId/role.
+     */
+    public void getUserRole(String userId, DataCallback<UserRole> callback) {
+        fetchNode(
+                Constants.USERS_TABLE_NAME + "/" + userId + "/role",
+                String.class,
+                new DataCallback<String>() {
+                    @Override
+                    public void onSuccess(String role) {
+                        try {
+                            callback.onSuccess(UserRole.valueOf(role));
+                        } catch (IllegalArgumentException e) {
+                            callback.onSuccess(UserRole.SCOUTER);
+                        }
+                    }
+                    @Override
+                    public void onFailure(String error) {
+                        callback.onSuccess(UserRole.SCOUTER);
+                    }
+                }
+        );
     }
 
     // ==================== ASSIGNMENT METHODS ====================
@@ -291,8 +326,42 @@ public class DataHelper {
     }
 
     /**
+     * Fetches pending assignments for a scouter (one-time read).
+     */
+    public void getPendingAssignments(String userId, DataCallback<ArrayList<Assignment>> callback) {
+        Thread t = new Thread(() ->
+                rootRef.child(Constants.ASSIGNMENTS_TABLE_NAME)
+                        .child(userId)
+                        .child("pending")
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                if (callback != null)
+                                    callback.onFailure(task.getException() != null
+                                            ? task.getException().getMessage() : "Unknown error");
+                                return;
+                            }
+                            ArrayList<Assignment> assignments = new ArrayList<>();
+                            DataSnapshot snapshot = task.getResult();
+                            if (snapshot.exists()) {
+                                for (DataSnapshot child : snapshot.getChildren()) {
+                                    Assignment a = child.getValue(Assignment.class);
+                                    if (a != null) assignments.add(a);
+                                }
+                            }
+                            assignments.sort((a1, a2) ->
+                                    Integer.compare(a1.getGameNumber(), a2.getGameNumber()));
+                            if (callback != null) callback.onSuccess(assignments);
+                        })
+        );
+        t.setName("firebase-get-assignments-" + userId);
+        t.start();
+    }
+
+    /**
      * Live listener for pending assignments.
      * Auto-updates the profile panel when admin adds/removes assignments.
+     * No thread wrap — ValueEventListener is already async.
      */
     public void listenToPendingAssignments(String userId, DataCallback<ArrayList<Assignment>> callback) {
         rootRef.child(Constants.ASSIGNMENTS_TABLE_NAME)
@@ -317,31 +386,6 @@ public class DataHelper {
                         if (callback != null) callback.onFailure(error.getMessage());
                     }
                 });
-    }
-
-    /**
-     * Fetches all users from users/ — used in AdminPanelActivity.
-     * Returns userId + role pairs.
-     */
-    public void getAllUserIds(DataCallback<ArrayList<String>> callback) {
-        Thread t = new Thread(() ->
-                rootRef.child(Constants.USERS_TABLE_NAME).get().addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        if (callback != null) callback.onFailure("Failed to fetch users");
-                        return;
-                    }
-                    ArrayList<String> userIds = new ArrayList<>();
-                    DataSnapshot snapshot = task.getResult();
-                    if (snapshot.exists()) {
-                        for (DataSnapshot child : snapshot.getChildren()) {
-                            userIds.add(child.getKey());
-                        }
-                    }
-                    if (callback != null) callback.onSuccess(userIds);
-                })
-        );
-        t.setName("firebase-get-all-userids");
-        t.start();
     }
 
     // ==================== TEAM METHODS ====================
@@ -393,16 +437,18 @@ public class DataHelper {
     }
 
     public void readTeamStats(String teamID, DataCallback<TeamStats> callback) {
-        fetchNode(Constants.TEAMS_TABLE_NAME + "/" + teamID, TeamStats.class, new DataCallback<TeamStats>() {
-            @Override
-            public void onSuccess(TeamStats data) {
-                if (callback != null) callback.onSuccess(data);
-            }
-            @Override
-            public void onFailure(String error) {
-                if (callback != null) callback.onFailure("קבוצה לא קיימת, איתחול מידע");
-            }
-        });
+        fetchNode(Constants.TEAMS_TABLE_NAME + "/" + teamID, TeamStats.class,
+                new DataCallback<TeamStats>() {
+                    @Override
+                    public void onSuccess(TeamStats data) {
+                        if (callback != null) callback.onSuccess(data);
+                    }
+                    @Override
+                    public void onFailure(String error) {
+                        if (callback != null) callback.onFailure("קבוצה לא קיימת, איתחול מידע");
+                    }
+                }
+        );
     }
 
     public void isTeamDataExists(Team t, ExistsCallback callback) {

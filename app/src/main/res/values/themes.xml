@@ -6,4 +6,27 @@
     </style>
 
     <style name="Theme.MainApp" parent="Base.Theme.MainApp" />
+
+    <style name="DarkAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:background">#1A1025</item>
+        <item name="android:textColor">#F0E6FF</item>
+        <item name="android:textColorHint">#7C6F8E</item>
+        <item name="colorAccent">#C084FC</item>
+        <item name="buttonBarPositiveButtonStyle">@style/DialogPositiveButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/DialogNegativeButton</item>
+        <item name="android:windowTitleStyle">@style/DarkDialogTitle</item>
+    </style>
+
+    <style name="DialogPositiveButton" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">#C084FC</item>
+    </style>
+
+    <style name="DialogNegativeButton" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">#7C6F8E</item>
+    </style>
+    <style name="DarkDialogTitle" parent="Base.DialogWindowTitle.AppCompat">
+        <item name="android:textColor">#F0E6FF</item>
+    </style>
+
+
 </resources>

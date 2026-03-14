@@ -1,5 +1,7 @@
 package com.example.mainapp.Utils.DatabaseUtils;
 
+import com.google.firebase.database.Exclude;
+
 public class User {
     private String fullName;
     private String email;
@@ -32,6 +34,7 @@ public class User {
     public void setRole(UserRole role)       { this.role = role; }
     public void setUserId(String userId)     { this.userId = userId; }
 
+    @Exclude
     public boolean isAdmin() {
         return role == UserRole.ADMIN;
     }

@@ -189,9 +189,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(context, PredictionScreen.class));
         });
 
-//        btnAdminPanel.setOnClickListener(v ->
-//                startActivity(new Intent(context, AdminPanelActivity.class))
-//        );
+        btnAdminPanel.setOnClickListener(v ->
+                startActivity(new Intent(context, AdminPanelActivity.class))
+        );
 
         buttonLogout.setOnClickListener(v ->
                 new AlertDialog.Builder(context)
