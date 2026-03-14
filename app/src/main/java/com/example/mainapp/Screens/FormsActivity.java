@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mainapp.R;
@@ -50,9 +49,6 @@ public class FormsActivity extends AppCompatActivity {
     private int gameNumberValue = 0;
     private String assignmentKey = null;
 
-    // Show offline warning only once per session
-    private static boolean offlineWarningShown = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,23 +72,7 @@ public class FormsActivity extends AppCompatActivity {
             gameNumber.setAlpha(0.6f);
         }
 
-        // Show offline warning once per session
-        if (!InternetUtils.isInternetConnected(context) && !offlineWarningShown) {
-            offlineWarningShown = true;
-            new AlertDialog.Builder(context)
-                    .setTitle("אין חיבור לאינטרנט")
-                    .setMessage("הנתונים יישמרו מקומית ויסונכרנו אוטומטית כשתחזור לאינטרנט")
-                    .setPositiveButton("הבנתי", null)
-                    .show();
-        }
-
         sendBtn.setOnClickListener(view -> handleSendBtnClick());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        offlineWarningShown = false;
     }
 
     // ==================== BUTTON CLICK ====================
@@ -106,7 +86,7 @@ public class FormsActivity extends AppCompatActivity {
             Toast.makeText(context, "הכנס מספר קבוצה תקין", LENGTH_SHORT).show();
             return;
         }
-        if (!TeamUtils.containsTeam(AppCache.getInstance().getTeamAtEvent(),
+        if (!TeamUtils.containsTeam(AppCache.getInstance().getTeamsAtEvent(),
                 getInputFromEditText(teamNumber))) {
             Toast.makeText(context, "הכנס קבוצה שמתחרה בתחרות שבחרת", LENGTH_SHORT).show();
             return;
@@ -119,7 +99,7 @@ public class FormsActivity extends AppCompatActivity {
         int teamNum = getInputFromEditText(teamNumber);
         int gameNum = getInputFromEditText(gameNumber);
 
-        Team t = TeamUtils.getTeamFromArray(AppCache.getInstance().getTeamAtEvent(), teamNum);
+        Team t = TeamUtils.getTeamFromArray(AppCache.getInstance().getTeamsAtEvent(), teamNum);
         if (t == null) {
             showError("קבוצה לא נמצאה");
             return;
@@ -128,37 +108,71 @@ public class FormsActivity extends AppCompatActivity {
         progressBar.setVisibility(VISIBLE);
         sendBtn.setEnabled(false);
 
+        // Build TeamAtGame
+        TeamAtGame teamAtGame = new TeamAtGame(t, gameNum);
+        updateGamePieceScored(teamAtGame);
+
+        // Step 1 — always save to SQLite as local backup
+        saveToSQLite(t, gameNum, teamAtGame);
+
+        // Step 2 — if online also save to Firebase immediately
+        // if offline Firebase will be updated by InternetReciver on reconnect
         if (InternetUtils.isInternetConnected(context)) {
-            fetchStatsAndSave(t, gameNum);
+            saveToFirebase(t, gameNum, teamAtGame);
         } else {
-            saveLocally(t, gameNum);
+            // Offline — SQLite saved, show success same as online
+            onSaveSuccess();
         }
     }
 
-    // ==================== ONLINE FLOW ====================
+    // ==================== SQLITE ====================
 
-    private void fetchStatsAndSave(Team t, int gameNum) {
+    private void saveToSQLite(Team t, int gameNum, TeamAtGame teamAtGame) {
+        new Thread(() -> {
+            try {
+                String piecesJson = serializeGamePieces(teamAtGame);
+                String climbName  = teamAtGame.getClimb().name();
+                OfflineFormData formData = new OfflineFormData(
+                        t.getTeamNumber(),
+                        gameNum,
+                        piecesJson,
+                        climbName,
+                        System.currentTimeMillis(),
+                        assignmentKey,
+                        SharedPrefHelper.getInstance(context).getUserId()
+                );
+                LocalDatabase.getInstance(context).saveForm(formData);
+            } catch (Exception e) {
+                // Non-critical — Firebase save can still succeed
+            }
+        }).start();
+    }
+
+    // ==================== FIREBASE ====================
+
+    private void saveToFirebase(Team t, int gameNum, TeamAtGame teamAtGame) {
+        Log.d("FORMS", "saveToFirebase called — team: " + t.getTeamNumber());
+
         DataHelper.getInstance().readTeamStats(
                 Integer.toString(t.getTeamNumber()),
                 new DataHelper.DataCallback<TeamStats>() {
                     @Override
                     public void onSuccess(TeamStats data) {
                         if (data == null) data = new TeamStats(t);
-                        saveGameData(t, gameNum, data);
+                        persistToFirebase(t, gameNum, teamAtGame, data);
                     }
                     @Override
                     public void onFailure(String error) {
-                        saveGameData(t, gameNum, new TeamStats(t));
+                        persistToFirebase(t, gameNum, teamAtGame, new TeamStats(t));
                     }
                 }
         );
     }
 
-    private void saveGameData(Team t, int gameNum, TeamStats stats) {
-        TeamAtGame teamAtGame = new TeamAtGame(t, gameNum);
-        updateGamePieceScored(teamAtGame);
-        stats.addGame(teamAtGame);
+    private void persistToFirebase(Team t, int gameNum, TeamAtGame teamAtGame, TeamStats stats) {
+        Log.d("FORMS", "persistToFirebase called — team: " + t.getTeamNumber());
 
+        stats.addGame(teamAtGame);
         DataHelper.getInstance().replace(
                 Constants.TEAMS_TABLE_NAME,
                 Integer.toString(t.getTeamNumber()),
@@ -166,97 +180,66 @@ public class FormsActivity extends AppCompatActivity {
                 new DataHelper.DatabaseCallback() {
                     @Override
                     public void onSuccess(String id) {
+                        Log.d("FORMS", "✅ Firebase write success");
+
+                        // Mark SQLite row as synced — no need to sync again on reconnect
+                        markLatestAsSynced(t.getTeamNumber(), gameNum);
+
                         if (assignmentKey != null) {
-                            String userId = SharedPrefHelper.getInstance(context).getUserId();
-                            Assignment assignment = new Assignment(gameNum, t.getTeamNumber());
-                            DataHelper.getInstance().completeAssignment(userId, assignment,
-                                    new DataHelper.DatabaseCallback() {
-                                        @Override
-                                        public void onSuccess(String id) {
-                                            runOnUiThread(() -> { onSaveSuccess(); finish(); });
-                                        }
-                                        @Override
-                                        public void onFailure(String error) {
-                                            runOnUiThread(() -> { onSaveSuccess(); finish(); });
-                                        }
-                                    }
-                            );
+                            Log.d("FORMS", "Completing assignment: " + assignmentKey);
+
+                            completeAssignmentOnFirebase(t, gameNum);
                         } else {
                             runOnUiThread(() -> onSaveSuccess());
                         }
                     }
                     @Override
                     public void onFailure(String error) {
-                        showError("שגיאה בשמירת הנתונים: " + error);
+                        // Firebase failed but SQLite has it — show success anyway
+                        // InternetReciver will retry when reconnected
+                        Log.e("FORMS", "❌ Firebase write failed: " + error);
+
+                        runOnUiThread(() -> onSaveSuccess());
                     }
                 }
         );
     }
-
-    // ==================== OFFLINE FLOW ====================
-
-    private void saveLocally(Team t, int gameNum) {
-        new Thread(() -> {
-            try {
-                TeamAtGame teamAtGame = new TeamAtGame(t, gameNum);
-                updateGamePieceScored(teamAtGame);
-
-                String piecesJson = serializeGamePieces(teamAtGame);
-                String climbName  = teamAtGame.getClimb().name();
-
-                OfflineFormData formData = new OfflineFormData(
-                        t.getTeamNumber(),
-                        gameNum,
-                        piecesJson,
-                        climbName,
-                        System.currentTimeMillis()
-                );
-
-                long rowId = LocalDatabase.getInstance(context).saveForm(formData);
-                Log.d("OFFLINE", "Saved locally — rowId: " + rowId
-                        + " team: " + t.getTeamNumber()
-                        + " game: " + gameNum);
-                runOnUiThread(() -> {
-                    if (rowId != -1) {
-                        onOfflineSaveSuccess();
-                    } else {
-                        showError("שגיאה בשמירה מקומית");
+    private void completeAssignmentOnFirebase(Team t, int gameNum) {
+        String userId = SharedPrefHelper.getInstance(context).getUserId();
+        Log.d("FORMS", "completeAssignment — userId: " + userId + " key: " + assignmentKey);
+        Assignment assignment = new Assignment(gameNum, t.getTeamNumber());
+        DataHelper.getInstance().completeAssignment(userId, assignment,
+                new DataHelper.DatabaseCallback() {
+                    @Override
+                    public void onSuccess(String id) {
+                        Log.d("FORMS", "✅ completeAssignment success");
+                        runOnUiThread(() -> onSaveSuccess());
                     }
-                });
-            } catch (Exception e) {
-                showError("שגיאה בשמירה מקומית: " + e.getMessage());
-            }
-        }).start();
+                    @Override
+                    public void onFailure(String error) {
+                        Log.e("FORMS", "❌ completeAssignment failed: " + error);
+                        runOnUiThread(() -> onSaveSuccess());
+                    }
+                }
+        );
+    }
+    private void markLatestAsSynced(int teamNum, int gameNum) {
+        new Thread(() ->
+                LocalDatabase.getInstance(context).markLatestAsSynced(teamNum, gameNum)
+        ).start();
     }
 
-    private String serializeGamePieces(TeamAtGame teamAtGame) throws Exception {
-        JSONArray array = new JSONArray();
-        for (TeamAtGame.GamePieceScore score : teamAtGame.getGamePiecesScored()) {
-            JSONObject obj = new JSONObject();
-            obj.put("piece", score.getPiece());
-            obj.put("inAuto", score.isInAuto());
-            array.put(obj);
-        }
-        return array.toString();
-    }
+    // ==================== SUCCESS ====================
 
-    // ==================== SUCCESS HANDLERS ====================
-
+    /**
+     * Always called regardless of online/offline.
+     * User sees the same toast and behavior either way.
+     */
     private void onSaveSuccess() {
         progressBar.setVisibility(GONE);
         sendBtn.setEnabled(true);
         clearForm();
         Toast.makeText(this, "המידע נשמר בהצלחה ✓", LENGTH_SHORT).show();
-        AppCache.getInstance().setTotalGames(AppCache.getInstance().getTotalGames() + 1);
-    }
-
-    private void onOfflineSaveSuccess() {
-        progressBar.setVisibility(GONE);
-        sendBtn.setEnabled(true);
-        clearForm();
-        Toast.makeText(this,
-                "נשמר מקומית ✓ — יסונכרן כשתחזור לאינטרנט",
-                Toast.LENGTH_LONG).show();
         AppCache.getInstance().setTotalGames(AppCache.getInstance().getTotalGames() + 1);
         if (assignmentKey != null) finish();
     }
@@ -270,6 +253,17 @@ public class FormsActivity extends AppCompatActivity {
     }
 
     // ==================== HELPERS ====================
+
+    private String serializeGamePieces(TeamAtGame teamAtGame) throws Exception {
+        JSONArray array = new JSONArray();
+        for (TeamAtGame.GamePieceScore score : teamAtGame.getGamePiecesScored()) {
+            JSONObject obj = new JSONObject();
+            obj.put("piece", score.getPiece());
+            obj.put("inAuto", score.isInAuto());
+            array.put(obj);
+        }
+        return array.toString();
+    }
 
     private void updateGamePieceScored(TeamAtGame teamAtGame) {
         for (int i = 0; i < getInputFromEditText(autoL1); i++)

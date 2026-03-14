@@ -41,6 +41,7 @@
             android:maxLines="1"
             android:ellipsize="end" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -90,7 +91,42 @@
                         android:layout_height="wrap_content"
                         android:text="מוכן לסקאוטינג היום?"
                         android:textSize="13sp"
-                        android:textColor="#C084FC" />
+                        android:textColor="#C084FC"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#3D2A5C"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Current event row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🏆 תחרות נוכחית:"
+                            android:textSize="13sp"
+                            android:textColor="#7C6F8E"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:id="@+id/tvCurrentEvent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="—"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="#C084FC" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <!-- Section label -->
@@ -176,7 +212,7 @@
                     android:letterSpacing="0.12"
                     android:layout_marginBottom="10dp" />
 
-                <!-- Forms - full width primary -->
+                <!-- Forms button -->
                 <Button
                     android:id="@+id/btnForms"
                     android:layout_width="match_parent"
@@ -188,7 +224,7 @@
                     android:background="@drawable/btn_primary"
                     android:stateListAnimator="@null" />
 
-
+                <!-- Prediction button -->
                 <Button
                     android:id="@+id/btnPrediction"
                     android:layout_width="match_parent"
@@ -296,7 +332,6 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
 
-                <!-- Empty state -->
                 <TextView
                     android:id="@+id/tvNoAssignments"
                     android:layout_width="match_parent"
@@ -341,7 +376,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#0D0D14"
-
         app:itemIconTint="@color/bottom_nav_colors"
         app:itemTextColor="@color/bottom_nav_colors"
         app:itemActiveIndicatorStyle="@null"

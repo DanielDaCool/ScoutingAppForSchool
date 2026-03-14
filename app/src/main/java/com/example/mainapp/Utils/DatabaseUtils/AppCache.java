@@ -37,7 +37,7 @@ public class AppCache {
     public void setTotalGames(int totalGames) { this.totalGames = totalGames; }
 
 
-    public Team[] getTeamAtEvent(){
+    public Team[] getTeamsAtEvent(){
         return this.teamsAtEvent;
     }
     public void setTeamsAtEvent(Team[] teamsAtEvent){
@@ -45,6 +45,9 @@ public class AppCache {
     }
 
 
+    public boolean isCacheEmpty() {
+        return teamsAtEvent == null && allTeamStats == null && gamesList == null;
+    }
     public static synchronized AppCache getInstance(){
         if(instance == null) instance = new AppCache();
         return instance;

@@ -17,6 +17,7 @@ import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
+import com.example.mainapp.Utils.Game;
 import com.example.mainapp.Utils.InternetUtils;
 import com.example.mainapp.Utils.SharedPrefHelper;
 import com.example.mainapp.Utils.TeamUtils.Team;
@@ -26,7 +27,6 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class LoadingScreen extends AppCompatActivity {
 
@@ -34,9 +34,6 @@ public class LoadingScreen extends AppCompatActivity {
     private TextView tvStatus, tvPercent, tvNoInternet;
     private Button btnRetry;
     private SharedPrefHelper prefs;
-
-    private static final int TOTAL_STEPS = 5;
-    private final AtomicInteger completedSteps = new AtomicInteger(0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,19 +51,16 @@ public class LoadingScreen extends AppCompatActivity {
 
         btnRetry.setOnClickListener(v -> {
             if (!InternetUtils.isInternetConnected(this)) {
-                // Still no internet — shake the button or just ignore
                 tvStatus.setText("עדיין אין חיבור...");
                 return;
             }
-            // Internet is back — hide no-internet UI and start loading
             tvNoInternet.setVisibility(View.GONE);
             btnRetry.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
             tvPercent.setVisibility(View.VISIBLE);
-            completedSteps.set(0);
             setProgress(0, "מאתחל...");
             try {
-                startLoading();
+                loadStep1_TBATeams();
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
@@ -74,26 +68,24 @@ public class LoadingScreen extends AppCompatActivity {
             }
         });
 
-        boolean hasInternet     = InternetUtils.isInternetConnected(this);
+        boolean hasInternet       = InternetUtils.isInternetConnected(this);
         boolean hasLaunchedBefore = prefs.hasLaunchedBefore();
 
         if (!hasInternet && !hasLaunchedBefore) {
-            // First launch with no internet — block completely
             showNoInternetState();
             return;
         }
 
         if (!hasInternet) {
-            // Returning user offline — skip loading, use last session's cache
-            // (AppCache is empty in memory but user has seen data before)
+            // Returning user offline — skip loading
             navigateNext();
             return;
         }
 
-        // Has internet — load everything fresh
+        // Has internet — start sequential loading
         setProgress(0, "מאתחל...");
         try {
-            startLoading();
+            loadStep1_TBATeams();
         } catch (JSONException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -101,7 +93,7 @@ public class LoadingScreen extends AppCompatActivity {
         }
     }
 
-    // ==================== NO INTERNET STATE ====================
+    // ==================== NO INTERNET ====================
 
     private void showNoInternetState() {
         progressBar.setVisibility(View.GONE);
@@ -111,88 +103,102 @@ public class LoadingScreen extends AppCompatActivity {
         btnRetry.setVisibility(View.VISIBLE);
     }
 
-    // ==================== LOADING ====================
+    // ==================== SEQUENTIAL LOADING STEPS ====================
 
-    private void startLoading() throws JSONException, IOException {
-        setProgress(5, "טוען נתוני קבוצות...");
-
-        TBAApiManager.getInstance().getEventTeams(Constants.CURRENT_EVENT_ON_APP,
+    // Step 1 — Load TBA event teams
+    private void loadStep1_TBATeams() throws JSONException, IOException {
+        setProgress(10, "טוען קבוצות מ-TBA...");
+        TBAApiManager.getInstance().getEventTeams(
+                Constants.CURRENT_EVENT_ON_APP,
                 new TBAApiManager.TeamCallback() {
                     @Override
                     public void onSuccess(ArrayList<Team> teams) {
                         AppCache.getInstance().setTeamsAtEvent(teams.toArray(new Team[0]));
+                        loadStep2_TeamStats();
                     }
                     @Override
-                    public void onError(Exception e) {}
+                    public void onError(Exception e) {
+                        loadStep2_TeamStats(); // continue even on error
+                    }
                 }
         );
+    }
 
+    // Step 2 — Load all team stats from Firebase
+    private void loadStep2_TeamStats() {
+        setProgress(30, "טוען נתוני סקאוטינג...");
         DataHelper.getInstance().readAllTeamStats(
                 new DataHelper.DataCallback<ArrayList<TeamStats>>() {
                     @Override
                     public void onSuccess(ArrayList<TeamStats> data) {
                         AppCache.getInstance().setAllTeamStats(data);
-                        onStepComplete("נתוני קבוצות נטענו ✓");
 
-                        DataHelper.getInstance().countTeams(count -> {
-                            AppCache.getInstance().setTeamCount(count);
-                            onStepComplete("ספירת קבוצות ✓");
-                        });
-
+                        // Calculate total games while we have the data
                         int totalGames = 0;
                         for (TeamStats t : data) {
                             if (t.getAllGames() != null) totalGames += t.getAllGames().size();
                         }
                         AppCache.getInstance().setTotalGames(totalGames);
-                        onStepComplete("ספירת משחקים ✓");
+                        loadStep3_TeamCount();
                     }
                     @Override
                     public void onFailure(String error) {
-                        onStepComplete("נתוני קבוצות (שגיאה)");
-                        onStepComplete("ספירת קבוצות (שגיאה)");
-                        onStepComplete("ספירת משחקים (שגיאה)");
+                        loadStep3_TeamCount(); // continue even on error
                     }
                 }
         );
+    }
 
-        setProgress(10, "טוען רשימת משחקים...");
-        TBAApiManager.getInstance().getEventGames(Constants.CURRENT_EVENT_ON_APP,
+    // Step 3 — Count teams in Firebase
+    private void loadStep3_TeamCount() {
+        setProgress(50, "סופר קבוצות...");
+        DataHelper.getInstance().countTeams(count -> {
+            AppCache.getInstance().setTeamCount(count);
+            loadStep4_Games();
+        });
+    }
+
+    // Step 4 — Load games list from TBA
+    private void loadStep4_Games() {
+        setProgress(70, "טוען רשימת משחקים...");
+        TBAApiManager.getInstance().getEventGames(
+                Constants.CURRENT_EVENT_ON_APP,
                 new TBAApiManager.GameCallback() {
                     @Override
-                    public void onSuccess(ArrayList<com.example.mainapp.Utils.Game> games) {
+                    public void onSuccess(ArrayList<Game> games) {
                         AppCache.getInstance().setGamesList(games);
-                        onStepComplete("רשימת משחקים נטענה ✓");
+                        loadStep5_IsraeliTeams();
                     }
                     @Override
                     public void onError(Exception e) {
-                        onStepComplete("רשימת משחקים (שגיאה)");
+                        loadStep5_IsraeliTeams(); // continue even on error
                     }
                 }
         );
+    }
 
-        setProgress(15, "טוען קבוצות ישראליות...");
+    // Step 5 — Load all Israeli teams (last step — navigate when done)
+    private void loadStep5_IsraeliTeams() {
+        setProgress(90, "טוען קבוצות ישראליות...");
         TBAApiManager.getInstance().getIsraeliTeams(
                 new TBAApiManager.TeamListCallback() {
                     @Override
                     public void onSuccess(ArrayList<Team> teams) {
                         AppCache.getInstance().setIsraeliTeams(teams);
-                        onStepComplete("קבוצות ישראליות נטענו ✓");
+                        setProgress(100, "מוכן! ✓");
+
+                        // Mark that app has been successfully loaded at least once
+                        prefs.markHasLaunched();
+
+                        // Small delay so user sees 100%
+                        new Handler(Looper.getMainLooper()).postDelayed(
+                                () -> navigateNext(), 400);
                     }
                 }
         );
     }
 
-    private void onStepComplete(String message) {
-        int done    = completedSteps.incrementAndGet();
-        int percent = (done * 100) / TOTAL_STEPS;
-        setProgress(percent, message);
-
-        if (done >= TOTAL_STEPS) {
-            // Mark that data has been loaded at least once
-            prefs.markHasLaunched();
-            new Handler(Looper.getMainLooper()).postDelayed(this::navigateNext, 600);
-        }
-    }
+    // ==================== HELPERS ====================
 
     private void setProgress(int percent, String message) {
         runOnUiThread(() -> {

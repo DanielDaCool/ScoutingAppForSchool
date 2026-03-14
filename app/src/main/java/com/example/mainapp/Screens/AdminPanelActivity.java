@@ -1,10 +1,8 @@
 package com.example.mainapp.Screens;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,9 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mainapp.Adapters.ScouterAdapter;
 import com.example.mainapp.R;
+import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.DatabaseUtils.Assignment;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.DatabaseUtils.User;
+import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 
 import java.util.ArrayList;
 
@@ -41,7 +41,11 @@ public class AdminPanelActivity extends AppCompatActivity {
         init();
 
         tvBack.setOnClickListener(v -> finish());
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadScouters();
     }
 
@@ -57,7 +61,6 @@ public class AdminPanelActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     scouterList.clear();
 
-                    // Filter out admins — only show scouters
                     for (User u : users) {
                         if (!u.isAdmin()) scouterList.add(u);
                     }
@@ -65,11 +68,10 @@ public class AdminPanelActivity extends AppCompatActivity {
                     scouterAdapter.updateData(scouterList);
                     tvEmpty.setVisibility(scouterList.isEmpty() ? View.VISIBLE : View.GONE);
 
-                    // Load pending count for each scouter
+                    // Start live listeners for each scouter's pending count
                     loadPendingCounts();
                 });
             }
-
             @Override
             public void onFailure(String error) {
                 runOnUiThread(() -> {
@@ -80,9 +82,14 @@ public class AdminPanelActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Attaches a live listener for each scouter's pending assignments.
+     * Count updates automatically when assignments are added or completed.
+     */
     private void loadPendingCounts() {
         for (User scouter : scouterList) {
-            DataHelper.getInstance().getPendingAssignments(scouter.getUserId(),
+            DataHelper.getInstance().listenToPendingAssignments(
+                    scouter.getUserId(),
                     new DataHelper.DataCallback<ArrayList<Assignment>>() {
                         @Override
                         public void onSuccess(ArrayList<Assignment> assignments) {
@@ -103,6 +110,7 @@ public class AdminPanelActivity extends AppCompatActivity {
             );
         }
     }
+
     // ==================== ASSIGN DIALOG ====================
 
     private void showAssignDialog(User scouter) {
@@ -126,8 +134,19 @@ public class AdminPanelActivity extends AppCompatActivity {
                     try {
                         int gameNumber = Integer.parseInt(gameStr);
                         int teamNumber = Integer.parseInt(teamStr);
-                        Assignment assignment = new Assignment(gameNumber, teamNumber);
-                        saveAssignment(scouter, assignment);
+
+                        if (!TeamUtils.containsTeam(AppCache.getInstance().getTeamsAtEvent(), teamNumber)) {
+                            Toast.makeText(context, "הכנס קבוצה שמתחרה בתחרות", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if (!TeamUtils.containsTeam(
+                                AppCache.getInstance().getGamesList().get(gameNumber - 1).getPlayingTeamsNumbers(),
+                                teamNumber)) {
+                            Toast.makeText(context, "הכנס משחק שהקבוצה משחקת בו", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        saveAssignment(scouter, new Assignment(gameNumber, teamNumber));
                     } catch (NumberFormatException e) {
                         Toast.makeText(context, "הכנס מספרים בלבד", Toast.LENGTH_SHORT).show();
                     }
@@ -141,13 +160,13 @@ public class AdminPanelActivity extends AppCompatActivity {
                 new DataHelper.DatabaseCallback() {
                     @Override
                     public void onSuccess(String id) {
-                        runOnUiThread(() -> {
-                            Toast.makeText(context,
-                                    "משימה הוקצתה ל-" + scouter.getFullName(),
-                                    Toast.LENGTH_SHORT).show();
-                            // Reload counts to reflect the new assignment
-                            loadPendingCounts();
-                        });
+                        runOnUiThread(() ->
+                                        Toast.makeText(context,
+                                                "משימה הוקצתה ל-" + scouter.getFullName(),
+                                                Toast.LENGTH_SHORT).show()
+                                // No need to call loadPendingCounts() —
+                                // the live listener fires automatically
+                        );
                     }
                     @Override
                     public void onFailure(String error) {

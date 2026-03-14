@@ -37,6 +37,11 @@ public class ScouterAdapter extends RecyclerView.Adapter<ScouterAdapter.ScouterV
         notifyDataSetChanged();
     }
 
+    public void setPendingCount(String userId, int count) {
+        pendingCounts.put(userId, count);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ScouterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -50,6 +55,7 @@ public class ScouterAdapter extends RecyclerView.Adapter<ScouterAdapter.ScouterV
         User scouter = scouters.get(position);
         holder.bind(scouter);
 
+        // Set count AFTER bind() so it doesn't get overwritten
         Integer count = pendingCounts.get(scouter.getUserId());
         if (count != null) {
             holder.tvPendingCount.setText(count + " משימות פתוחות");
@@ -63,10 +69,6 @@ public class ScouterAdapter extends RecyclerView.Adapter<ScouterAdapter.ScouterV
         return scouters.size();
     }
 
-    public void setPendingCount(String userId, int count) {
-        pendingCounts.put(userId, count);
-        notifyDataSetChanged();
-    }
     public class ScouterViewHolder extends RecyclerView.ViewHolder {
         private TextView tvName, tvEmail;
         public TextView tvPendingCount;
@@ -81,18 +83,11 @@ public class ScouterAdapter extends RecyclerView.Adapter<ScouterAdapter.ScouterV
         public void bind(User scouter) {
             tvName.setText(scouter.getFullName());
             tvEmail.setText(scouter.getEmail());
-            // Pending count is set externally after fetching assignments
-            tvPendingCount.setText("טוען...");
+            // tvPendingCount is set in onBindViewHolder — not here
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) listener.onScouterClick(scouter);
             });
         }
-
-        public void setPendingCount(int count) {
-            tvPendingCount.setText(count + " משימות פתוחות");
-        }
-
-
     }
 }

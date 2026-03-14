@@ -13,10 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mainapp.Adapters.EventDropdown;
 import com.example.mainapp.R;
+import com.example.mainapp.Screens.AuthenticationScreens.LoginScreen;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
+import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.InternetReciver;
+import com.example.mainapp.Utils.SharedPrefHelper;
 import com.example.mainapp.Utils.TeamUtils.Team;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import com.google.firebase.FirebaseApp;
@@ -27,7 +30,6 @@ import java.util.ArrayList;
 public class SplashScreen extends AppCompatActivity {
 
     private EventDropdown eventDropdown;
-    private InternetReciver internetReciver;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -36,11 +38,22 @@ public class SplashScreen extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         FirebaseDatabase.getInstance("https://scoutingapp-7bb4e-default-rtdb.europe-west1.firebasedatabase.app")
                 .setPersistenceEnabled(true);
+
+
+
+
+
+        if (!AppCache.getInstance().isCacheEmpty()) {
+            Intent intent = SharedPrefHelper.getInstance(this).isUserLoggedIn()
+                    ? new Intent(this, MainActivity.class)
+                    : new Intent(this, LoginScreen.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+
         setContentView(R.layout.activity_splash_screen);
-
-        internetReciver = new InternetReciver();
-
-
 
         View dropdownView = findViewById(R.id.eventDropdown);
         eventDropdown = new EventDropdown(this, dropdownView);
@@ -57,21 +70,6 @@ public class SplashScreen extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(internetReciver, intentFilter);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        try {
-            unregisterReceiver(internetReciver);
-        } catch (IllegalArgumentException ignored) {}
-    }
 
     private void initTeams() {
         TBAApiManager.getInstance().getIsraeliTeams(new TBAApiManager.TeamListCallback() {
