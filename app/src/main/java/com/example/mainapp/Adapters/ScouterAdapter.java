@@ -24,16 +24,12 @@ public class ScouterAdapter extends RecyclerView.Adapter<ScouterAdapter.ScouterV
         void onScouterClick(User scouter);
     }
 
-    public ScouterAdapter(ArrayList<User> scouters) {
-        this.scouters = scouters;
-    }
+    public ScouterAdapter(ArrayList<User> scouters) { this.scouters = scouters; }
 
-    public void setOnScouterClickListener(OnScouterClickListener listener) {
-        this.listener = listener;
-    }
+    public void setOnScouterClickListener(OnScouterClickListener l) { this.listener = l; }
 
-    public void updateData(ArrayList<User> newScouters) {
-        this.scouters = newScouters;
+    public void updateData(ArrayList<User> newList) {
+        this.scouters = newList;
         notifyDataSetChanged();
     }
 
@@ -42,12 +38,11 @@ public class ScouterAdapter extends RecyclerView.Adapter<ScouterAdapter.ScouterV
         notifyDataSetChanged();
     }
 
-    @NonNull
-    @Override
+    @NonNull @Override
     public ScouterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_scouter, parent, false);
-        return new ScouterViewHolder(view);
+        return new ScouterViewHolder(v);
     }
 
     @Override
@@ -55,23 +50,16 @@ public class ScouterAdapter extends RecyclerView.Adapter<ScouterAdapter.ScouterV
         User scouter = scouters.get(position);
         holder.bind(scouter);
 
-        // Set count AFTER bind() so it doesn't get overwritten
+        // Set count AFTER bind() so it is not overwritten
         Integer count = pendingCounts.get(scouter.getUserId());
-        if (count != null) {
-            holder.tvPendingCount.setText(count + " משימות פתוחות");
-        } else {
-            holder.tvPendingCount.setText("טוען...");
-        }
+        holder.tvPendingCount.setText(count != null ? count + " משימות פתוחות" : "טוען...");
     }
 
-    @Override
-    public int getItemCount() {
-        return scouters.size();
-    }
+    @Override public int getItemCount() { return scouters.size(); }
 
     public class ScouterViewHolder extends RecyclerView.ViewHolder {
         private TextView tvName, tvEmail;
-        public TextView tvPendingCount;
+        public  TextView tvPendingCount;
 
         public ScouterViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,8 +71,7 @@ public class ScouterAdapter extends RecyclerView.Adapter<ScouterAdapter.ScouterV
         public void bind(User scouter) {
             tvName.setText(scouter.getFullName());
             tvEmail.setText(scouter.getEmail());
-            // tvPendingCount is set in onBindViewHolder — not here
-
+            // tvPendingCount is set in onBindViewHolder — NOT here
             itemView.setOnClickListener(v -> {
                 if (listener != null) listener.onScouterClick(scouter);
             });

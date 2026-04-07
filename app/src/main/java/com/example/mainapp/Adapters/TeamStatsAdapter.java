@@ -1,4 +1,6 @@
 package com.example.mainapp.Adapters;
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mainapp.R;
+import com.example.mainapp.Screens.TeamProfileActivity;
 import com.example.mainapp.Utils.GamePiece;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
@@ -15,24 +18,22 @@ import java.util.ArrayList;
 public class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.TeamStatsViewHolder> {
 
     private ArrayList<TeamStats> teamStats;
+    private Context context;
 
-    // The constructor now takes the already aggregated list
     public TeamStatsAdapter(ArrayList<TeamStats> teamStats) {
         this.teamStats = teamStats;
     }
 
-    // Removed the getUniqueTeamNumbers and the aggregation method as it's now in the Activity
-
     @NonNull
     @Override
     public TeamStatsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_team_stats, parent, false);
         return new TeamStatsViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TeamStatsViewHolder holder, int position) {
-        // The item at 'position' is the complete history for one team
         TeamStats curTeamStats = teamStats.get(position);
 
 
@@ -54,13 +55,17 @@ public class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.Team
         holder.mostScoredTextView.setText(mostScoredText);
 
         holder.gamesPlayedTextView.setText("כמות משחקים: " + curTeamStats.getGamesPlayed());
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, TeamProfileActivity.class);
+            intent.putExtra(TeamProfileActivity.EXTRA_TEAM_NUMBER, curTeamStats.getTeam().getTeamNumber());
+            context.startActivity(intent);
+        });
     }
 
 
 
     @Override
     public int getItemCount() {
-        // Item count is the number of unique teams (size of the outer list)
         return teamStats.size();
     }
 

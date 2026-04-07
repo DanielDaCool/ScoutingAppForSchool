@@ -8,6 +8,21 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="תחרות"
+        android:textColor="#F0E6FF"
+        android:textSize="13sp"
+        android:layout_marginBottom="4dp" />
+
+    <Spinner
+        android:id="@+id/spDistrict"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#C084FC"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="מספר משחק"
         android:textColor="#F0E6FF"
         android:textSize="13sp"
@@ -20,8 +35,8 @@
         android:inputType="number"
         android:hint="לדוגמה: 5"
         android:textColor="#F0E6FF"
-        android:textColorHint="#7C6F8E"
-        android:backgroundTint="#C084FC"
+        android:textColorHint="#4A3F5C"
+        android:backgroundTint="#2A1F3D"
         android:padding="10dp"
         android:layout_marginBottom="16dp" />
 
@@ -38,11 +53,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
-        android:hint="לדוגמה: 5635"
-
+        android:hint="לדוגמה: 5987"
         android:textColor="#F0E6FF"
-        android:textColorHint="#7C6F8E"
-        android:backgroundTint="#C084FC"
+        android:textColorHint="#4A3F5C"
+        android:backgroundTint="#2A1F3D"
         android:padding="10dp" />
 
 </LinearLayout>

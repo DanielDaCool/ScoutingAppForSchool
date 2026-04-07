@@ -17,10 +17,10 @@
         android:theme="@style/Theme.MainApp"
         tools:targetApi="31">
         <activity
-            android:name=".Screens.AdminPanelActivity"
+            android:name=".Screens.AdminMainActivity"
             android:exported="false" />
         <activity
-            android:name=".Screens.GameDetailActivity"
+            android:name=".Screens.TeamProfileActivity"
             android:exported="false" />
         <activity
             android:name=".Screens.SplashScreen"
@@ -31,6 +31,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Screens.AuthenticationScreens.LoginScreen"
+            android:exported="false" />
+        <activity
+            android:name=".Screens.AuthenticationScreens.SignupScreen"
+            android:exported="false" />
+        <activity
+            android:name=".Screens.LoadingScreen"
+            android:exported="false" />
+        <activity
+            android:name=".Screens.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Screens.AdminMainScreen"
+            android:exported="false" />
+        <activity
+            android:name=".Screens.AdminPanelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Screens.GameDetailActivity"
+            android:exported="false" />
         <activity
             android:name=".Screens.Predictions.PredictionScreen"
             android:exported="false" />
@@ -43,18 +64,6 @@
         <activity
             android:name=".Screens.GamesList"
             android:exported="false" />
-        <activity
-            android:name=".Screens.AuthenticationScreens.LoginScreen"
-            android:exported="false" />
-        <activity
-            android:name=".Screens.AuthenticationScreens.SignupScreen"
-            android:exported="false" />
-        <activity android:name=".Screens.LoadingScreen" />
-        <activity
-            android:name=".Screens.MainActivity"
-            android:exported="false" />
-
-
     </application>
 
 </manifest>

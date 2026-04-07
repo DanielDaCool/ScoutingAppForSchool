@@ -21,15 +21,12 @@ public class AppCache {
     public ArrayList<TeamStats> getAllTeamStats() { return allTeamStats; }
     public void setAllTeamStats(ArrayList<TeamStats> allTeamStats) { this.allTeamStats = allTeamStats; }
 
-    // ── Games list ───────────────────────────────────────
     public ArrayList<Game> getGamesList() { return gamesList; }
     public void setGamesList(ArrayList<Game> gamesList) { this.gamesList = gamesList; }
 
-    // ── Israeli teams ─────────────────────────────────────
     public ArrayList<Team> getIsraeliTeams() { return israeliTeams; }
     public void setIsraeliTeams(ArrayList<Team> israeliTeams) { this.israeliTeams = israeliTeams; }
 
-    // ── Counts ────────────────────────────────────────────
     public long getTeamCount() { return teamCount; }
     public void setTeamCount(long teamCount) { this.teamCount = teamCount; }
 

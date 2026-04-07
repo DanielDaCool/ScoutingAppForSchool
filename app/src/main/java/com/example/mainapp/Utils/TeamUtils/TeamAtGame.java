@@ -112,17 +112,11 @@ public class TeamAtGame implements Serializable {
 
         int sum = 0;
         for (GamePieceScore g : gamePiecesScored) {
-            try {
-                GamePiece piece = GamePiece.valueOf(g.getPiece());
-                sum += g.isInAuto() ? piece.getAutoPoints() : piece.getTeleopPoints();
-            } catch (Exception e) {
-                // Skip invalid pieces
-            }
+            sum+= g.getPoints();
         }
         return sum + c.getPoints();
     }
 
-    // Firebase-compatible replacement for Pair
     public static class GamePieceScore implements Serializable {
         private String piece;
         private boolean inAuto;
@@ -130,6 +124,12 @@ public class TeamAtGame implements Serializable {
         public GamePieceScore() {
         }
 
+        public int getPoints(){
+            GamePiece piece = GamePiece.valueOf(this.piece);
+            return this.inAuto ? piece.getAutoPoints() : piece.getTeleopPoints();
+
+
+        }
         public GamePieceScore(String piece, boolean inAuto) {
             this.piece = piece;
             this.inAuto = inAuto;

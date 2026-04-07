@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#0A0A0F">
+    android:background="#0A0A0F"
+    android:orientation="vertical">
 
     <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:orientation="horizontal"
+        android:background="#0D0D14"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:background="#0D0D14">
+        android:paddingEnd="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ScoutingApp"
+            android:textColor="#F0E6FF"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.04"
-            android:textColor="#F0E6FF" />
+            android:textStyle="bold" />
 
         <View
             android:layout_width="0dp"
@@ -35,11 +33,12 @@
             android:id="@+id/textViewWelcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="שלום, משתמש"
-            android:textSize="16sp"
-            android:textColor="#7C6F8E"
+            android:ellipsize="end"
             android:maxLines="1"
-            android:ellipsize="end" />
+            android:text="שלום, משתמש"
+            android:textColor="#7C6F8E"
+            android:textSize="16sp" />
+
     </LinearLayout>
 
     <View
@@ -47,13 +46,12 @@
         android:layout_height="1dp"
         android:background="#16102A" />
 
-    <!-- Panels container -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <!-- ===== HOME PANEL ===== -->
+        <!-- HOME PANEL -->
         <ScrollView
             android:id="@+id/panelHome"
             android:layout_width="match_parent"
@@ -67,179 +65,168 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <!-- Welcome banner card -->
+                <!-- Banner -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_marginBottom="24dp"
                     android:background="@drawable/card_bg_purple"
-                    android:padding="20dp"
-                    android:layout_marginBottom="24dp">
+                    android:gravity="right"
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                     <TextView
-                        android:id="@+id/tvWelcomeBanner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
                         android:text="ברוך הבא 👋"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
                         android:textColor="#F0E6FF"
-                        android:layout_marginBottom="4dp" />
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
                         android:text="מוכן לסקאוטינג היום?"
-                        android:textSize="13sp"
                         android:textColor="#C084FC"
-                        android:layout_marginBottom="12dp" />
+                        android:textSize="13sp" />
 
-                    <!-- Divider -->
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#3D2A5C"
-                        android:layout_marginBottom="12dp" />
+                        android:layout_marginBottom="12dp"
+                        android:background="#3D2A5C" />
 
-                    <!-- Current event row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="right"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                        >
 
                         <TextView
+
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🏆 תחרות נוכחית:"
-                            android:textSize="13sp"
+                            android:layout_marginEnd="8dp"
+                            android:text="תחרות נוכחית:"
                             android:textColor="#7C6F8E"
-                            android:layout_marginEnd="8dp" />
-
-                        <TextView
-                            android:id="@+id/tvCurrentEvent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="—"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:textColor="#C084FC" />
+                            android:textSize="13sp" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <!-- Section label -->
+                <!-- Stats -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:text="סיכום נתונים"
-                    android:textSize="18sp"
                     android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.12"
-                    android:layout_marginBottom="10dp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                <!-- Stats cards row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="28dp">
+                    android:layout_marginBottom="28dp"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="88dp"
-                        android:layout_weight="1"
                         android:layout_marginEnd="8dp"
-                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:background="@drawable/card_bg_dark"
                         android:gravity="center"
-                        android:background="@drawable/card_bg_dark">
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tvTeamCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="—"
+                            android:textColor="#C084FC"
                             android:textSize="30sp"
-                            android:textStyle="bold"
-                            android:textColor="#C084FC" />
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="מספר קבוצות בתחרות"
-                            android:textSize="14sp"
-                            android:textColor="#7C6F8E" />
+                            android:text="מספר קבוצות"
+                            android:textColor="#7C6F8E"
+                            android:textSize="14sp" />
+
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="88dp"
-                        android:layout_weight="1"
                         android:layout_marginStart="8dp"
-                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:background="@drawable/card_bg_dark"
                         android:gravity="center"
-                        android:background="@drawable/card_bg_dark">
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tvGamesCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="—"
+                            android:textColor="#C084FC"
                             android:textSize="30sp"
-                            android:textStyle="bold"
-                            android:textColor="#C084FC" />
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="משחקים אחרי סקאוטינג"
-                            android:textSize="14sp"
                             android:textAlignment="center"
-                            android:textColor="#7C6F8E" />
+                            android:textColor="#7C6F8E"
+                            android:textSize="14sp" />
+
                     </LinearLayout>
+
                 </LinearLayout>
 
-                <!-- Section label -->
+                <!-- Actions -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:text="פעולות מהירות"
-                    android:textSize="18sp"
                     android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.12"
-                    android:layout_marginBottom="10dp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                <!-- Forms button -->
                 <Button
                     android:id="@+id/btnForms"
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
                     android:layout_marginBottom="12dp"
+                    android:background="@drawable/btn_primary"
+                    android:stateListAnimator="@null"
                     android:text="📝   מלא טופס סקאוטינג"
                     android:textColor="#FFFFFF"
-                    android:textSize="15sp"
-                    android:background="@drawable/btn_primary"
-                    android:stateListAnimator="@null" />
+                    android:textSize="15sp" />
 
-                <!-- Prediction button -->
                 <Button
                     android:id="@+id/btnPrediction"
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
-                    android:layout_marginBottom="12dp"
-                    android:text="🤖   חיזוי תוצאת משחק לפי נתונים"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
                     android:background="@drawable/btn_primary"
-                    android:stateListAnimator="@null" />
+                    android:stateListAnimator="@null"
+                    android:text="🤖   חיזוי תוצאת משחק"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
 
             </LinearLayout>
+
         </ScrollView>
 
-        <!-- ===== PROFILE PANEL ===== -->
+        <!-- PROFILE PANEL -->
         <LinearLayout
             android:id="@+id/panelProfile"
             android:layout_width="match_parent"
@@ -248,12 +235,10 @@
             android:padding="20dp"
             android:visibility="gone">
 
-            <!-- User info card -->
             <androidx.cardview.widget.CardView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="12dp"
                 app:cardBackgroundColor="#1A1025"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="6dp">
@@ -268,54 +253,61 @@
                         android:id="@+id/tvProfileName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
                         android:text="שם משתמש"
                         android:textColor="#F0E6FF"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:layout_marginBottom="4dp" />
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tvProfileEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center"
                         android:text="email@example.com"
                         android:textColor="#7C6F8E"
-                        android:textSize="13sp"
-                        android:gravity="center"
-                        android:layout_marginBottom="8dp" />
+                        android:textSize="13sp" />
 
-                    <!-- Role badge -->
                     <TextView
                         android:id="@+id/tvProfileRole"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="👤 Scouter"
-                        android:textColor="#7C6F8E"
-                        android:textSize="13sp"
+                        android:layout_marginBottom="8dp"
                         android:background="#2A1F3D"
                         android:paddingStart="12dp"
-                        android:paddingEnd="12dp"
                         android:paddingTop="4dp"
-                        android:paddingBottom="4dp" />
+                        android:paddingEnd="12dp"
+                        android:paddingBottom="4dp"
+                        android:text="👤 Scouter"
+                        android:textColor="#7C6F8E"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvCurrentDistrict"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="תחרות: "
+                        android:textColor="#C084FC"
+                        android:textSize="13sp" />
 
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Admin panel button — only visible for ADMIN -->
             <Button
-                android:id="@+id/btnAdminPanel"
+                android:id="@+id/btnChangeDistrict"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ניהול משימות 🔑"
-                android:textColor="#F0E6FF"
+                android:layout_marginBottom="12dp"
                 android:backgroundTint="#2A1F3D"
-                android:layout_marginBottom="16dp"
-                android:visibility="gone" />
+                android:text="שנה תחרות"
+                android:textColor="#F0E6FF" />
 
-            <!-- Assignment list — only visible for SCOUTER -->
+            <!-- Assignments -->
             <LinearLayout
                 android:id="@+id/layoutAssignments"
                 android:layout_width="match_parent"
@@ -326,21 +318,21 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="המשימות שלי"
                     android:textColor="#F0E6FF"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvNoAssignments"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
                     android:text="אין משימות פתוחות ✓"
                     android:textColor="#7C6F8E"
                     android:textSize="14sp"
-                    android:gravity="center"
-                    android:layout_marginTop="16dp"
                     android:visibility="gone" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -351,15 +343,14 @@
 
             </LinearLayout>
 
-            <!-- Logout button always at bottom -->
             <Button
                 android:id="@+id/buttonLogout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="התנתק"
-                android:textColor="#FF5050"
+                android:layout_marginTop="8dp"
                 android:backgroundTint="#1A0A0A"
-                android:layout_marginTop="8dp" />
+                android:text="התנתק"
+                android:textColor="#FF5050" />
 
         </LinearLayout>
 
@@ -370,15 +361,14 @@
         android:layout_height="1dp"
         android:background="#16102A" />
 
-    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#0D0D14"
+        app:itemActiveIndicatorStyle="@null"
         app:itemIconTint="@color/bottom_nav_colors"
         app:itemTextColor="@color/bottom_nav_colors"
-        app:itemActiveIndicatorStyle="@null"
         app:menu="@menu/bottom_nav_menu" />
 
 </LinearLayout>

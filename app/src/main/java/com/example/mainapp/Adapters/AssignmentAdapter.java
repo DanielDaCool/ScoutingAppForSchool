@@ -54,7 +54,6 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         notifyDataSetChanged();
     }
 
-    // Removes an assignment from the list by key — called after form submission
     public void removeByKey(String key) {
         for (int i = 0; i < assignments.size(); i++) {
             if (assignments.get(i).getKey().equals(key)) {

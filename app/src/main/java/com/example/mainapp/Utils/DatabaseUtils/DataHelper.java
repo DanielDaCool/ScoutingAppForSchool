@@ -3,6 +3,7 @@ package com.example.mainapp.Utils.DatabaseUtils;
 import androidx.annotation.NonNull;
 import androidx.core.math.MathUtils;
 
+import com.example.mainapp.TBAHelpers.EVENTS;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.TeamUtils.Team;
 import com.example.mainapp.Utils.TeamUtils.TeamAtGame;
@@ -25,16 +26,14 @@ public class DataHelper {
     private final FirebaseDatabase database;
     private final DatabaseReference rootRef;
     private final FirebaseAuth auth;
-
     private static DataHelper instance;
 
     private DataHelper() {
-        database = FirebaseDatabase.getInstance("https://scoutingapp-7bb4e-default-rtdb.europe-west1.firebasedatabase.app");
+        database = FirebaseDatabase.getInstance(
+                "https://scoutingapp-7bb4e-default-rtdb.europe-west1.firebasedatabase.app");
         rootRef = database.getReference();
-        auth = FirebaseAuth.getInstance();
+        auth    = FirebaseAuth.getInstance();
     }
-
-    // ==================== SINGLETON ====================
 
     public static synchronized DataHelper getInstance() {
         if (instance == null) instance = new DataHelper();
@@ -44,117 +43,70 @@ public class DataHelper {
     // ==================== GENERIC HELPERS ====================
 
     private <T> void fetchNode(String path, Class<T> type, DataCallback<T> callback) {
-        Thread t = new Thread(() ->
+        new Thread(() ->
                 rootRef.child(path).get().addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
-                        if (callback != null)
-                            callback.onFailure(task.getException() != null
-                                    ? task.getException().getMessage() : "Unknown error");
+                        if (callback != null) callback.onFailure(task.getException() != null
+                                ? task.getException().getMessage() : "Unknown error");
                         return;
                     }
-                    DataSnapshot snapshot = task.getResult();
-                    if (!snapshot.exists()) {
-                        if (callback != null) callback.onFailure("Not found");
-                        return;
-                    }
-                    T value = snapshot.getValue(type);
-                    if (callback != null) callback.onSuccess(value);
+                    DataSnapshot snap = task.getResult();
+                    if (!snap.exists()) { if (callback != null) callback.onFailure("Not found"); return; }
+                    if (callback != null) callback.onSuccess(snap.getValue(type));
                 })
-        );
-        t.setName("firebase-fetch-" + path);
-        t.start();
+        ).start();
     }
 
-    private void writeNode(String tableName, String id, Object data, DatabaseCallback callback) {
-        Thread t = new Thread(() ->
-                rootRef.child(tableName).child(id).setValue(data)
-                        .addOnSuccessListener(aVoid -> {
-                            if (callback != null) callback.onSuccess(id);
-                        })
-                        .addOnFailureListener(e -> {
-                            if (callback != null) callback.onFailure(e.getMessage());
-                        })
-        );
-        t.setName("firebase-write-" + tableName + "-" + id);
-        t.start();
+    private void writeNode(String table, String id, Object data, DatabaseCallback callback) {
+        new Thread(() ->
+                rootRef.child(table).child(id).setValue(data)
+                        .addOnSuccessListener(v -> { if (callback != null) callback.onSuccess(id); })
+                        .addOnFailureListener(e -> { if (callback != null) callback.onFailure(e.getMessage()); })
+        ).start();
     }
 
-    // ==================== AUTH METHODS ====================
+    // ==================== AUTH ====================
 
-    /**
-     * Register a new user.
-     * Saves full User object to users/userId in Realtime DB.
-     * Role defaults to SCOUTER — admin changes manually in Firebase Console.
-     */
     public void registerUser(String fullName, String email, String password, DataCallback<User> callback) {
-        Thread t = new Thread(() ->
+        new Thread(() ->
                 auth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                FirebaseUser firebaseUser = auth.getCurrentUser();
-                                UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
-                                        .setDisplayName(fullName)
-                                        .build();
-                                firebaseUser.updateProfile(profileUpdate)
-                                        .addOnCompleteListener(profileTask -> {
-                                            // Save full user object so getAllUsers() can read name/email
-                                            User user = new User(
-                                                    fullName,
-                                                    email,
-                                                    UserRole.SCOUTER,
-                                                    firebaseUser.getUid());
-                                            rootRef.child(Constants.USERS_TABLE_NAME)
-                                                    .child(firebaseUser.getUid())
+                                FirebaseUser fu = auth.getCurrentUser();
+                                fu.updateProfile(new UserProfileChangeRequest.Builder()
+                                                .setDisplayName(fullName).build())
+                                        .addOnCompleteListener(pt -> {
+                                            User user = new User(fullName, email, UserRole.SCOUTER, fu.getUid());
+                                            rootRef.child(Constants.USERS_TABLE_NAME).child(fu.getUid())
                                                     .setValue(user)
-                                                    .addOnCompleteListener(dbTask -> {
+                                                    .addOnCompleteListener(dt -> {
                                                         if (callback != null) callback.onSuccess(user);
                                                     });
                                         });
                             } else {
-                                if (callback != null)
-                                    callback.onFailure(task.getException() != null
-                                            ? task.getException().getMessage() : "Registration failed");
+                                if (callback != null) callback.onFailure(task.getException() != null
+                                        ? task.getException().getMessage() : "Registration failed");
                             }
                         })
-        );
-        t.setName("firebase-register-" + email);
-        t.start();
+        ).start();
     }
 
-    /**
-     * Login user.
-     * Reads full User object from users/userId — includes role, name, email.
-     */
     public void loginUser(String email, String password, DataCallback<User> callback) {
-        Thread t = new Thread(() ->
+        new Thread(() ->
                 auth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                FirebaseUser firebaseUser = auth.getCurrentUser();
-                                String fullName = firebaseUser.getDisplayName() != null
-                                        ? firebaseUser.getDisplayName() : "";
-                                // Fetch full user object to get role
-                                fetchNode(
-                                        Constants.USERS_TABLE_NAME + "/" + firebaseUser.getUid(),
-                                        User.class,
+                                FirebaseUser fu       = auth.getCurrentUser();
+                                String       fullName = fu.getDisplayName() != null ? fu.getDisplayName() : "";
+                                fetchNode(Constants.USERS_TABLE_NAME + "/" + fu.getUid(), User.class,
                                         new DataCallback<User>() {
-                                            @Override
-                                            public void onSuccess(User user) {
-                                                // Make sure userId is set (older registrations may not have it)
-                                                if (user.getUserId() == null) {
-                                                    user.setUserId(firebaseUser.getUid());
-                                                }
+                                            @Override public void onSuccess(User user) {
+                                                if (user.getUserId() == null) user.setUserId(fu.getUid());
                                                 if (callback != null) callback.onSuccess(user);
                                             }
-                                            @Override
-                                            public void onFailure(String error) {
-                                                // Fallback — default to SCOUTER if DB read fails
-                                                if (callback != null)
-                                                    callback.onSuccess(new User(
-                                                            fullName,
-                                                            firebaseUser.getEmail(),
-                                                            UserRole.SCOUTER,
-                                                            firebaseUser.getUid()));
+                                            @Override public void onFailure(String error) {
+                                                if (callback != null) callback.onSuccess(
+                                                        new User(fullName, fu.getEmail(), UserRole.SCOUTER, fu.getUid()));
                                             }
                                         }
                                 );
@@ -162,54 +114,38 @@ public class DataHelper {
                                 if (callback != null) {
                                     String msg = task.getException() != null
                                             ? task.getException().getMessage() : "Login failed";
-                                    if (msg.contains("no user record") || msg.contains("INVALID_LOGIN_CREDENTIALS")) {
+                                    if (msg.contains("no user record") || msg.contains("INVALID_LOGIN_CREDENTIALS"))
                                         callback.onFailure("User not found");
-                                    } else if (msg.contains("password is invalid") || msg.contains("WRONG_PASSWORD")) {
+                                    else if (msg.contains("password is invalid") || msg.contains("WRONG_PASSWORD"))
                                         callback.onFailure("Wrong password");
-                                    } else {
-                                        callback.onFailure(msg);
-                                    }
+                                    else callback.onFailure(msg);
                                 }
                             }
                         })
-        );
-        t.setName("firebase-login-" + email);
-        t.start();
+        ).start();
     }
 
-    public void logoutUser() {
-        auth.signOut();
-    }
-
-    public FirebaseUser getCurrentFirebaseUser() {
-        return auth.getCurrentUser();
-    }
-
+    public void logoutUser()                   { auth.signOut(); }
+    public FirebaseUser getCurrentFirebaseUser() { return auth.getCurrentUser(); }
     public String getCurrentUserId() {
-        FirebaseUser user = auth.getCurrentUser();
-        return user != null ? user.getUid() : null;
+        FirebaseUser u = auth.getCurrentUser();
+        return u != null ? u.getUid() : null;
     }
 
-    // ==================== USER METHODS ====================
+    // ==================== USERS ====================
 
-    /**
-     * Fetches all users from users/ — used in AdminPanelActivity.
-     */
     public void getAllUsers(DataCallback<ArrayList<User>> callback) {
-        Thread t = new Thread(() ->
+        new Thread(() ->
                 rootRef.child(Constants.USERS_TABLE_NAME).get().addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
-                        if (callback != null)
-                            callback.onFailure(task.getException() != null
-                                    ? task.getException().getMessage() : "Unknown error");
+                        if (callback != null) callback.onFailure(task.getException() != null
+                                ? task.getException().getMessage() : "Unknown error");
                         return;
                     }
                     ArrayList<User> users = new ArrayList<>();
-                    DataSnapshot snapshot = task.getResult();
-                    if (snapshot.exists()) {
-                        for (DataSnapshot child : snapshot.getChildren()) {
+                    if (task.getResult().exists()) {
+                        for (DataSnapshot child : task.getResult().getChildren()) {
                             User user = child.getValue(User.class);
-                            // Ensure userId is always set from the DB key
                             if (user != null) {
                                 if (user.getUserId() == null) user.setUserId(child.getKey());
                                 users.add(user);
@@ -218,373 +154,222 @@ public class DataHelper {
                     }
                     if (callback != null) callback.onSuccess(users);
                 })
-        );
-        t.setName("firebase-get-all-users");
-        t.start();
+        ).start();
     }
 
+    // ==================== ASSIGNMENTS ====================
+
     /**
-     * Reads role from users/userId/role.
+     * Firebase path: assignments / userId / districtEventKey / pending|completed / key
      */
-    public void getUserRole(String userId, DataCallback<UserRole> callback) {
-        fetchNode(
-                Constants.USERS_TABLE_NAME + "/" + userId + "/role",
-                String.class,
-                new DataCallback<String>() {
-                    @Override
-                    public void onSuccess(String role) {
-                        try {
-                            callback.onSuccess(UserRole.valueOf(role));
-                        } catch (IllegalArgumentException e) {
-                            callback.onSuccess(UserRole.SCOUTER);
-                        }
-                    }
-                    @Override
-                    public void onFailure(String error) {
-                        callback.onSuccess(UserRole.SCOUTER);
-                    }
-                }
-        );
+    private String assignmentPath(String userId, EVENTS district, String sub) {
+        return Constants.ASSIGNMENTS_TABLE_NAME + "/" + userId
+                + "/" + district.getEventKey() + "/" + sub;
     }
 
-    // ==================== ASSIGNMENT METHODS ====================
-
-    /**
-     * Admin saves a new pending assignment for a scouter.
-     * Path: assignments/userId/pending/gameNumber-teamNumber
-     */
-    public void saveAssignment(String userId, Assignment assignment, DatabaseCallback callback) {
-        Thread t = new Thread(() ->
-                rootRef.child(Constants.ASSIGNMENTS_TABLE_NAME)
-                        .child(userId)
-                        .child("pending")
+    public void saveAssignment(String userId, EVENTS district,
+                               Assignment assignment, DatabaseCallback callback) {
+        new Thread(() ->
+                rootRef.child(assignmentPath(userId, district, "pending"))
                         .child(assignment.getKey())
                         .setValue(assignment)
-                        .addOnSuccessListener(aVoid -> {
-                            if (callback != null) callback.onSuccess(assignment.getKey());
-                        })
-                        .addOnFailureListener(e -> {
-                            if (callback != null) callback.onFailure(e.getMessage());
-                        })
-        );
-        t.setName("firebase-save-assignment-" + userId);
-        t.start();
+                        .addOnSuccessListener(v -> { if (callback != null) callback.onSuccess(assignment.getKey()); })
+                        .addOnFailureListener(e -> { if (callback != null) callback.onFailure(e.getMessage()); })
+        ).start();
     }
 
-    /**
-     * Moves assignment from pending to completed.
-     * Called automatically when scouter submits a form.
-     */
-    public void completeAssignment(String userId, Assignment assignment, DatabaseCallback callback) {
-        Thread t = new Thread(() -> {
-            String key = assignment.getKey();
-            rootRef.child(Constants.ASSIGNMENTS_TABLE_NAME)
-                    .child(userId)
-                    .child("completed")
-                    .child(key)
-                    .setValue(assignment)
-                    .addOnSuccessListener(aVoid ->
-                            rootRef.child(Constants.ASSIGNMENTS_TABLE_NAME)
-                                    .child(userId)
-                                    .child("pending")
-                                    .child(key)
-                                    .removeValue()
-                                    .addOnSuccessListener(aVoid2 -> {
-                                        if (callback != null) callback.onSuccess(key);
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        if (callback != null) callback.onFailure(e.getMessage());
-                                    })
-                    )
-                    .addOnFailureListener(e -> {
-                        if (callback != null) callback.onFailure(e.getMessage());
-                    });
-        });
-        t.setName("firebase-complete-assignment-" + userId + "-" + assignment.getKey());
-        t.start();
+    public void completeAssignment(String userId, EVENTS district,
+                                   Assignment assignment, DatabaseCallback callback) {
+        String key           = assignment.getKey();
+        String completedPath = assignmentPath(userId, district, "completed");
+        String pendingPath   = assignmentPath(userId, district, "pending");
+        new Thread(() ->
+                rootRef.child(completedPath).child(key).setValue(assignment)
+                        .addOnSuccessListener(v ->
+                                rootRef.child(pendingPath).child(key).removeValue()
+                                        .addOnSuccessListener(v2 -> { if (callback != null) callback.onSuccess(key); })
+                                        .addOnFailureListener(e -> { if (callback != null) callback.onFailure(e.getMessage()); })
+                        )
+                        .addOnFailureListener(e -> { if (callback != null) callback.onFailure(e.getMessage()); })
+        ).start();
     }
 
-    /**
-     * Deletes a pending assignment — used by admin to remove an assignment.
-     */
-    public void deleteAssignment(String userId, String key, DatabaseCallback callback) {
-        Thread t = new Thread(() ->
-                rootRef.child(Constants.ASSIGNMENTS_TABLE_NAME)
-                        .child(userId)
-                        .child("pending")
-                        .child(key)
-                        .removeValue()
-                        .addOnSuccessListener(aVoid -> {
-                            if (callback != null) callback.onSuccess(key);
-                        })
-                        .addOnFailureListener(e -> {
-                            if (callback != null) callback.onFailure(e.getMessage());
-                        })
-        );
-        t.setName("firebase-delete-assignment-" + userId + "-" + key);
-        t.start();
-    }
-
-    /**
-     * Fetches pending assignments for a scouter (one-time read).
-     */
-    public void getPendingAssignments(String userId, DataCallback<ArrayList<Assignment>> callback) {
-        Thread t = new Thread(() ->
-                rootRef.child(Constants.ASSIGNMENTS_TABLE_NAME)
-                        .child(userId)
-                        .child("pending")
-                        .get()
-                        .addOnCompleteListener(task -> {
+    /** One-time read — used by AdminPanelActivity for counts. */
+    public void getPendingAssignments(String userId, EVENTS district,
+                                      DataCallback<ArrayList<Assignment>> callback) {
+        new Thread(() ->
+                rootRef.child(assignmentPath(userId, district, "pending"))
+                        .get().addOnCompleteListener(task -> {
                             if (!task.isSuccessful()) {
-                                if (callback != null)
-                                    callback.onFailure(task.getException() != null
-                                            ? task.getException().getMessage() : "Unknown error");
+                                if (callback != null) callback.onFailure(task.getException() != null
+                                        ? task.getException().getMessage() : "Unknown error");
                                 return;
                             }
-                            ArrayList<Assignment> assignments = new ArrayList<>();
-                            DataSnapshot snapshot = task.getResult();
-                            if (snapshot.exists()) {
-                                for (DataSnapshot child : snapshot.getChildren()) {
+                            ArrayList<Assignment> list = new ArrayList<>();
+                            if (task.getResult().exists()) {
+                                for (DataSnapshot child : task.getResult().getChildren()) {
                                     Assignment a = child.getValue(Assignment.class);
-                                    if (a != null) assignments.add(a);
+                                    if (a != null) list.add(a);
                                 }
                             }
-                            assignments.sort((a1, a2) ->
-                                    Integer.compare(a1.getGameNumber(), a2.getGameNumber()));
-                            if (callback != null) callback.onSuccess(assignments);
+                            list.sort((a, b) -> Integer.compare(a.getGameNumber(), b.getGameNumber()));
+                            if (callback != null) callback.onSuccess(list);
                         })
-        );
-        t.setName("firebase-get-assignments-" + userId);
-        t.start();
+        ).start();
     }
 
-    /**
-     * Live listener for pending assignments.
-     * Auto-updates the profile panel when admin adds/removes assignments.
-     * No thread wrap — ValueEventListener is already async.
-     */
-    public void listenToPendingAssignments(String userId, DataCallback<ArrayList<Assignment>> callback) {
-        rootRef.child(Constants.ASSIGNMENTS_TABLE_NAME)
-                .child(userId)
-                .child("pending")
+    /** Live listener — used by MainActivity to show scouter's assignments in real time. */
+    public void listenToPendingAssignments(String userId, EVENTS district,
+                                           DataCallback<ArrayList<Assignment>> callback) {
+        rootRef.child(assignmentPath(userId, district, "pending"))
                 .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ArrayList<Assignment> assignments = new ArrayList<>();
+                    @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ArrayList<Assignment> list = new ArrayList<>();
                         if (snapshot.exists()) {
                             for (DataSnapshot child : snapshot.getChildren()) {
                                 Assignment a = child.getValue(Assignment.class);
-                                if (a != null) assignments.add(a);
+                                if (a != null) list.add(a);
                             }
                         }
-                        assignments.sort((a1, a2) ->
-                                Integer.compare(a1.getGameNumber(), a2.getGameNumber()));
-                        if (callback != null) callback.onSuccess(assignments);
+                        list.sort((a, b) -> Integer.compare(a.getGameNumber(), b.getGameNumber()));
+                        if (callback != null) callback.onSuccess(list);
                     }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                    @Override public void onCancelled(@NonNull DatabaseError error) {
                         if (callback != null) callback.onFailure(error.getMessage());
                     }
                 });
     }
 
-    // ==================== TEAM METHODS ====================
+    // ==================== TEAMS ====================
 
     public void createTeamStats(TeamStats data, DatabaseCallback callback) {
-        writeNode(Constants.TEAMS_TABLE_NAME, Integer.toString(data.getTeam().getTeamNumber()), data, callback);
+        writeNode(Constants.TEAMS_TABLE_NAME,
+                Integer.toString(data.getTeam().getTeamNumber()), data, callback);
     }
 
-    public void createWithId(String tableName, String id, Object data, DatabaseCallback callback) {
-        writeNode(tableName, id, data, callback);
-    }
-
-    public void getAvgOfTeam(int teamNumber, int amount, DataCallback<Double> callback) {
-        getAvgOfTeam(Integer.toString(teamNumber), amount, callback);
-    }
-
-    public void getAvgOfTeam(String teamID, int amount, DataCallback<Double> callback) {
-        Thread t = new Thread(() ->
-                rootRef.child(Constants.TEAMS_TABLE_NAME).child(teamID).get()
-                        .addOnCompleteListener(task -> {
-                            if (!task.isSuccessful()) {
-                                if (callback != null)
-                                    callback.onFailure(task.getException() != null
-                                            ? task.getException().getMessage() : "Unknown error");
-                                return;
-                            }
-                            DataSnapshot snapshot = task.getResult();
-                            if (!snapshot.exists()) {
-                                if (callback != null) callback.onSuccess(0.0);
-                                return;
-                            }
-                            TeamStats teamStats = snapshot.getValue(TeamStats.class);
-                            if (teamStats == null || teamStats.getAllGames() == null || teamStats.getAllGames().isEmpty()) {
-                                if (callback != null) callback.onSuccess(0.0);
-                                return;
-                            }
-                            List<TeamAtGame> games = teamStats.getAllGames();
-                            double avgPoints = 0.0;
-                            int amt = MathUtils.clamp(amount, 1, 3);
-                            if (amt > games.size()) amt = games.size();
-                            for (int i = 0; i < amt; i++) {
-                                avgPoints += games.get(games.size() - 1 - i).calculatePoints() * (1.0 / amount);
-                            }
-                            if (callback != null) callback.onSuccess(avgPoints);
-                        })
-        );
-        t.setName("firebase-avg-" + teamID);
-        t.start();
+    public void isTeamDataExists(Team t, ExistsCallback callback) {
+        readTeamStats(Integer.toString(t.getTeamNumber()), new DataCallback<TeamStats>() {
+            @Override public void onSuccess(TeamStats data) { callback.onResult(data.getGamesPlayed() != 0); }
+            @Override public void onFailure(String error)   { callback.onResult(false); }
+        });
     }
 
     public void readTeamStats(String teamID, DataCallback<TeamStats> callback) {
         fetchNode(Constants.TEAMS_TABLE_NAME + "/" + teamID, TeamStats.class,
                 new DataCallback<TeamStats>() {
-                    @Override
-                    public void onSuccess(TeamStats data) {
-                        if (callback != null) callback.onSuccess(data);
-                    }
-                    @Override
-                    public void onFailure(String error) {
-                        if (callback != null) callback.onFailure("קבוצה לא קיימת, איתחול מידע");
-                    }
+                    @Override public void onSuccess(TeamStats data) { if (callback != null) callback.onSuccess(data); }
+                    @Override public void onFailure(String error)   { if (callback != null) callback.onFailure(error); }
                 }
         );
     }
 
-    public void isTeamDataExists(Team t, ExistsCallback callback) {
-        readTeamStats(Integer.toString(t.getTeamNumber()), new DataCallback<TeamStats>() {
-            @Override
-            public void onSuccess(TeamStats data) {
-                callback.onResult(data.getGamesPlayed() != 0);
-            }
-            @Override
-            public void onFailure(String error) {
-                callback.onResult(false);
-            }
-        });
-    }
-
     public void readAllTeamStats(DataCallback<ArrayList<TeamStats>> callback) {
-        Thread t = new Thread(() ->
+        new Thread(() ->
                 rootRef.child(Constants.TEAMS_TABLE_NAME).get().addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
-                        if (callback != null)
-                            callback.onFailure(task.getException() != null
-                                    ? task.getException().getMessage() : "Unknown error");
+                        if (callback != null) callback.onFailure(task.getException() != null
+                                ? task.getException().getMessage() : "Unknown error");
                         return;
                     }
-                    DataSnapshot snapshot = task.getResult();
-                    ArrayList<TeamStats> teamStatsList = new ArrayList<>();
-                    if (snapshot.exists()) {
-                        for (DataSnapshot child : snapshot.getChildren()) {
-                            TeamStats teamStats = child.getValue(TeamStats.class);
-                            if (teamStats != null) teamStatsList.add(teamStats);
+                    ArrayList<TeamStats> list = new ArrayList<>();
+                    if (task.getResult().exists()) {
+                        for (DataSnapshot child : task.getResult().getChildren()) {
+                            TeamStats ts = child.getValue(TeamStats.class);
+                            if (ts != null) list.add(ts);
                         }
                     }
-                    if (callback != null) callback.onSuccess(teamStatsList);
+                    if (callback != null) callback.onSuccess(list);
                 })
-        );
-        t.setName("firebase-read-all-teams");
-        t.start();
+        ).start();
     }
 
     public void countTeams(CountCallback callback) {
-        Thread t = new Thread(() ->
+        new Thread(() ->
                 rootRef.child(Constants.TEAMS_TABLE_NAME).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        long count = task.getResult().getChildrenCount();
-                        if (callback != null) callback.onResult(count);
+                        if (callback != null) callback.onResult(task.getResult().getChildrenCount());
                     } else {
                         if (callback != null) callback.onResult(0);
                     }
                 })
-        );
-        t.setName("firebase-count-teams");
-        t.start();
+        ).start();
     }
 
-    public void update(String tableName, String id, Map<String, Object> updates, DatabaseCallback callback) {
-        Thread t = new Thread(() ->
-                rootRef.child(tableName).child(id).updateChildren(updates)
-                        .addOnSuccessListener(aVoid -> {
-                            if (callback != null) callback.onSuccess(id);
+    public void replace(String table, String id, Object data, DatabaseCallback callback) {
+        writeNode(table, id, data, callback);
+    }
+
+    public void getAvgOfTeam(int teamID, int amount,  DataCallback<Double> callback){
+        getAvgOfTeam(Integer.toString(teamID), amount, callback);
+    }
+    public void getAvgOfTeam(String teamID, int amount, DataCallback<Double> callback) {
+        new Thread(() ->
+                rootRef.child(Constants.TEAMS_TABLE_NAME).child(teamID).get()
+                        .addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) { if (callback != null) callback.onSuccess(0.0); return; }
+                            TeamStats ts = task.getResult().getValue(TeamStats.class);
+                            if (ts == null || ts.getAllGames() == null || ts.getAllGames().isEmpty()) {
+                                if (callback != null) callback.onSuccess(0.0); return;
+                            }
+                            List<TeamAtGame> games = ts.getAllGames();
+                            int    amt       = MathUtils.clamp(amount, 1, games.size());
+                            double avg       = 0.0;
+                            for (int i = 0; i < amt; i++)
+                                avg += games.get(games.size() - 1 - i).calculatePoints() * (1.0 / amount);
+                            if (callback != null) callback.onSuccess(avg);
                         })
-                        .addOnFailureListener(e -> {
-                            if (callback != null) callback.onFailure(e.getMessage());
-                        })
-        );
-        t.setName("firebase-update-" + tableName + "-" + id);
-        t.start();
-    }
-
-    public void replace(String tableName, String id, Object data, DatabaseCallback callback) {
-        writeNode(tableName, id, data, callback);
-    }
-
-    public void getCurrentTeamSnapshot(TeamSnapshotCallback callback) {
-        Thread t = new Thread(() ->
-                rootRef.child(Constants.TEAMS_TABLE_NAME).get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if (callback != null) callback.onSuccess(task.getResult());
-                    } else {
-                        if (callback != null) callback.onFailure(new Exception("Task not successful"));
-                    }
-                })
-        );
-        t.setName("firebase-snapshot-teams");
-        t.start();
+        ).start();
     }
 
     public void getUpdatedTeamStats(Team team, DataCallback<TeamStats> callback) {
-        Thread t = new Thread(() ->
-                rootRef.child(Constants.TEAMS_TABLE_NAME)
-                        .child(Integer.toString(team.getTeamNumber()))
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot.exists()) {
-                                    TeamStats teamStats = snapshot.getValue(TeamStats.class);
-                                    if (teamStats != null) {
-                                        if (callback != null) callback.onSuccess(teamStats);
-                                    } else {
-                                        if (callback != null) callback.onFailure("Failed to parse team stats");
-                                    }
-                                } else {
-                                    if (callback != null) callback.onFailure("Team not found");
-                                }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                                if (callback != null) callback.onFailure(error.getMessage());
-                            }
-                        })
-        );
-        t.setName("firebase-live-team-" + team.getTeamNumber());
-        t.start();
+        rootRef.child(Constants.TEAMS_TABLE_NAME)
+                .child(Integer.toString(team.getTeamNumber()))
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override public void onDataChange(@NonNull DataSnapshot snap) {
+                        TeamStats ts = snap.getValue(TeamStats.class);
+                        if (ts != null) { if (callback != null) callback.onSuccess(ts); }
+                        else            { if (callback != null) callback.onFailure("Not found"); }
+                    }
+                    @Override public void onCancelled(@NonNull DatabaseError error) {
+                        if (callback != null) callback.onFailure(error.getMessage());
+                    }
+                });
     }
 
-    // Persistent listener — no thread wrap intentionally
     public void getUpdatedTeamsStats(DataCallback<ArrayList<TeamStats>> callback) {
         rootRef.child(Constants.TEAMS_TABLE_NAME).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<TeamStats> teamStatsList = new ArrayList<>();
-                if (snapshot.exists()) {
-                    for (DataSnapshot child : snapshot.getChildren()) {
-                        TeamStats teamStats = child.getValue(TeamStats.class);
-                        if (teamStats != null) teamStatsList.add(teamStats);
-                    }
+            @Override public void onDataChange(@NonNull DataSnapshot snap) {
+                ArrayList<TeamStats> list = new ArrayList<>();
+                for (DataSnapshot child : snap.getChildren()) {
+                    TeamStats ts = child.getValue(TeamStats.class);
+                    if (ts != null) list.add(ts);
                 }
-                if (callback != null) callback.onSuccess(teamStatsList);
+                if (callback != null) callback.onSuccess(list);
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            @Override public void onCancelled(@NonNull DatabaseError error) {
                 if (callback != null) callback.onFailure(error.getMessage());
             }
         });
     }
 
-    // ==================== CALLBACK INTERFACES ====================
+    public void getCurrentTeamSnapshot(TeamSnapshotCallback callback) {
+        new Thread(() ->
+                rootRef.child(Constants.TEAMS_TABLE_NAME).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) { if (callback != null) callback.onSuccess(task.getResult()); }
+                    else { if (callback != null) callback.onFailure(new Exception("Failed")); }
+                })
+        ).start();
+    }
+
+    public void update(String table, String id, Map<String, Object> updates, DatabaseCallback callback) {
+        new Thread(() ->
+                rootRef.child(table).child(id).updateChildren(updates)
+                        .addOnSuccessListener(v -> { if (callback != null) callback.onSuccess(id); })
+                        .addOnFailureListener(e -> { if (callback != null) callback.onFailure(e.getMessage()); })
+        ).start();
+    }
+
+    // ==================== CALLBACKS ====================
 
     public interface DatabaseCallback {
         void onSuccess(String id);
@@ -596,13 +381,8 @@ public class DataHelper {
         void onFailure(String error);
     }
 
-    public interface ExistsCallback {
-        void onResult(boolean exists);
-    }
-
-    public interface CountCallback {
-        void onResult(long count);
-    }
+    public interface ExistsCallback  { void onResult(boolean exists); }
+    public interface CountCallback   { void onResult(long count); }
 
     public interface TeamSnapshotCallback {
         void onSuccess(DataSnapshot snapshot);

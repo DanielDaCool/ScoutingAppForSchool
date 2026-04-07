@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mainapp.R;
 import com.example.mainapp.Screens.AuthenticationScreens.LoginScreen;
+import com.example.mainapp.TBAHelpers.EVENTS;
 import com.example.mainapp.TBAHelpers.TBAApiManager;
-import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.Game;
@@ -31,9 +31,10 @@ import java.util.ArrayList;
 public class LoadingScreen extends AppCompatActivity {
 
     private ProgressBar progressBar;
-    private TextView tvStatus, tvPercent, tvNoInternet;
-    private Button btnRetry;
+    private TextView    tvStatus, tvPercent, tvNoInternet;
+    private Button      btnRetry;
     private SharedPrefHelper prefs;
+    private EVENTS districtToLoad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +47,20 @@ public class LoadingScreen extends AppCompatActivity {
         tvNoInternet = findViewById(R.id.tvNoInternet);
         btnRetry     = findViewById(R.id.btnRetry);
         prefs        = SharedPrefHelper.getInstance(this);
-
         progressBar.setMax(100);
+
+        // Determine which district's data to load
+        if (prefs.isAdmin()) {
+            districtToLoad = EVENTS.values()[0];
+        } else {
+            districtToLoad = prefs.getCurrentDistrict();
+            if (districtToLoad == null) {
+                // Scouter has no district — force them to pick one
+                startActivity(new Intent(this, LoginScreen.class));
+                finish();
+                return;
+            }
+        }
 
         btnRetry.setOnClickListener(v -> {
             if (!InternetUtils.isInternetConnected(this)) {
@@ -59,13 +72,7 @@ public class LoadingScreen extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
             tvPercent.setVisibility(View.VISIBLE);
             setProgress(0, "מאתחל...");
-            try {
-                loadStep1_TBATeams();
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            loadStep1_TBATeams();
         });
 
         boolean hasInternet       = InternetUtils.isInternetConnected(this);
@@ -75,25 +82,14 @@ public class LoadingScreen extends AppCompatActivity {
             showNoInternetState();
             return;
         }
-
         if (!hasInternet) {
-            // Returning user offline — skip loading
             navigateNext();
             return;
         }
 
-        // Has internet — start sequential loading
         setProgress(0, "מאתחל...");
-        try {
-            loadStep1_TBATeams();
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        loadStep1_TBATeams();
     }
-
-    // ==================== NO INTERNET ====================
 
     private void showNoInternetState() {
         progressBar.setVisibility(View.GONE);
@@ -103,53 +99,41 @@ public class LoadingScreen extends AppCompatActivity {
         btnRetry.setVisibility(View.VISIBLE);
     }
 
-    // ==================== SEQUENTIAL LOADING STEPS ====================
+    // ==================== SEQUENTIAL STEPS ====================
 
-    // Step 1 — Load TBA event teams
-    private void loadStep1_TBATeams() throws JSONException, IOException {
+    private void loadStep1_TBATeams() {
         setProgress(10, "טוען קבוצות מ-TBA...");
-        TBAApiManager.getInstance().getEventTeams(
-                Constants.CURRENT_EVENT_ON_APP,
-                new TBAApiManager.TeamCallback() {
-                    @Override
-                    public void onSuccess(ArrayList<Team> teams) {
-                        AppCache.getInstance().setTeamsAtEvent(teams.toArray(new Team[0]));
-                        loadStep2_TeamStats();
+        try {
+            TBAApiManager.getInstance().getEventTeams(districtToLoad,
+                    new TBAApiManager.TeamCallback() {
+                        @Override public void onSuccess(ArrayList<Team> teams) {
+                            AppCache.getInstance().setTeamsAtEvent(teams.toArray(new Team[0]));
+                            loadStep2_TeamStats();
+                        }
+                        @Override public void onError(Exception e) { loadStep2_TeamStats(); }
                     }
-                    @Override
-                    public void onError(Exception e) {
-                        loadStep2_TeamStats(); // continue even on error
-                    }
-                }
-        );
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    // Step 2 — Load all team stats from Firebase
     private void loadStep2_TeamStats() {
         setProgress(30, "טוען נתוני סקאוטינג...");
-        DataHelper.getInstance().readAllTeamStats(
-                new DataHelper.DataCallback<ArrayList<TeamStats>>() {
-                    @Override
-                    public void onSuccess(ArrayList<TeamStats> data) {
-                        AppCache.getInstance().setAllTeamStats(data);
-
-                        // Calculate total games while we have the data
-                        int totalGames = 0;
-                        for (TeamStats t : data) {
-                            if (t.getAllGames() != null) totalGames += t.getAllGames().size();
-                        }
-                        AppCache.getInstance().setTotalGames(totalGames);
-                        loadStep3_TeamCount();
-                    }
-                    @Override
-                    public void onFailure(String error) {
-                        loadStep3_TeamCount(); // continue even on error
-                    }
-                }
-        );
+        DataHelper.getInstance().readAllTeamStats(new DataHelper.DataCallback<ArrayList<TeamStats>>() {
+            @Override public void onSuccess(ArrayList<TeamStats> data) {
+                AppCache.getInstance().setAllTeamStats(data);
+                int totalGames = 0;
+                for (TeamStats t : data) if (t.getAllGames() != null) totalGames += t.getAllGames().size();
+                AppCache.getInstance().setTotalGames(totalGames);
+                loadStep3_TeamCount();
+            }
+            @Override public void onFailure(String error) { loadStep3_TeamCount(); }
+        });
     }
 
-    // Step 3 — Count teams in Firebase
     private void loadStep3_TeamCount() {
         setProgress(50, "סופר קבוצות...");
         DataHelper.getInstance().countTeams(count -> {
@@ -158,47 +142,41 @@ public class LoadingScreen extends AppCompatActivity {
         });
     }
 
-    // Step 4 — Load games list from TBA
     private void loadStep4_Games() {
-        setProgress(70, "טוען רשימת משחקים...");
-        TBAApiManager.getInstance().getEventGames(
-                Constants.CURRENT_EVENT_ON_APP,
+        setProgress(65, "טוען רשימת משחקים...");
+        TBAApiManager.getInstance().getEventGames(districtToLoad,
                 new TBAApiManager.GameCallback() {
-                    @Override
-                    public void onSuccess(ArrayList<Game> games) {
+                    @Override public void onSuccess(ArrayList<Game> games) {
                         AppCache.getInstance().setGamesList(games);
                         loadStep5_IsraeliTeams();
                     }
-                    @Override
-                    public void onError(Exception e) {
-                        loadStep5_IsraeliTeams(); // continue even on error
-                    }
+                    @Override public void onError(Exception e) { loadStep5_IsraeliTeams(); }
                 }
         );
     }
 
-    // Step 5 — Load all Israeli teams (last step — navigate when done)
     private void loadStep5_IsraeliTeams() {
-        setProgress(90, "טוען קבוצות ישראליות...");
-        TBAApiManager.getInstance().getIsraeliTeams(
-                new TBAApiManager.TeamListCallback() {
-                    @Override
-                    public void onSuccess(ArrayList<Team> teams) {
-                        AppCache.getInstance().setIsraeliTeams(teams);
-                        setProgress(100, "מוכן! ✓");
-
-                        // Mark that app has been successfully loaded at least once
-                        prefs.markHasLaunched();
-
-                        // Small delay so user sees 100%
-                        new Handler(Looper.getMainLooper()).postDelayed(
-                                () -> navigateNext(), 400);
-                    }
-                }
-        );
+        setProgress(80, "טוען קבוצות ישראליות...");
+        TBAApiManager.getInstance().getIsraeliTeams(new TBAApiManager.TeamListCallback() {
+            @Override public void onSuccess(ArrayList<Team> teams) {
+                AppCache.getInstance().setIsraeliTeams(teams);
+                loadStep6_InitTeams(teams);
+            }
+        });
     }
 
-    // ==================== HELPERS ====================
+    /** Moved from old SplashScreen — creates Firebase entries for new teams. */
+    private void loadStep6_InitTeams(ArrayList<Team> teams) {
+        setProgress(90, "מאתחל קבוצות...");
+        for (Team t : teams) {
+            DataHelper.getInstance().isTeamDataExists(t, exists -> {
+                if (!exists) DataHelper.getInstance().createTeamStats(new TeamStats(t), null);
+            });
+        }
+        setProgress(100, "מוכן! ✓");
+        prefs.markHasLaunched();
+        new Handler(Looper.getMainLooper()).postDelayed(() -> navigateNext(), 400);
+    }
 
     private void setProgress(int percent, String message) {
         runOnUiThread(() -> {
@@ -209,10 +187,14 @@ public class LoadingScreen extends AppCompatActivity {
     }
 
     private void navigateNext() {
-        boolean isLoggedIn = prefs.isUserLoggedIn();
-        Intent intent = isLoggedIn
-                ? new Intent(this, MainActivity.class)
-                : new Intent(this, LoginScreen.class);
+        if (!prefs.isUserLoggedIn()) {
+            startActivity(new Intent(this, LoginScreen.class));
+            finish();
+            return;
+        }
+        Intent intent = prefs.isAdmin()
+                ? new Intent(this, AdminMainActivity.class)
+                : new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
