@@ -22,16 +22,20 @@ import java.util.List;
 public class InternetReciver extends BroadcastReceiver {
 
     private static final String TAG = "InternetReciver";
+    private boolean hasDisconnected = false;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
-            if (InternetUtils.isInternetConnected(context)) {
+            if (hasDisconnected && InternetUtils.isInternetConnected(context)) {
+                hasDisconnected = false;
                 Toast.makeText(context, "מחובר לאינטרנט ✓", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Internet restored — starting sync");
                 // Run sync on background thread so main thread is never blocked
                 new Thread(() -> syncPendingForms(context)).start();
-            } else {
+            }
+            else if (!hasDisconnected && !InternetUtils.isInternetConnected(context)) {
+                hasDisconnected = true;
                 Toast.makeText(context, "מנותק מהאינטרנט ✗", Toast.LENGTH_LONG).show();
                 Log.d(TAG, "Internet lost");
             }
