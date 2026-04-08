@@ -1,4 +1,4 @@
-package com.example.mainapp.Screens;
+package com.example.mainapp.Screens.AdminScreens;
 
 import android.content.Context;
 import android.os.Bundle;

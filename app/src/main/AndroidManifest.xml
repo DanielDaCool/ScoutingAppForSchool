@@ -17,7 +17,7 @@
         android:theme="@style/Theme.MainApp"
         tools:targetApi="31">
         <activity
-            android:name=".Screens.AdminMainActivity"
+            android:name=".Screens.AdminScreens.AdminMainActivity"
             android:exported="false" />
         <activity
             android:name=".Screens.TeamProfileActivity"
@@ -47,7 +47,7 @@
             android:name=".Screens.AdminMainScreen"
             android:exported="false" />
         <activity
-            android:name=".Screens.AdminPanelActivity"
+            android:name=".Screens.AdminScreens.AdminPanelActivity"
             android:exported="false" />
         <activity
             android:name=".Screens.GameDetailActivity"
