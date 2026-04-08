@@ -8,7 +8,7 @@ public class Game {
     private final Team[] blueAlliance;
     private final Team[] redAlliance;
     private final int gameNumber;
-    private final int scouterID;
+    private int scouterID;
 
     public Game(Team[] blueAlliance, Team[] redAlliance, int gameNumber, int scouterID) {
         this.blueAlliance = blueAlliance;
@@ -27,6 +27,7 @@ public class Game {
     public int getScouterID() {
         return this.scouterID;
     }
+    public void setScouterID(int scouterID){this.scouterID = scouterID;}
 
     public int getGameNumber() {
         return this.gameNumber;
