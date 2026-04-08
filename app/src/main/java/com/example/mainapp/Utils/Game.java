@@ -8,26 +8,14 @@ public class Game {
     private final Team[] blueAlliance;
     private final Team[] redAlliance;
     private final int gameNumber;
-    private int scouterID;
 
-    public Game(Team[] blueAlliance, Team[] redAlliance, int gameNumber, int scouterID) {
-        this.blueAlliance = blueAlliance;
-        this.redAlliance = redAlliance;
-        this.gameNumber = gameNumber;
-        this.scouterID = scouterID;
-    }
+
     public Game(Team[] blueAlliance, Team[] redAlliance, int gameNumber) {
         this.blueAlliance = blueAlliance;
         this.redAlliance = redAlliance;
         this.gameNumber = gameNumber;
-        this.scouterID = -1;
     }
 
-
-    public int getScouterID() {
-        return this.scouterID;
-    }
-    public void setScouterID(int scouterID){this.scouterID = scouterID;}
 
     public int getGameNumber() {
         return this.gameNumber;

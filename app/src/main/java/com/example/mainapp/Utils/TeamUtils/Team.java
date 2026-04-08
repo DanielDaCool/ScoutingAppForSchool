@@ -8,13 +8,11 @@ public class Team implements Serializable {
     private String teamName;
 
     public Team(){}
-    // ✅ Full constructor
     public Team(int teamNumber, String teamName) {
         this.teamNumber = teamNumber;
         this.teamName = teamName;
     }
 
-    // ✅ Getters and setters
     public int getTeamNumber() {
         return teamNumber;
     }
