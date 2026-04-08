@@ -99,10 +99,9 @@ public class LoadingScreen extends AppCompatActivity {
         btnRetry.setVisibility(View.VISIBLE);
     }
 
-    // ==================== SEQUENTIAL STEPS ====================
 
     private void loadStep1_TBATeams() {
-        setProgress(10, "טוען קבוצות מ-TBA...");
+        setProgress(10, "טוען  מידע...");
         try {
             TBAApiManager.getInstance().getEventTeams(districtToLoad,
                     new TBAApiManager.TeamCallback() {
@@ -121,7 +120,7 @@ public class LoadingScreen extends AppCompatActivity {
     }
 
     private void loadStep2_TeamStats() {
-        setProgress(30, "טוען נתוני סקאוטינג...");
+        setProgressWithoutText(30);
         DataHelper.getInstance().readAllTeamStats(new DataHelper.DataCallback<ArrayList<TeamStats>>() {
             @Override public void onSuccess(ArrayList<TeamStats> data) {
                 AppCache.getInstance().setAllTeamStats(data);
@@ -135,7 +134,7 @@ public class LoadingScreen extends AppCompatActivity {
     }
 
     private void loadStep3_TeamCount() {
-        setProgress(50, "סופר קבוצות...");
+        setProgressWithoutText(50);
         DataHelper.getInstance().countTeams(count -> {
             AppCache.getInstance().setTeamCount(count);
             loadStep4_Games();
@@ -143,7 +142,7 @@ public class LoadingScreen extends AppCompatActivity {
     }
 
     private void loadStep4_Games() {
-        setProgress(65, "טוען רשימת משחקים...");
+        setProgressWithoutText(65);
         TBAApiManager.getInstance().getEventGames(districtToLoad,
                 new TBAApiManager.GameCallback() {
                     @Override public void onSuccess(ArrayList<Game> games) {
@@ -156,7 +155,7 @@ public class LoadingScreen extends AppCompatActivity {
     }
 
     private void loadStep5_IsraeliTeams() {
-        setProgress(80, "טוען קבוצות ישראליות...");
+        setProgressWithoutText(80);
         TBAApiManager.getInstance().getIsraeliTeams(new TBAApiManager.TeamListCallback() {
             @Override public void onSuccess(ArrayList<Team> teams) {
                 AppCache.getInstance().setIsraeliTeams(teams);
@@ -167,7 +166,7 @@ public class LoadingScreen extends AppCompatActivity {
 
     /** Moved from old SplashScreen — creates Firebase entries for new teams. */
     private void loadStep6_InitTeams(ArrayList<Team> teams) {
-        setProgress(90, "מאתחל קבוצות...");
+        setProgressWithoutText(90);
         for (Team t : teams) {
             DataHelper.getInstance().isTeamDataExists(t, exists -> {
                 if (!exists) DataHelper.getInstance().createTeamStats(new TeamStats(t), null);
@@ -178,6 +177,9 @@ public class LoadingScreen extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(() -> navigateNext(), 400);
     }
 
+    private void setProgressWithoutText(int percent){
+        setProgress(percent, tvStatus.getText().toString());
+    }
     private void setProgress(int percent, String message) {
         runOnUiThread(() -> {
             progressBar.setProgress(percent);

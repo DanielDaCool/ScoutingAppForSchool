@@ -37,22 +37,32 @@ public class AdminMainActivity extends AppCompatActivity {
     private Context          context;
     private SharedPrefHelper prefs;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!SharedPrefHelper.getInstance(this).isUserLoggedIn()) {
-            startActivity(new Intent(this, LoginScreen.class));
-            finish();
-            return;
-        }
-        setContentView(R.layout.activity_admin_main);
         context = this;
+        checkAndHandleNonAuthenticatedUser();
+        setContentView(R.layout.activity_admin_main);
+
         prefs   = SharedPrefHelper.getInstance(context);
 
         init();
         setupBottomNav();
         setupButtons();
         setupProfilePanel();
+    }
+    private void checkAndHandleNonAuthenticatedUser(){
+        if (!SharedPrefHelper.getInstance(context).isUserLoggedIn()) {
+            startActivity(new Intent(context, LoginScreen.class));
+            finish();
+            return;
+        }
+        if(!SharedPrefHelper.getInstance(context).isAdmin()){
+            startActivity(new Intent(context, MainActivity.class));
+            finish();
+        }
     }
 
     @Override
