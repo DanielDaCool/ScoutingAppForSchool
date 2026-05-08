@@ -29,11 +29,9 @@ import java.util.ArrayList;
 
 public class ScouterMainActivity extends AppCompatActivity {
 
-    // Home panel
     private TextView textViewWelcome, tvTeamCount, tvGamesCount, tvCurrentEvent;
     private Button   btnForms, btnPrediction;
 
-    // Profile panel
     private TextView tvProfileName, tvProfileEmail, tvProfileRole, tvCurrentDistrict;
     private Button   buttonLogout, btnChangeDistrict;
     private LinearLayout layoutAssignments;
@@ -42,7 +40,6 @@ public class ScouterMainActivity extends AppCompatActivity {
     private AssignmentAdapter     assignmentAdapter;
     private ArrayList<Assignment> assignmentList = new ArrayList<>();
 
-    // Navigation
     private ScrollView   panelHome;
     private LinearLayout panelProfile;
     private com.google.android.material.bottomnavigation.BottomNavigationView bottomNav;
@@ -50,8 +47,6 @@ public class ScouterMainActivity extends AppCompatActivity {
     private Context          context;
     private SharedPrefHelper prefs;
 
-    // Track which district the Firebase listener is registered for
-    // to avoid registering multiple listeners on each onResume
     private boolean firebaseListenerRegistered = false;
     private EVENTS  registeredListenerDistrict = null;
 

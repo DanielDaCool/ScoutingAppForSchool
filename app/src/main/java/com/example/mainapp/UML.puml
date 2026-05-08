@@ -1,0 +1,210 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.AssignmentViewHolder> {
+
+    private ArrayList<Assignment> assignments;
+    private OnAssignmentClickListener listener;
+
+}
+
+class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
+
+    private List<Game> games;
+    private OnItemClickListener listener;
+}
+class GameHistoryAdapter extends RecyclerView.Adapter<GameHistoryAdapter.GameViewHolder> {
+
+    private final ArrayList<TeamAtGame> games;
+}
+class PredictionPagerAdapter extends FragmentStateAdapter
+
+ class ScouterAdapter extends RecyclerView.Adapter<ScouterAdapter.ScouterViewHolder> {
+
+    private ArrayList<User> scouters;
+    private OnScouterClickListener listener;
+    private HashMap<String, Integer> pendingCounts = new HashMap<>();
+}
+ class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.TeamStatsViewHolder> {
+
+    private ArrayList<TeamStats> teamStats;
+    private Context context;
+}
+ class AdminMainActivity extends AppCompatActivity {
+
+    private TextView textViewWelcome, tvTeamCount, tvGamesCount;
+    private Button   btnPrediction, btnAdminPanel;
+
+    private TextView tvProfileName, tvProfileEmail, tvProfileRole;
+    private Button   buttonLogout;
+
+    private ScrollView   panelHome;
+    private LinearLayout panelProfile;
+    private com.google.android.material.bottomnavigation.BottomNavigationView bottomNav;
+
+    private Context          context;
+    private SharedPrefHelper prefs;
+
+}
+
+ class AdminPanelActivity extends AppCompatActivity {
+
+    private RecyclerView   rvScouters;
+    private ScouterAdapter scouterAdapter;
+    private ArrayList<User> scouterList = new ArrayList<>();
+    private ProgressBar progressBar;
+    private TextView    tvBack, tvEmpty;
+    private Context     context;
+}
+
+ class LoginScreen extends AppCompatActivity {
+
+    private EditText etEmail, etPassword;
+    private Button   btnLogin;
+    private TextView tvSignupLink;
+    private Context  context;
+}
+ class SignupScreen extends AppCompatActivity {
+
+    private EditText etFullName, etEmail, etPassword, etConfirmPassword;
+    private Button btnSignup;
+    private TextView tvLoginLink;
+    private Context context;
+}
+
+ class GamePredictionFragment extends Fragment {
+
+    private ArrayList<Game> allGames;
+    private Spinner spinnerGames;
+    private TextView redAlliance, blueAlliance, predictionTxt;
+    private Button predictBtn;
+    private int currentGameID = 0;
+}
+
+ class ManualPredictionFragment extends Fragment {
+
+    private EditText edtRedTeam1, edtRedTeam2, edtRedTeam3;
+    private EditText edtBlueTeam1, edtBlueTeam2, edtBlueTeam3;
+    private Button btnCalculate;
+    private TextView predictionTxt;
+}
+
+class PredictionScreen extends AppCompatActivity {
+
+    private ViewPager2 viewPager;
+    private TextView tvHeader, tabGame, tabManual, btnBack;
+    }
+
+ class FormsActivity extends AppCompatActivity {
+
+    private EditText autoL1, autoL2, autoL3, autoL4;
+    private EditText teleL1, teleL2, teleL3, teleL4, teleNet, teleProc;
+    private EditText teamNumber, gameNumber;
+    private RadioGroup group;
+    private Button sendBtn;
+    private Context context;
+    private ProgressBar progressBar;
+
+    private int    teamNumberValue    = 0;
+    private int    gameNumberValue    = 0;
+    private String assignmentKey      = null;
+    private EVENTS assignmentDistrict = null;
+
+}
+class GameDetailActivity extends AppCompatActivity {
+
+    private TextView tvGameTitle, tvBackBtn;
+
+    // Red team views
+    private TextView tvRedTeam1, tvRedTeam2, tvRedTeam3;
+    private TextView tvRedPoints1, tvRedPoints2, tvRedPoints3;
+    private TextView tvRedHeight1, tvRedHeight2, tvRedHeight3;
+    private TextView tvRedClimb1, tvRedClimb2, tvRedClimb3;
+    private TextView tvRedGames1, tvRedGames2, tvRedGames3;
+
+    // Blue team views
+    private TextView tvBlueTeam1, tvBlueTeam2, tvBlueTeam3;
+    private TextView tvBluePoints1, tvBluePoints2, tvBluePoints3;
+    private TextView tvBlueHeight1, tvBlueHeight2, tvBlueHeight3;
+    private TextView tvBlueClimb1, tvBlueClimb2, tvBlueClimb3;
+    private TextView tvBlueGames1, tvBlueGames2, tvBlueGames3;
+
+    private ProgressBar progressBar;
+
+    private int gameNumber;
+    private int[] redTeams  = new int[3];
+    private int[] blueTeams = new int[3];
+    }
+
+ class GamesList extends AppCompatActivity {
+
+    private RecyclerView recyclerView;
+    private GameAdapter gameAdapter;
+    private EditText listFilter;
+    private ArrayList<Game> gameList;
+    private ArrayList<Game> filteredGameList;
+    private Context context;
+}
+
+ class LoadingScreen extends AppCompatActivity {
+
+    private ProgressBar progressBar;
+    private TextView tvStatus, tvPercent, tvNoInternet;
+    private Button btnRetry;
+    private SharedPrefHelper prefs;
+    private EVENTS districtToLoad;
+    }
+
+    class ScouterMainActivity extends AppCompatActivity {
+
+        private TextView textViewWelcome, tvTeamCount, tvGamesCount, tvCurrentEvent;
+        private Button   btnForms, btnPrediction;
+
+        private TextView tvProfileName, tvProfileEmail, tvProfileRole, tvCurrentDistrict;
+        private Button   buttonLogout, btnChangeDistrict;
+        private LinearLayout layoutAssignments;
+        private RecyclerView rvAssignments;
+        private TextView     tvNoAssignments;
+        private AssignmentAdapter     assignmentAdapter;
+        private ArrayList<Assignment> assignmentList = new ArrayList<>();
+
+        private ScrollView   panelHome;
+        private LinearLayout panelProfile;
+        private com.google.android.material.bottomnavigation.BottomNavigationView bottomNav;
+
+        private Context          context;
+        private SharedPrefHelper prefs;
+
+        private boolean firebaseListenerRegistered = false;
+        private EVENTS  registeredListenerDistrict = null;
+}
+
+class TeamProfileActivity extends AppCompatActivity {
+
+    private TextView    tvTeamName, tvTeamNumber, tvAvgPoints, tvClimbRate, tvGamesPlayed;
+    private RecyclerView rvGameHistory;
+    private ProgressBar  progressBar;
+    private TextView     tvNoGames;
+    private TextView     tvBack;
+    private Context      context;
+
+    private GameHistoryAdapter gameHistoryAdapter;
+    private ArrayList<TeamAtGame> gameList = new ArrayList<>();
+
+    public static final String EXTRA_TEAM_NUMBER = "teamNumber";
+    }
+
+
+class TeamStatsActivity extends AppCompatActivity {
+
+
+    private Context context;
+    private RecyclerView recyclerView;
+    private TeamStatsAdapter adapter;
+    private EditText editText;
+    private Button btnSort;
+    private TextView tvSortIndicator;
+    private ArrayList<TeamStats> cachedStats;
+    private SortType currentSort = SortType.AVG_POINTS;
+    }
+@enduml

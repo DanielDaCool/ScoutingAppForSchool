@@ -22,18 +22,19 @@
         <activity
             android:name=".Screens.TeamProfileActivity"
             android:exported="false" />
+
+
         <activity
-            android:name=".Screens.SplashScreen"
+            android:name=".Screens.AuthenticationScreens.LoginScreen"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Screens.AuthenticationScreens.LoginScreen"
-            android:exported="false" />
+
         <activity
             android:name=".Screens.AuthenticationScreens.SignupScreen"
             android:exported="false" />
