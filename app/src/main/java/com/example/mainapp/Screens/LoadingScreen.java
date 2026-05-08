@@ -32,8 +32,8 @@ import java.util.ArrayList;
 public class LoadingScreen extends AppCompatActivity {
 
     private ProgressBar progressBar;
-    private TextView    tvStatus, tvPercent, tvNoInternet;
-    private Button      btnRetry;
+    private TextView tvStatus, tvPercent, tvNoInternet;
+    private Button btnRetry;
     private SharedPrefHelper prefs;
     private EVENTS districtToLoad;
 
@@ -42,26 +42,22 @@ public class LoadingScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_screen);
 
-        progressBar  = findViewById(R.id.progressBar);
-        tvStatus     = findViewById(R.id.tvStatus);
-        tvPercent    = findViewById(R.id.tvPercent);
+        progressBar = findViewById(R.id.progressBar);
+        tvStatus = findViewById(R.id.tvStatus);
+        tvPercent = findViewById(R.id.tvPercent);
         tvNoInternet = findViewById(R.id.tvNoInternet);
-        btnRetry     = findViewById(R.id.btnRetry);
-        prefs        = SharedPrefHelper.getInstance(this);
+        btnRetry = findViewById(R.id.btnRetry);
+        prefs = SharedPrefHelper.getInstance(this);
         progressBar.setMax(100);
 
-        // Determine which district's data to load
-        if (prefs.isAdmin()) {
-            districtToLoad = EVENTS.values()[0];
-        } else {
-            districtToLoad = prefs.getCurrentDistrict();
-            if (districtToLoad == null) {
-                // Scouter has no district — force them to pick one
-                startActivity(new Intent(this, LoginScreen.class));
-                finish();
-                return;
-            }
+
+        districtToLoad = prefs.getCurrentDistrict();
+        if (districtToLoad == null) {
+            startActivity(new Intent(this, LoginScreen.class));
+            finish();
+            return;
         }
+
 
         btnRetry.setOnClickListener(v -> {
             if (!InternetUtils.isInternetConnected(this)) {
@@ -76,7 +72,7 @@ public class LoadingScreen extends AppCompatActivity {
             loadStep1_TBATeams();
         });
 
-        boolean hasInternet       = InternetUtils.isInternetConnected(this);
+        boolean hasInternet = InternetUtils.isInternetConnected(this);
         boolean hasLaunchedBefore = prefs.hasLaunchedBefore();
 
         if (!hasInternet && !hasLaunchedBefore) {
@@ -106,11 +102,16 @@ public class LoadingScreen extends AppCompatActivity {
         try {
             TBAApiManager.getInstance().getEventTeams(districtToLoad,
                     new TBAApiManager.TeamCallback() {
-                        @Override public void onSuccess(ArrayList<Team> teams) {
+                        @Override
+                        public void onSuccess(ArrayList<Team> teams) {
                             AppCache.getInstance().setTeamsAtEvent(teams.toArray(new Team[0]));
                             loadStep2_TeamStats();
                         }
-                        @Override public void onError(Exception e) { loadStep2_TeamStats(); }
+
+                        @Override
+                        public void onError(Exception e) {
+                            loadStep2_TeamStats();
+                        }
                     }
             );
         } catch (IOException e) {
@@ -123,14 +124,20 @@ public class LoadingScreen extends AppCompatActivity {
     private void loadStep2_TeamStats() {
         setProgressWithoutText(30);
         DataHelper.getInstance().readAllTeamStats(new DataHelper.DataCallback<ArrayList<TeamStats>>() {
-            @Override public void onSuccess(ArrayList<TeamStats> data) {
+            @Override
+            public void onSuccess(ArrayList<TeamStats> data) {
                 AppCache.getInstance().setAllTeamStats(data);
                 int totalGames = 0;
-                for (TeamStats t : data) if (t.getAllGames() != null) totalGames += t.getAllGames().size();
+                for (TeamStats t : data)
+                    if (t.getAllGames() != null) totalGames += t.getAllGames().size();
                 AppCache.getInstance().setTotalGames(totalGames);
                 loadStep3_TeamCount();
             }
-            @Override public void onFailure(String error) { loadStep3_TeamCount(); }
+
+            @Override
+            public void onFailure(String error) {
+                loadStep3_TeamCount();
+            }
         });
     }
 
@@ -146,11 +153,16 @@ public class LoadingScreen extends AppCompatActivity {
         setProgressWithoutText(65);
         TBAApiManager.getInstance().getEventGames(districtToLoad,
                 new TBAApiManager.GameCallback() {
-                    @Override public void onSuccess(ArrayList<Game> games) {
+                    @Override
+                    public void onSuccess(ArrayList<Game> games) {
                         AppCache.getInstance().setGamesList(games);
                         loadStep5_IsraeliTeams();
                     }
-                    @Override public void onError(Exception e) { loadStep5_IsraeliTeams(); }
+
+                    @Override
+                    public void onError(Exception e) {
+                        loadStep5_IsraeliTeams();
+                    }
                 }
         );
     }
@@ -158,14 +170,17 @@ public class LoadingScreen extends AppCompatActivity {
     private void loadStep5_IsraeliTeams() {
         setProgressWithoutText(80);
         TBAApiManager.getInstance().getIsraeliTeams(new TBAApiManager.TeamListCallback() {
-            @Override public void onSuccess(ArrayList<Team> teams) {
+            @Override
+            public void onSuccess(ArrayList<Team> teams) {
                 AppCache.getInstance().setIsraeliTeams(teams);
                 loadStep6_InitTeams(teams);
             }
         });
     }
 
-    /** Moved from old SplashScreen — creates Firebase entries for new teams. */
+    /**
+     * Moved from old SplashScreen — creates Firebase entries for new teams.
+     */
     private void loadStep6_InitTeams(ArrayList<Team> teams) {
         setProgressWithoutText(90);
         for (Team t : teams) {
@@ -178,9 +193,10 @@ public class LoadingScreen extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(() -> navigateNext(), 400);
     }
 
-    private void setProgressWithoutText(int percent){
+    private void setProgressWithoutText(int percent) {
         setProgress(percent, tvStatus.getText().toString());
     }
+
     private void setProgress(int percent, String message) {
         runOnUiThread(() -> {
             progressBar.setProgress(percent);

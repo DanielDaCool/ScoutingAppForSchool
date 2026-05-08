@@ -58,11 +58,8 @@ public class LoginScreen extends AppCompatActivity {
                     Toast.makeText(context,
                             "ברוך הבא " + user.getFullName(), Toast.LENGTH_SHORT).show();
 
-                    if (user.isAdmin()) {
-                        navigateToLoading(); // admin skips district picker
-                    } else {
-                        showDistrictPickerDialog(); // scouter must pick district
-                    }
+                    showDistrictPickerDialog(user.isAdmin());
+
                 });
             }
             @Override public void onFailure(String error) {
@@ -82,13 +79,14 @@ public class LoginScreen extends AppCompatActivity {
         });
     }
 
-    private void showDistrictPickerDialog() {
+
+    private void showDistrictPickerDialog(boolean isAdmin) {
         EVENTS[] events     = EVENTS.values();
         String[] eventNames = new String[events.length];
         for (int i = 0; i < events.length; i++) eventNames[i] = events[i].toString();
 
         new AlertDialog.Builder(context)
-                .setTitle("בחר מחוז לסקאוטינג")
+                .setTitle(isAdmin ? "בחר תחרות לצפייה בנתונים" : "בחר תחרות לסקאוטינג")
                 .setCancelable(false) // must pick
                 .setItems(eventNames, (dialog, which) -> {
                     SharedPrefHelper.getInstance(context).saveDistrict(events[which]);
