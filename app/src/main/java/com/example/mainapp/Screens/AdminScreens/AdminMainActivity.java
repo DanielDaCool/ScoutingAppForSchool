@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.mainapp.R;
 import com.example.mainapp.Screens.AuthenticationScreens.LoginScreen;
 import com.example.mainapp.Screens.GamesList;
-import com.example.mainapp.Screens.MainActivity;
+import com.example.mainapp.Screens.ScouterMainActivity;
 import com.example.mainapp.Screens.Predictions.PredictionScreen;
 import com.example.mainapp.Screens.TeamStatsActivity;
 import com.example.mainapp.Utils.DatabaseUtils.AppCache;
@@ -63,7 +63,7 @@ public class AdminMainActivity extends AppCompatActivity {
             return;
         }
         if(!SharedPrefHelper.getInstance(context).isAdmin()){
-            startActivity(new Intent(context, MainActivity.class));
+            startActivity(new Intent(context, ScouterMainActivity.class));
             finish();
         }
     }

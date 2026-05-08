@@ -27,7 +27,7 @@ import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class ScouterMainActivity extends AppCompatActivity {
 
     // Home panel
     private TextView textViewWelcome, tvTeamCount, tvGamesCount, tvCurrentEvent;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_scouter_main);
         context = this;
         prefs   = SharedPrefHelper.getInstance(context);
 

@@ -41,10 +41,7 @@
             android:name=".Screens.LoadingScreen"
             android:exported="false" />
         <activity
-            android:name=".Screens.MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Screens.AdminMainScreen"
+            android:name=".Screens.ScouterMainActivity"
             android:exported="false" />
         <activity
             android:name=".Screens.AdminScreens.AdminPanelActivity"

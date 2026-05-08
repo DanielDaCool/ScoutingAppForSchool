@@ -50,8 +50,8 @@ public class FormsActivity extends AppCompatActivity {
         init();
 
         if (getIntent().getExtras() != null) {
-            teamNumberValue = (Integer) getIntent().getExtras().get("teamNumber");
-            gameNumberValue = (Integer) getIntent().getExtras().get("gameNumber");
+            teamNumberValue = getIntent().getIntExtra("teamNumber", 0);
+            gameNumberValue = getIntent().getIntExtra("gameNumber", 0);
             assignmentKey   = getIntent().getStringExtra("assignmentKey");
 
             // Read district from Intent so we complete the right district's assignment

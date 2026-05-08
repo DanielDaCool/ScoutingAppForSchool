@@ -197,7 +197,7 @@ public class LoadingScreen extends AppCompatActivity {
         }
         Intent intent = prefs.isAdmin()
                 ? new Intent(this, AdminMainActivity.class)
-                : new Intent(this, MainActivity.class);
+                : new Intent(this, ScouterMainActivity.class);
         startActivity(intent);
         finish();
     }
