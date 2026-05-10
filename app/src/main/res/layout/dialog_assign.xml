@@ -17,14 +17,16 @@
         android:id="@+id/spDistrict"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#C084FC"
+        android:backgroundTint="@color/white"
+
+
         android:layout_marginBottom="16dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="מספר משחק"
-        android:textColor="#F0E6FF"
+        android:textColor="@color/white"
         android:textSize="13sp"
         android:layout_marginBottom="4dp" />
 
@@ -34,8 +36,8 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:hint="לדוגמה: 5"
-        android:textColor="#F0E6FF"
-        android:textColorHint="#4A3F5C"
+        android:textColor="@color/white"
+        android:textColorHint="#DEDEDE"
         android:backgroundTint="#2A1F3D"
         android:padding="10dp"
         android:layout_marginBottom="16dp" />
@@ -44,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="מספר קבוצה"
-        android:textColor="#F0E6FF"
+        android:textColor="@color/white"
         android:textSize="13sp"
         android:layout_marginBottom="4dp" />
 
@@ -53,9 +55,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
-        android:hint="לדוגמה: 5987"
-        android:textColor="#F0E6FF"
-        android:textColorHint="#4A3F5C"
+        android:hint="לדוגמה: 5635"
+        android:textColor="@color/white"
+        android:textColorHint="#DEDEDE"
         android:backgroundTint="#2A1F3D"
         android:padding="10dp" />
 
