@@ -51,7 +51,6 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <!-- HOME PANEL -->
         <ScrollView
             android:id="@+id/panelHome"
             android:layout_width="match_parent"

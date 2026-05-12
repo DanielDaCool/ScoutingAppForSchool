@@ -197,7 +197,6 @@ public class ScouterMainActivity extends AppCompatActivity {
         );
     }
 
-    // ==================== NAVIGATION ====================
 
     private void setupBottomNav() {
         bottomNav.setOnItemSelectedListener(item -> {
@@ -216,7 +215,6 @@ public class ScouterMainActivity extends AppCompatActivity {
         panel.setVisibility(View.VISIBLE);
     }
 
-    // ==================== BUTTONS ====================
 
     private void setupButtons() {
         btnForms.setOnClickListener(v ->
@@ -238,7 +236,6 @@ public class ScouterMainActivity extends AppCompatActivity {
         );
     }
 
-    // ==================== INIT ====================
 
     private void init() {
         textViewWelcome   = findViewById(R.id.textViewWelcome);
