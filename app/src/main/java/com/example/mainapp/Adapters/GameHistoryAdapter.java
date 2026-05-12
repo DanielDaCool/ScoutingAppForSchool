@@ -110,10 +110,10 @@ public class GameHistoryAdapter extends RecyclerView.Adapter<GameHistoryAdapter.
             CLIMB climb = game.getClimb();
             if (climb == null) { tvClimb.setText("—"); return; }
             switch (climb) {
-                case HIGH:      tvClimb.setText("✅ גבוה");   break;
-                case LOW:       tvClimb.setText("✅ נמוך");   break;
-                case FAILED:    tvClimb.setText("❌ נכשל");   break;
-                case DIDNT_TRY: tvClimb.setText("⬜ לא ניסה"); break;
+                case HIGH:      tvClimb.setText("גבוה");   break;
+                case LOW:       tvClimb.setText("נמוך");   break;
+                case FAILED:    tvClimb.setText("נכשל");   break;
+                case DIDNT_TRY: tvClimb.setText("לא ניסה"); break;
                 default:        tvClimb.setText("—");          break;
             }
         }

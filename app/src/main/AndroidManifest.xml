@@ -60,7 +60,7 @@
             android:name=".Screens.FormsActivity"
             android:exported="false" />
         <activity
-            android:name=".Screens.GamesList"
+            android:name=".Screens.GamesListActivity"
             android:exported="false" />
     </application>
 

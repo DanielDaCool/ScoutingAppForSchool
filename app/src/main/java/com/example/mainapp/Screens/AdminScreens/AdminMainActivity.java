@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mainapp.R;
 import com.example.mainapp.Screens.AuthenticationScreens.LoginScreen;
-import com.example.mainapp.Screens.GamesList;
+import com.example.mainapp.Screens.GamesListActivity;
 import com.example.mainapp.Screens.ScouterMainActivity;
 import com.example.mainapp.Screens.Predictions.PredictionScreen;
 import com.example.mainapp.Screens.TeamStatsActivity;
@@ -113,7 +113,7 @@ public class AdminMainActivity extends AppCompatActivity {
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if      (id == R.id.nav_home)    showPanel(panelHome);
-            else if (id == R.id.nav_games)   startActivity(new Intent(context, GamesList.class));
+            else if (id == R.id.nav_games)   startActivity(new Intent(context, GamesListActivity.class));
             else if (id == R.id.nav_stats)   startActivity(new Intent(context, TeamStatsActivity.class));
             else if (id == R.id.nav_profile) showPanel(panelProfile);
             return true;

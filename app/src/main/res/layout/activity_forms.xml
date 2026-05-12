@@ -52,6 +52,8 @@
                 android:hint="מספר קבוצה"
                 android:textColor="#F0E6FF"
                 android:textColorHint="#4A3F5C"
+
+                android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
 
             <TextView
@@ -61,6 +63,8 @@
                 android:layout_marginHorizontal="6dp"
                 android:text="משחק:"
                 android:textColor="#C084FC"
+
+                android:inputType="number"
                 android:textSize="18sp" />
 
             <EditText
@@ -71,6 +75,8 @@
                 android:hint="מספר משחק"
                 android:textColor="#F0E6FF"
                 android:textColorHint="#4A3F5C"
+
+                android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
         </LinearLayout>
 
@@ -103,6 +109,8 @@
                 android:padding="16dp"
                 android:textColor="#F0E6FF"
                 android:textColorHint="#4A3F5C"
+
+                android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
 
             <EditText
@@ -113,6 +121,8 @@
                 android:padding="16dp"
                 android:textColor="#F0E6FF"
                 android:textColorHint="#4A3F5C"
+
+                android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
 
             <EditText
@@ -123,6 +133,8 @@
                 android:padding="16dp"
                 android:textColor="#F0E6FF"
                 android:textColorHint="#4A3F5C"
+
+                android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
 
             <EditText
@@ -133,6 +145,8 @@
                 android:padding="16dp"
                 android:textColor="#F0E6FF"
                 android:textColorHint="#4A3F5C"
+
+                android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
         </LinearLayout>
 
@@ -164,6 +178,8 @@
                 android:hint="L4"
                 android:padding="12dp"
                 android:textColor="#F0E6FF"
+
+                android:inputType="number"
                 android:textColorHint="#4A3F5C"
                 android:backgroundTint="#2A1F3D" />
 
@@ -175,6 +191,8 @@
                 android:padding="12dp"
                 android:textColor="#F0E6FF"
                 android:textColorHint="#4A3F5C"
+
+                android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
 
             <EditText
@@ -185,6 +203,7 @@
                 android:padding="12dp"
                 android:textColor="#F0E6FF"
                 android:textColorHint="#4A3F5C"
+                android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
 
             <EditText
@@ -195,6 +214,8 @@
                 android:padding="12dp"
                 android:textColor="#F0E6FF"
                 android:textColorHint="#4A3F5C"
+
+                android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
 
             <EditText
@@ -205,6 +226,8 @@
                 android:padding="12dp"
                 android:textColor="#F0E6FF"
                 android:textColorHint="#4A3F5C"
+
+                android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
 
             <EditText
@@ -215,6 +238,8 @@
                 android:padding="12dp"
                 android:textColor="#F0E6FF"
                 android:textColorHint="#4A3F5C"
+
+                android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
         </LinearLayout>
 

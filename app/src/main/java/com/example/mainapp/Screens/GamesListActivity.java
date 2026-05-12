@@ -21,7 +21,7 @@ import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 
 import java.util.ArrayList;
 
-public class GamesList extends AppCompatActivity {
+public class GamesListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private GameAdapter gameAdapter;
@@ -91,7 +91,7 @@ public class GamesList extends AppCompatActivity {
 
     private void init(){
         recyclerView = findViewById(R.id.gamesList);
-        context = GamesList.this;
+        context = GamesListActivity.this;
         listFilter = findViewById(R.id.editTextTeamFilter);
 
         // FIXED: Create separate ArrayList instances

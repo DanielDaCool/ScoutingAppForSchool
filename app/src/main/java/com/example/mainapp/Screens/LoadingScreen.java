@@ -97,6 +97,7 @@ public class LoadingScreen extends AppCompatActivity {
     }
 
 
+
     private void loadStep1_TBATeams() {
         setProgress(10, "טוען  מידע...");
         try {
@@ -178,9 +179,6 @@ public class LoadingScreen extends AppCompatActivity {
         });
     }
 
-    /**
-     * Moved from old SplashScreen — creates Firebase entries for new teams.
-     */
     private void loadStep6_InitTeams(ArrayList<Team> teams) {
         setProgressWithoutText(90);
         for (Team t : teams) {
