@@ -80,7 +80,6 @@ public class ScouterMainActivity extends AppCompatActivity {
         loadDashboardStats();
         refreshCacheInBackground();
 
-        // Re-register Firebase listener only if district changed
         EVENTS currentDistrict = prefs.getCurrentDistrict();
         boolean districtChanged = currentDistrict != null
                 && !currentDistrict.equals(registeredListenerDistrict);
@@ -89,7 +88,7 @@ public class ScouterMainActivity extends AppCompatActivity {
             registeredListenerDistrict  = currentDistrict;
             firebaseListenerRegistered  = false;
             tvCurrentEvent.setText(currentDistrict.toString());
-            tvCurrentDistrict.setText("מחוז: " + currentDistrict.toString());
+            tvCurrentDistrict.setText(",תחרות: " + currentDistrict.toString());
         }
 
         if (!firebaseListenerRegistered) {
@@ -141,7 +140,7 @@ public class ScouterMainActivity extends AppCompatActivity {
         for (int i = 0; i < events.length; i++) eventNames[i] = events[i].toString();
 
         new AlertDialog.Builder(context)
-                .setTitle("שנה מחוז")
+                .setTitle("שנה תחרות")
                 .setItems(eventNames, (dialog, which) -> {
                     prefs.saveDistrict(events[which]);
                     // Reset listener so it re-registers for the new district
