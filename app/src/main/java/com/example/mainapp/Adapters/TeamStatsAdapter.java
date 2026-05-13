@@ -44,17 +44,17 @@ public class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.Team
         double avgGamePieces = curTeamStats.getAvgGamePieceCount();
         GamePiece mostScoredPiece = curTeamStats.getMostScoredGamePiece();
 
-        holder.teamNumberTextView.setText(String.valueOf(teamNumber));
-        holder.teamNameTextView.setText(teamName);
-        holder.avgPointsTextView.setText("ממוצע נקודות: " + String.format("%.1f", Double.isNaN(avgPoints) ? 0 : avgPoints));
-        holder.avgGamePiecesTextView.setText("ממוצע חלקי משחק: " + String.format("%.1f", Double.isNaN(avgGamePieces) ? 0 : avgGamePieces));
+        holder.tvTeamNumber.setText(String.valueOf(teamNumber));
+        holder.tvTeamName.setText(teamName);
+        holder.tvAvgPoints.setText("ממוצע נקודות: " + String.format("%.1f", Double.isNaN(avgPoints) ? 0 : avgPoints));
+        holder.tvGamePieces.setText("ממוצע חלקי משחק: " + String.format("%.1f", Double.isNaN(avgGamePieces) ? 0 : avgGamePieces));
 
         String mostScoredText = mostScoredPiece != null
                 ? "הגובה הממוצע: " + mostScoredPiece.name()
                 : "הגובה הממוצע: אין מידע";
-        holder.mostScoredTextView.setText(mostScoredText);
+        holder.tvMostScored.setText(mostScoredText);
 
-        holder.gamesPlayedTextView.setText("כמות משחקים: " + curTeamStats.getGamesPlayed());
+        holder.tvGamesPlayed.setText("כמות משחקים: " + curTeamStats.getGamesPlayed());
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, TeamProfileActivity.class);
             intent.putExtra(TeamProfileActivity.EXTRA_TEAM_NUMBER, curTeamStats.getTeam().getTeamNumber());
@@ -76,21 +76,21 @@ public class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.Team
 
 
     public static class TeamStatsViewHolder extends RecyclerView.ViewHolder {
-        TextView teamNumberTextView;
-        TextView teamNameTextView;
-        TextView avgPointsTextView;
-        TextView avgGamePiecesTextView;
-        TextView mostScoredTextView;
-        TextView gamesPlayedTextView;
+        TextView tvTeamNumber;
+        TextView tvTeamName;
+        TextView tvAvgPoints;
+        TextView tvGamePieces;
+        TextView tvMostScored;
+        TextView tvGamesPlayed;
 
         public TeamStatsViewHolder(@NonNull View itemView) {
             super(itemView);
-            teamNumberTextView = itemView.findViewById(R.id.teamNumberTextView);
-            teamNameTextView = itemView.findViewById(R.id.teamNameTextView);
-            avgPointsTextView = itemView.findViewById(R.id.avgPointsTextView);
-            avgGamePiecesTextView = itemView.findViewById(R.id.avgGamePiecesTextView);
-            mostScoredTextView = itemView.findViewById(R.id.mostScoredTextView);
-            gamesPlayedTextView = itemView.findViewById(R.id.gamesPlayedTextView);
+            tvTeamNumber = itemView.findViewById(R.id.teamNumberTextView);
+            tvTeamName = itemView.findViewById(R.id.teamNameTextView);
+            tvAvgPoints = itemView.findViewById(R.id.avgPointsTextView);
+            tvGamePieces = itemView.findViewById(R.id.avgGamePiecesTextView);
+            tvMostScored = itemView.findViewById(R.id.mostScoredTextView);
+            tvGamesPlayed = itemView.findViewById(R.id.gamesPlayedTextView);
         }
     }
 }

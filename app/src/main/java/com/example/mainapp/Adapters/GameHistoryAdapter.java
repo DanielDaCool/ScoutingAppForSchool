@@ -15,7 +15,7 @@ import com.example.mainapp.Utils.TeamUtils.TeamAtGame;
 
 import java.util.ArrayList;
 
-public class GameHistoryAdapter extends RecyclerView.Adapter<GameHistoryAdapter.GameViewHolder> {
+public class GameHistoryAdapter extends RecyclerView.Adapter<GameHistoryAdapter.TeamAtGameViewHolder> {
 
     private final ArrayList<TeamAtGame> games;
 
@@ -24,20 +24,20 @@ public class GameHistoryAdapter extends RecyclerView.Adapter<GameHistoryAdapter.
     }
 
     @NonNull @Override
-    public GameViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TeamAtGameViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_game_history, parent, false);
-        return new GameViewHolder(v);
+        return new TeamAtGameViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TeamAtGameViewHolder holder, int position) {
         holder.bind(games.get(position));
     }
 
     @Override public int getItemCount() { return games.size(); }
 
-    static class GameViewHolder extends RecyclerView.ViewHolder {
+    static class TeamAtGameViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView tvGameNumber;
         private final TextView tvPoints;
@@ -47,7 +47,7 @@ public class GameHistoryAdapter extends RecyclerView.Adapter<GameHistoryAdapter.
         private final TextView tvClimb;
         private final TextView tvL1, tvL2, tvL3, tvL4, tvNet, tvProc;
 
-        GameViewHolder(@NonNull View itemView) {
+        TeamAtGameViewHolder(@NonNull View itemView) {
             super(itemView);
             tvGameNumber = itemView.findViewById(R.id.tvGameNumber);
             tvPoints     = itemView.findViewById(R.id.tvPoints);

@@ -49,10 +49,6 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         return assignments.size();
     }
 
-    public void updateData(ArrayList<Assignment> newAssignments) {
-        this.assignments = newAssignments;
-        notifyDataSetChanged();
-    }
 
     public void removeByKey(String key) {
         for (int i = 0; i < assignments.size(); i++) {
@@ -68,13 +64,11 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
 
         private TextView tvGameNumber;
         private TextView tvTeamNumber;
-        private TextView tvArrow;
 
         public AssignmentViewHolder(@NonNull View itemView) {
             super(itemView);
             tvGameNumber = itemView.findViewById(R.id.tvAssignmentGame);
             tvTeamNumber = itemView.findViewById(R.id.tvAssignmentTeam);
-            tvArrow      = itemView.findViewById(R.id.tvAssignmentArrow);
         }
 
         public void bind(Assignment assignment) {

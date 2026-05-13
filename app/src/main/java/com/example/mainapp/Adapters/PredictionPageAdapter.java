@@ -8,9 +8,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.mainapp.Screens.Predictions.GamePredictionFragment;
 import com.example.mainapp.Screens.Predictions.ManualPredictionFragment;
 
-public class PredictionPagerAdapter extends FragmentStateAdapter {
+public class PredictionPageAdapter extends FragmentStateAdapter {
 
-    public PredictionPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    public PredictionPageAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
 

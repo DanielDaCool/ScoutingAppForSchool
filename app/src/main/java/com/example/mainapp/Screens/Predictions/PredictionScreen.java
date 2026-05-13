@@ -6,7 +6,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.mainapp.Adapters.PredictionPagerAdapter;
+import com.example.mainapp.Adapters.PredictionPageAdapter;
 import com.example.mainapp.R;
 
 public class PredictionScreen extends AppCompatActivity {
@@ -25,7 +25,7 @@ public class PredictionScreen extends AppCompatActivity {
         btnBack   = findViewById(R.id.btnBack);
         viewPager = findViewById(R.id.viewPager);
 
-        PredictionPagerAdapter adapter = new PredictionPagerAdapter(this);
+        PredictionPageAdapter adapter = new PredictionPageAdapter(this);
         viewPager.setAdapter(adapter);
 
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
