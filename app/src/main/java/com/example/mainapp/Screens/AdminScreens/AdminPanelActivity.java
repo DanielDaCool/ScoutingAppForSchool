@@ -73,11 +73,7 @@ public class AdminPanelActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * One-time read across all districts per scouter.
-     * Using getPendingAssignments (not a live listener) to avoid
-     * listener accumulation on repeated onResume calls.
-     */
+
     private void loadPendingCounts() {
         EVENTS[] districts = EVENTS.values();
         for (User scouter : scouterList) {

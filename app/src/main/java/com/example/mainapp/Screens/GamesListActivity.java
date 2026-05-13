@@ -121,18 +121,4 @@ public class GamesListActivity extends AppCompatActivity {
         recyclerView.setAdapter(gameAdapter);
     }
 
-    public void addNewGame(Game newGame) {
-        gameList.add(newGame);
-        filteredGameList.add(newGame);
-        gameAdapter.notifyItemInserted(filteredGameList.size() - 1);
-    }
-
-    public void removeGame(int position) {
-        if (position >= 0 && position < filteredGameList.size()) {
-            Game gameToRemove = filteredGameList.get(position);
-            gameList.remove(gameToRemove);
-            filteredGameList.remove(position);
-            gameAdapter.notifyItemRemoved(position);
-        }
-    }
 }
