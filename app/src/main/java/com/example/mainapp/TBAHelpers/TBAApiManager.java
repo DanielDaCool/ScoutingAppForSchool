@@ -26,7 +26,7 @@ public class TBAApiManager {
     private static final String BASE_URL = "https://www.thebluealliance.com/api/v3";
 
     private OkHttpClient client;
-    public static TBAApiManager instance;
+    private static TBAApiManager instance;
     private TBAApiManager() {
         this.client = new OkHttpClient();
     }
@@ -53,7 +53,7 @@ public class TBAApiManager {
     }
 
 
-    public List<Team> getEventTeams(EVENTS eventKey, TeamCallback callback) throws IOException, JSONException {
+    public void getEventTeams(EVENTS eventKey, TeamCallback callback) throws IOException, JSONException {
         ArrayList<Team> teams = new ArrayList<Team>();
         new Thread(() -> {
             try {
@@ -80,9 +80,6 @@ public class TBAApiManager {
             }
         }).start();
 
-
-
-        return teams;
     }
     public void getEventGames(EVENTS eventKey, GameCallback callback) {
         new Thread(() -> {
@@ -131,7 +128,7 @@ public class TBAApiManager {
     }
 
 
-    public void getIsraeliTeams(TeamListCallback callback) {
+    public void getIsraeliTeams(TeamCallback callback) {
         new Thread(()->{
             Set<Team> israeliTeams = new HashSet<>();
 
@@ -152,7 +149,7 @@ public class TBAApiManager {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject teamJson = jsonArray.getJSONObject(i);
                         Team team = JsonParser.parseToTeam(teamJson);
-                        israeliTeams.add(team);  // Set automatically handles duplicates
+                        israeliTeams.add(team);
                     }
                 } catch (Exception e) {
                     Log.w("TBAApiManager", "Could not fetch teams from " + event.getEventKey());
@@ -165,11 +162,7 @@ public class TBAApiManager {
         }).start();
     }
 
-    public interface TeamListCallback{
-        void onSuccess(ArrayList<Team> teams);
 
-    }
-    // Callback interface
     public interface GameCallback {
         void onSuccess(ArrayList<Game> games);
         void onError(Exception e);
@@ -177,14 +170,6 @@ public class TBAApiManager {
 
     public interface TeamCallback{
         void onSuccess(ArrayList<Team> teams);
-        void onError(Exception e);
-    }
-    public interface SingleTeamCallback{
-        void onSuccess(Team t);
-        void onError(Exception e);
-    }
-    public interface  CountCallback{
-        void onSuccess(int count);
         void onError(Exception e);
     }
 }

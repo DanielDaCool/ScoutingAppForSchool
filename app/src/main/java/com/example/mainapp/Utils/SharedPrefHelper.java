@@ -18,7 +18,7 @@ public class SharedPrefHelper {
     private static final String KEY_DISTRICT     = "district";
 
     private final SharedPreferences prefs;
-    private final SharedPreferences.Editor editor;
+        private final SharedPreferences.Editor editor;
     private static SharedPrefHelper instance;
 
     private SharedPrefHelper(Context context) {

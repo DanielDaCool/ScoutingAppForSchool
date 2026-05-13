@@ -17,7 +17,7 @@ public class TeamUtils {
 
     public static boolean containsTeam(Team[] teams, int teamNumber){
         for(Team t : teams){
-            if(t.getTeamNumber() == teamNumber) return  true;
+            if(t.getTeamNumber() == teamNumber) return true;
         }
         return false;
     }
@@ -32,7 +32,6 @@ public class TeamUtils {
                 continue;
             }
 
-            // FIXED: Use String key instead of GamePiece enum
             for (GamePiece g : GamePiece.values()) {
                 Integer pieceCount = t.getGamePieceCount().get(g.name());
                 if (pieceCount != null) {
@@ -43,7 +42,7 @@ public class TeamUtils {
         return count;
     }
 
-    public static double getAvgGamePiecePerGame(ArrayList<TeamAtGame> allGamesOfTeam) {
+    public static double getAvgGamePieceCountPerGame(ArrayList<TeamAtGame> allGamesOfTeam) {
         if (allGamesOfTeam == null || allGamesOfTeam.isEmpty()) {
             return 0.0;
         }
@@ -88,7 +87,6 @@ public class TeamUtils {
                         totalGamePiecesScoredCount.put(g, currentCount + gameCount);
                     }
                 } catch (Exception e) {
-                    // Skip invalid game piece strings
                     continue;
                 }
             }

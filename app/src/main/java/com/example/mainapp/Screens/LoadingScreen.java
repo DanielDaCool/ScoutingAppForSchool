@@ -170,11 +170,16 @@ public class LoadingScreen extends AppCompatActivity {
 
     private void loadStep5_IsraeliTeams() {
         setProgressWithoutText(80);
-        TBAApiManager.getInstance().getIsraeliTeams(new TBAApiManager.TeamListCallback() {
+        TBAApiManager.getInstance().getIsraeliTeams(new TBAApiManager.TeamCallback() {
             @Override
             public void onSuccess(ArrayList<Team> teams) {
                 AppCache.getInstance().setIsraeliTeams(teams);
                 loadStep6_InitTeams(teams);
+            }
+
+            @Override
+            public void onError(Exception e) {
+
             }
         });
     }

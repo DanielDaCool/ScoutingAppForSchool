@@ -34,9 +34,6 @@ public class TeamStats implements Serializable {
         return this.allGames;
     }
 
-    public void setAllGames(ArrayList<TeamAtGame> allGames) {
-        this.allGames = allGames;
-    }
 
     public void addGame(TeamAtGame g) {
         allGames.add(g);
@@ -80,6 +77,6 @@ public class TeamStats implements Serializable {
         if (allGames == null || allGames.isEmpty()) {
             return 0.0;
         }
-        return TeamUtils.getAvgGamePiecePerGame(allGames);
+        return TeamUtils.getAvgGamePieceCountPerGame(allGames);
     }
 }
