@@ -1,6 +1,6 @@
 package com.example.mainapp.Utils.TeamUtils;
 
-import com.example.mainapp.Utils.DatabaseUtils.CLIMB;
+import com.example.mainapp.Utils.DatabaseUtils.Climb;
 import com.example.mainapp.Utils.GamePiece;
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -49,7 +49,7 @@ public class TeamStats implements Serializable {
 
         int count = 0;
         for (TeamAtGame t : allGames){
-            if(t.getClimb() != null && t.getClimb() != CLIMB.DIDNT_TRY && t.getClimb() != CLIMB.FAILED) count++;
+            if(t.getClimb() != null && t.getClimb() != Climb.DIDNT_TRY && t.getClimb() != Climb.FAILED) count++;
         }
         return  (double) count / allGames.size();
     }
@@ -70,7 +70,7 @@ public class TeamStats implements Serializable {
 
     public GamePiece getMostScoredGamePiece() {
         if (allGames == null || allGames.isEmpty()) {
-            return null;  // Or return a default GamePiece
+            return null;
         }
         return TeamUtils.getMostScoredGamePiece(allGames);
     }
@@ -78,7 +78,7 @@ public class TeamStats implements Serializable {
 
     public double getAvgGamePieceCount() {
         if (allGames == null || allGames.isEmpty()) {
-            return 0.0;  // ✅ Return 0 instead of NaN
+            return 0.0;
         }
         return TeamUtils.getAvgGamePiecePerGame(allGames);
     }

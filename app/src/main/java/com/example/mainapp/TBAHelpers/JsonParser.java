@@ -14,7 +14,6 @@ public class JsonParser {
         return new Team(num, name);
     }
 
-    // Helper method to extract team number from "frc5987" format
     private static int extractTeamNumber(String teamKey) {
         if (teamKey != null && teamKey.startsWith("frc")) {
             try {
@@ -50,7 +49,6 @@ public class JsonParser {
                 }
             }
 
-            // Blue alliance - FIXED: was getting "red" instead of "blue"
             if (alliances.has("blue")) {
                 JSONObject blue = alliances.getJSONObject("blue");
 

@@ -17,15 +17,10 @@ public class Assignment {
     public int getTeamNumber()  { return teamNumber; }
     public String getKey()      { return key; }
 
-    public void setGameNumber(int gameNumber) {
-        this.gameNumber = gameNumber;
-        this.key = gameNumber + "-" + teamNumber;
-    }
 
     public void setTeamNumber(int teamNumber) {
         this.teamNumber = teamNumber;
         this.key = gameNumber + "-" + teamNumber;
     }
 
-    public void setKey(String key) { this.key = key; }
 }

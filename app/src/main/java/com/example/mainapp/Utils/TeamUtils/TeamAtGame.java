@@ -1,6 +1,6 @@
 package com.example.mainapp.Utils.TeamUtils;
 
-import com.example.mainapp.Utils.DatabaseUtils.CLIMB;
+import com.example.mainapp.Utils.DatabaseUtils.Climb;
 import com.example.mainapp.Utils.GamePiece;
 import com.google.firebase.database.Exclude;
 
@@ -15,14 +15,14 @@ public class TeamAtGame implements Serializable {
     private List<GamePieceScore> gamePiecesScored;
     private int gameID;
     private Map<String, Integer> gamePieceCount;
-    private CLIMB c;
+    private Climb climb;
 
 
 
     public TeamAtGame() {
         this.gamePiecesScored = new ArrayList<>();
         this.gamePieceCount = new HashMap<>();
-        this.c = CLIMB.DIDNT_TRY;
+        this.climb = Climb.DIDNT_TRY;
     }
 
     public TeamAtGame(Team team, int gameID) {
@@ -33,7 +33,7 @@ public class TeamAtGame implements Serializable {
         for (GamePiece g : GamePiece.values()) {
             gamePieceCount.put(g.name(), 0);
         }
-        this.c = CLIMB.DIDNT_TRY;
+        this.climb = Climb.DIDNT_TRY;
 
     }
 
@@ -49,29 +49,21 @@ public class TeamAtGame implements Serializable {
         return this.gameID;
     }
 
-    public void setGameID(int gameID) {
-        this.gameID = gameID;
-    }
 
     public List<GamePieceScore> getGamePiecesScored() {
         return this.gamePiecesScored;
     }
 
-    public void setGamePiecesScored(List<GamePieceScore> gamePiecesScored) {
-        this.gamePiecesScored = gamePiecesScored;
-    }
 
     public Map<String, Integer> getGamePieceCount() {
         return this.gamePieceCount;
     }
 
-    public void setGamePieceCount(Map<String, Integer> gamePieceCount) {
-        this.gamePieceCount = gamePieceCount;
+
+    public void setClimb(Climb c){
+        this.climb = c;
     }
-    public void setClimb(CLIMB c){
-        this.c = c;
-    }
-    public CLIMB getClimb(){return this.c;}
+    public Climb getClimb(){return this.climb;}
 
 
     public void addGamePieceScored(GamePiece gamePiece, Boolean isScoredInAuto) {
@@ -87,22 +79,6 @@ public class TeamAtGame implements Serializable {
         this.gamePieceCount.put(key, gamePieceCount.getOrDefault(key, 0) + 1);
     }
 
-    // FIXED: Add @Exclude so Firebase doesn't try to serialize this
-    // Helper method to get HashMap with enum keys for app use
-    @Exclude
-    public HashMap<GamePiece, Integer> getGamePieceCountAsEnum() {
-        HashMap<GamePiece, Integer> result = new HashMap<>();
-        if (gamePieceCount != null) {
-            for (Map.Entry<String, Integer> entry : gamePieceCount.entrySet()) {
-                try {
-                    result.put(GamePiece.valueOf(entry.getKey()), entry.getValue());
-                } catch (IllegalArgumentException e) {
-                    // Skip invalid game piece names
-                }
-            }
-        }
-        return result;
-    }
 
     @Exclude
     public int calculatePoints() {
@@ -114,7 +90,7 @@ public class TeamAtGame implements Serializable {
         for (GamePieceScore g : gamePiecesScored) {
             sum+= g.getPoints();
         }
-        return sum + c.getPoints();
+        return sum + climb.getPoints();
     }
 
     public static class GamePieceScore implements Serializable {
@@ -139,16 +115,10 @@ public class TeamAtGame implements Serializable {
             return piece;
         }
 
-        public void setPiece(String piece) {
-            this.piece = piece;
-        }
 
         public boolean isInAuto() {
             return inAuto;
         }
 
-        public void setInAuto(boolean inAuto) {
-            this.inAuto = inAuto;
-        }
     }
 }

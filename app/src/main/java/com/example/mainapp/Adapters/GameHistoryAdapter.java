@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mainapp.R;
-import com.example.mainapp.Utils.DatabaseUtils.CLIMB;
+import com.example.mainapp.Utils.DatabaseUtils.Climb;
 import com.example.mainapp.Utils.GamePiece;
 import com.example.mainapp.Utils.TeamUtils.TeamAtGame;
 
@@ -107,7 +107,7 @@ public class GameHistoryAdapter extends RecyclerView.Adapter<GameHistoryAdapter.
             tvProc.setText(String.valueOf(proc));
 
             // Climb
-            CLIMB climb = game.getClimb();
+            Climb climb = game.getClimb();
             if (climb == null) { tvClimb.setText("—"); return; }
             switch (climb) {
                 case HIGH:      tvClimb.setText("גבוה");   break;

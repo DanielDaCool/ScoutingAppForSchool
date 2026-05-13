@@ -1,10 +1,10 @@
 package com.example.mainapp.Utils;
 
 public enum GamePiece {
-    L1(2, 3),
-    L2(3,4),
-    L3(4,6),
-    L4(5,7),
+    L1(3, 2),
+    L2(4,3),
+    L3(6,4),
+    L4(7,5),
     NET(4, 4),
     PROCESSOR(6, 6);
 

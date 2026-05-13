@@ -36,7 +36,7 @@ public class TBAApiManager {
         if(instance == null) instance = new TBAApiManager();
         return  instance;
     }
-    // Generic method to fetch data
+
     private String fetchData(String endpoint) throws IOException {
         Request request = new Request.Builder()
                 .url(BASE_URL + endpoint)
@@ -52,7 +52,7 @@ public class TBAApiManager {
         }
     }
 
-    // Get teams at an event
+
     public List<Team> getEventTeams(EVENTS eventKey, TeamCallback callback) throws IOException, JSONException {
         ArrayList<Team> teams = new ArrayList<Team>();
         new Thread(() -> {
@@ -83,21 +83,6 @@ public class TBAApiManager {
 
 
         return teams;
-    }
-    public void getGamesCount(EVENTS eventKey, CountCallback callback){
-        new Thread(()->{
-            try{
-                String json = fetchData("/event/" + eventKey + "/matches");
-                System.out.println("JSON Response length: " + json.length());
-
-                callback.onSuccess(new JSONArray(json).length());
-
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }).start();
-
-
     }
     public void getEventGames(EVENTS eventKey, GameCallback callback) {
         new Thread(() -> {
@@ -145,20 +130,6 @@ public class TBAApiManager {
         }).start();
     }
 
-
-    public void getTeam(int teamNumber, SingleTeamCallback callback) throws IOException, JSONException {
-        new Thread(()->{
-            try{
-                String json = fetchData("/team/frc" + teamNumber);
-                callback.onSuccess(JsonParser.parseToTeam(new JSONObject(json)));
-            }
-            catch (Exception e){
-                System.err.println("Error: " + e.getMessage());
-                e.printStackTrace();
-                callback.onError(e);
-            }
-        }).start();
-    }
 
     public void getIsraeliTeams(TeamListCallback callback) {
         new Thread(()->{

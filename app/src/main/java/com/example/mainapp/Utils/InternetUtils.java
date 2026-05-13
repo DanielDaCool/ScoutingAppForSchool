@@ -21,20 +21,5 @@ public class InternetUtils {
         return false;
     }
 
-    public static boolean isInternetConnectedWithAlert(Context context) {
-        if (isInternetConnected(context)) return true;
-        new AlertDialog.Builder(context)
-                .setTitle("אין חיבור לאינטרנט")
-                .setMessage("מסך זה מצריך גישה לאינטרנט, התחבר לאינטרנט על מנת לגשת למסך")
-                .setPositiveButton("אישור", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
-
-        return false;
-    }
 
 }

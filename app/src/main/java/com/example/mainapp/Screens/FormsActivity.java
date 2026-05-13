@@ -18,7 +18,7 @@ import com.example.mainapp.R;
 import com.example.mainapp.TBAHelpers.EVENTS;
 import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.DatabaseUtils.Assignment;
-import com.example.mainapp.Utils.DatabaseUtils.CLIMB;
+import com.example.mainapp.Utils.DatabaseUtils.Climb;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.GamePiece;
@@ -176,12 +176,12 @@ public class FormsActivity extends AppCompatActivity {
         tg.setClimb(checkClimb());
     }
 
-    private CLIMB checkClimb() {
+    private Climb checkClimb() {
         int id = group.getCheckedRadioButtonId();
-        if (id == R.id.ClimbHigh)   return CLIMB.HIGH;
-        if (id == R.id.ClimbLow)    return CLIMB.LOW;
-        if (id == R.id.ClimbFailed) return CLIMB.FAILED;
-        return CLIMB.DIDNT_TRY;
+        if (id == R.id.ClimbHigh)   return Climb.HIGH;
+        if (id == R.id.ClimbLow)    return Climb.LOW;
+        if (id == R.id.ClimbFailed) return Climb.FAILED;
+        return Climb.DIDNT_TRY;
     }
 
     private int getInput(EditText et) {

@@ -25,7 +25,4 @@ public class Team implements Serializable {
         return teamName;
     }
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
-    }
 }

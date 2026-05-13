@@ -83,7 +83,7 @@ public class GamePredictionFragment extends Fragment {
     }
 
     private void initGames() {
-        TBAApiManager.getInstance().getEventGames(Constants.CURRENT_EVENT_ON_APP, new TBAApiManager.GameCallback() {
+        TBAApiManager.getInstance().getEventGames(Constants.DEFAULT_EVENT, new TBAApiManager.GameCallback() {
             @Override
             public void onSuccess(ArrayList<Game> games) {
                 allGames = games;
