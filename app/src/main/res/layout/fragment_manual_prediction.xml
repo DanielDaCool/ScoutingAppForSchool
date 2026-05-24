@@ -34,7 +34,7 @@
                 android:layout_height="50dp"
                 android:layout_marginBottom="10dp"
                 android:hint="קבוצה 1"
-                android:textColor="#F0E6FF"
+                android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:inputType="number"
                 android:padding="12dp"
@@ -46,7 +46,7 @@
                 android:layout_height="50dp"
                 android:layout_marginBottom="10dp"
                 android:hint="קבוצה 2"
-                android:textColor="#F0E6FF"
+                android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:inputType="number"
                 android:padding="12dp"
@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="קבוצה 3"
-                android:textColor="#F0E6FF"
+                android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:inputType="number"
                 android:padding="12dp"
@@ -88,7 +88,7 @@
                 android:layout_height="50dp"
                 android:layout_marginBottom="10dp"
                 android:hint="קבוצה 1"
-                android:textColor="#F0E6FF"
+                android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:inputType="number"
                 android:padding="12dp"
@@ -100,7 +100,7 @@
                 android:layout_height="50dp"
                 android:layout_marginBottom="10dp"
                 android:hint="קבוצה 2"
-                android:textColor="#F0E6FF"
+                android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:inputType="number"
                 android:padding="12dp"
@@ -111,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="קבוצה 3"
-                android:textColor="#F0E6FF"
+                android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:inputType="number"
                 android:padding="12dp"
@@ -142,10 +142,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="תוצאת חיזוי"
-                android:textSize="12sp"
-                android:textColor="#4A3F5C"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
                 android:textStyle="bold"
-                android:letterSpacing="0.1"
                 android:layout_marginBottom="10dp" />
 
             <TextView
@@ -154,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:text="הזן קבוצות וחשב חיזוי"
                 android:textSize="15sp"
-                android:textColor="#7C6F8E" />
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
     </LinearLayout>

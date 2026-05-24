@@ -51,7 +51,7 @@
                 android:layout_marginHorizontal="6dp"
                 android:hint="מספר קבוצה"
                 android:textColor="#F0E6FF"
-                android:textColorHint="#4A3F5C"
+                android:textColorHint="#DCDCDC"
 
                 android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
@@ -74,7 +74,7 @@
                 android:layout_marginHorizontal="6dp"
                 android:hint="מספר משחק"
                 android:textColor="#F0E6FF"
-                android:textColorHint="#4A3F5C"
+                android:textColorHint="#DCDCDC"
 
                 android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
@@ -108,7 +108,7 @@
                 android:hint="L4"
                 android:padding="16dp"
                 android:textColor="#F0E6FF"
-                android:textColorHint="#4A3F5C"
+                android:textColorHint="#DCDCDC"
 
                 android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
@@ -120,7 +120,7 @@
                 android:hint="L3"
                 android:padding="16dp"
                 android:textColor="#F0E6FF"
-                android:textColorHint="#4A3F5C"
+                android:textColorHint="#DCDCDC"
 
                 android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
@@ -132,7 +132,7 @@
                 android:hint="L2"
                 android:padding="16dp"
                 android:textColor="#F0E6FF"
-                android:textColorHint="#4A3F5C"
+                android:textColorHint="#DCDCDC"
 
                 android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
@@ -144,7 +144,7 @@
                 android:hint="L1"
                 android:padding="16dp"
                 android:textColor="#F0E6FF"
-                android:textColorHint="#4A3F5C"
+                android:textColorHint="#DCDCDC"
 
                 android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
@@ -180,7 +180,7 @@
                 android:textColor="#F0E6FF"
 
                 android:inputType="number"
-                android:textColorHint="#4A3F5C"
+                android:textColorHint="#DCDCDC"
                 android:backgroundTint="#2A1F3D" />
 
             <EditText
@@ -190,7 +190,7 @@
                 android:hint="L3"
                 android:padding="12dp"
                 android:textColor="#F0E6FF"
-                android:textColorHint="#4A3F5C"
+                android:textColorHint="#DCDCDC"
 
                 android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
@@ -202,7 +202,7 @@
                 android:hint="L2"
                 android:padding="12dp"
                 android:textColor="#F0E6FF"
-                android:textColorHint="#4A3F5C"
+                android:textColorHint="#DCDCDC"
                 android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
 
@@ -213,7 +213,7 @@
                 android:hint="L1"
                 android:padding="12dp"
                 android:textColor="#F0E6FF"
-                android:textColorHint="#4A3F5C"
+                android:textColorHint="#DCDCDC"
 
                 android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
@@ -225,7 +225,7 @@
                 android:hint="NET"
                 android:padding="12dp"
                 android:textColor="#F0E6FF"
-                android:textColorHint="#4A3F5C"
+                android:textColorHint="#DCDCDC"
 
                 android:inputType="number"
                 android:backgroundTint="#2A1F3D" />
@@ -237,7 +237,7 @@
                 android:hint="PROC"
                 android:padding="12dp"
                 android:textColor="#F0E6FF"
-                android:textColorHint="#4A3F5C"
+                android:textColorHint="#DCDCDC"
 
                 android:inputType="number"
                 android:backgroundTint="#2A1F3D" />

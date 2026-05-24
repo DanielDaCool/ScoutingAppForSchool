@@ -23,8 +23,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="בחר משחק"
-                android:textSize="12sp"
-                android:textColor="#4A3F5C"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:letterSpacing="0.1"
                 android:layout_marginBottom="10dp" />
@@ -95,7 +95,7 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Result card -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -107,19 +107,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="תוצאת חיזוי"
-                android:textSize="12sp"
-                android:textColor="#4A3F5C"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
                 android:textStyle="bold"
-                android:letterSpacing="0.1"
                 android:layout_marginBottom="10dp" />
 
             <TextView
-                android:id="@+id/txtPredictionResult"
+                android:id="@+id/txtResult"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="בחר משחק כדי לראות חיזוי"
+                android:text="הזן קבוצות וחשב חיזוי"
                 android:textSize="15sp"
-                android:textColor="#7C6F8E" />
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
     </LinearLayout>
