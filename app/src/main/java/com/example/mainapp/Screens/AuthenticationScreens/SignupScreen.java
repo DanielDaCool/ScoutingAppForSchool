@@ -15,10 +15,9 @@ import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.DatabaseUtils.User;
 
 /**
- * Represents the SignupScreen component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * SignupScreen handles new user registration.
+ * It validates user input (name, email, password match) and uses DataHelper
+ * to create a new user account in Firebase.
  */
 public class SignupScreen extends AppCompatActivity {
 

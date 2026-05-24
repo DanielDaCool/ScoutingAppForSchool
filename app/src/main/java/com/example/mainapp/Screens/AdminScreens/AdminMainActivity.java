@@ -26,10 +26,9 @@ import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import java.util.ArrayList;
 
 /**
- * Represents the AdminMainActivity component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * AdminMainActivity is the primary dashboard for users with the ADMIN role.
+ * It provides high-level statistics and navigation to administrative features
+ * like the Admin Panel for managing assignments.
  */
 public class AdminMainActivity extends AppCompatActivity {
 

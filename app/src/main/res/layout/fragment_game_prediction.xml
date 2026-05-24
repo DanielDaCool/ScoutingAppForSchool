@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout for the Game Prediction Fragment.
+    This screen allows users to select a game from a spinner and calculate the predicted outcome
+    based on team statistics. It displays the red and blue alliance teams and the final prediction result.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Main layout for the Scouter Dashboard.
+    This screen contains a header, a content area with a FrameLayout for switching panels,
+    and a BottomNavigationView for navigation between Home, Games, Stats, and Profile.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"

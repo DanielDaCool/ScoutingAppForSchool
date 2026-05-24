@@ -28,10 +28,9 @@ import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import java.util.ArrayList;
 
 /**
- * Represents the ScouterMainActivity component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * ScouterMainActivity is the main dashboard for users with the SCOUTER role.
+ * It features a bottom navigation for switching between the dashboard and profile panels.
+ * Scouters can view their assigned matches, start scouting forms, and use the prediction tool.
  */
 public class ScouterMainActivity extends AppCompatActivity {
 
