@@ -15,8 +15,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * ScouterAdapter is a RecyclerView adapter used in the Admin Panel to display a list of scouters.
- * It shows the scouter's name, email, and the number of pending assignments they currently have.
+ * Represents the ScouterAdapter component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class ScouterAdapter extends RecyclerView.Adapter<ScouterAdapter.ScouterViewHolder> {
 

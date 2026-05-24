@@ -22,15 +22,17 @@ import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.DatabaseUtils.Assignment;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.DatabaseUtils.User;
+import com.example.mainapp.Utils.InternetUtils;
 import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * AdminPanelActivity allows administrators to manage scouters and assign them scouting tasks.
- * It displays a list of all scouters and their current pending assignment counts.
- * Admins can click on a scouter to assign them a specific team and match to scout.
+ * Represents the AdminPanelActivity component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class AdminPanelActivity extends AppCompatActivity {
 
@@ -55,18 +57,16 @@ public class AdminPanelActivity extends AppCompatActivity {
     }
 
     @Override
-/**
- * Executes the logic associated with the onResume operation.
- */
     protected void onResume() {
         super.onResume();
-        loadScouters();
+        if (InternetUtils.checkConnection(this, this::finish)) {
+            loadScouters();
+        }
     }
 
-    /**
-     * Loads the list of scouters from the database and updates the UI.
-     * Filters out administrator accounts to only show scouters.
-     */
+/**
+ * Executes the logic associated with the loadScouters operation.
+ */
     private void loadScouters() {
         progressBar.setVisibility(View.VISIBLE);
         DataHelper.getInstance().getAllUsers(new DataHelper.DataCallback<ArrayList<User>>() {
@@ -90,9 +90,9 @@ public class AdminPanelActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * Iterates through all scouters and districts to fetch and update the count of pending assignments.
-     */
+/**
+ * Executes the logic associated with the loadPendingCounts operation.
+ */
     private void loadPendingCounts() {
         EVENTS[] districts = EVENTS.values();
         for (User scouter : scouterList) {
@@ -119,10 +119,10 @@ public class AdminPanelActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Displays a dialog to assign a new match and team to a specific scouter.
-     * @param scouter The user to whom the assignment will be given.
-     */
+/**
+ * Executes the logic associated with the showAssignDialog operation.
+ * @param scouter parameter required for this method.
+ */
     private void showAssignDialog(User scouter) {
         View     dialogView = getLayoutInflater().inflate(R.layout.dialog_assign, null);
         EditText etGame     = dialogView.findViewById(R.id.etAssignGame);
@@ -165,12 +165,12 @@ public class AdminPanelActivity extends AppCompatActivity {
                 .show();
     }
 
-    /**
-     * Saves a new assignment to the database for the specified scouter and district.
-     * @param scouter The user receiving the assignment.
-     * @param assignment The assignment details (game and team number).
-     * @param district The competition event/district for the assignment.
-     */
+/**
+ * Executes the logic associated with the saveAssignment operation.
+ * @param scouter parameter required for this method.
+ * @param assignment parameter required for this method.
+ * @param district parameter required for this method.
+ */
     private void saveAssignment(User scouter, Assignment assignment, EVENTS district) {
         DataHelper.getInstance().saveAssignment(scouter.getUserId(), district, assignment,
                 new DataHelper.DatabaseCallback() {

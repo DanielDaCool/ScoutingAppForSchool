@@ -3,8 +3,10 @@ package com.example.mainapp.Utils.DatabaseUtils;
 import com.google.firebase.database.Exclude;
 
 /**
- * User class represents a registered user in the system.
- * It stores basic profile information such as name, email, role (Admin or Scouter), and unique user ID.
+ * Represents the User component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class User {
     private String fullName;
@@ -54,10 +56,11 @@ public class User {
  */
     public void setUserId(String userId)     { this.userId = userId; }
 
-    /**
-     * @return true if the user has the ADMIN role, false otherwise.
-     */
     @Exclude
+/**
+ * Executes the logic associated with the isAdmin operation.
+ * @return the value produced by this method.
+ */
     public boolean isAdmin() {
         return role == UserRole.ADMIN;
     }

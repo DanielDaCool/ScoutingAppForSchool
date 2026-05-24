@@ -5,8 +5,10 @@ import com.example.mainapp.Utils.TeamUtils.Team;
 import java.util.Arrays;
 
 /**
- * Game class represents a single match between two alliances (Red and Blue).
- * Each alliance consists of three teams.
+ * Represents the Game component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class Game {
     private final Team[] blueAlliance;
@@ -14,12 +16,6 @@ public class Game {
     private final int gameNumber;
 
 
-    /**
-     * Constructs a new Game with specified alliances and match number.
-     * @param blueAlliance Array of 3 teams on the blue alliance.
-     * @param redAlliance Array of 3 teams on the red alliance.
-     * @param gameNumber The match number.
-     */
     public Game(Team[] blueAlliance, Team[] redAlliance, int gameNumber) {
         this.blueAlliance = blueAlliance;
         this.redAlliance = redAlliance;
@@ -27,32 +23,33 @@ public class Game {
     }
 
 
-    /**
-     * @return The match number of this game.
-     */
+/**
+ * Executes the logic associated with the getGameNumber operation.
+ * @return the value produced by this method.
+ */
     public int getGameNumber() {
         return this.gameNumber;
     }
 
-    /**
-     * @return An array of teams participating in the blue alliance.
-     */
+/**
+ * Executes the logic associated with the getBlueAlliance operation.
+ * @return the value produced by this method.
+ */
     public Team[] getBlueAlliance() {
         return this.blueAlliance;
     }
 
-    /**
-     * @return An array of teams participating in the red alliance.
-     */
+/**
+ * Executes the logic associated with the getRedAlliance operation.
+ * @return the value produced by this method.
+ */
     public Team[] getRedAlliance() {
         return this.redAlliance;
     }
-
-    /**
-     * Returns an array containing all team numbers in the match.
-     * Indices 0-2 are Red alliance, 3-5 are Blue alliance.
-     * @return Array of 6 team numbers.
-     */
+/**
+ * Executes the logic associated with the getPlayingTeamsNumbers operation.
+ * @return the value produced by this method.
+ */
     public int[] getPlayingTeamsNumbers(){
         int[] arr = new int[6];
         Arrays.fill(arr, 0);
@@ -66,24 +63,25 @@ public class Game {
         return arr;
     }
 
-    /**
-     * @return A localized string title for the game (e.g., "משחק 1").
-     */
+/**
+ * Executes the logic associated with the getGameTitle operation.
+ * @return the value produced by this method.
+ */
     public String getGameTitle() {
         return "משחק " + this.gameNumber;
     }
 
-    /**
-     * @return A string description of the teams playing in this match.
-     */
+/**
+ * Executes the logic associated with the getDescription operation.
+ * @return the value produced by this method.
+ */
     public String getDescription(){
         return getTeamsPlaying();
     }
-
-    /**
-     * Helper method to format the alliance team numbers into a string.
-     * @return Formatted string "Red Teams VS Blue Teams".
-     */
+/**
+ * Executes the logic associated with the getTeamsPlaying operation.
+ * @return the value produced by this method.
+ */
     private String getTeamsPlaying() {
         StringBuilder blueAllianceString = new StringBuilder();
         StringBuilder redAllianceString = new StringBuilder();

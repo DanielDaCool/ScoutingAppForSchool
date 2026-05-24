@@ -20,15 +20,17 @@ import com.example.mainapp.TBAHelpers.TBAApiManager;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.Game;
+import com.example.mainapp.Utils.InternetUtils;
 import com.example.mainapp.Utils.TeamUtils.Team;
 
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * GamePredictionFragment allows users to select a scheduled match and get a prediction
- * based on the historical performance of all teams on the competing alliances.
- * It calculates the average points for each team and compares the total alliance averages.
+ * Represents the GamePredictionFragment component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class GamePredictionFragment extends Fragment {
 
@@ -65,6 +67,11 @@ public class GamePredictionFragment extends Fragment {
         onClickGame();
 
         predictBtn.setOnClickListener(v -> {
+            if (!InternetUtils.isInternetConnected(requireContext())) {
+                predictionTxt.setText("אין חיבור לאינטרנט");
+                predictionTxt.setTextColor(Color.RED);
+                return;
+            }
             if (currentGameID == 0) {
                 predictionTxt.setText("בחר משחק לקבלת חיזוי");
                 return;

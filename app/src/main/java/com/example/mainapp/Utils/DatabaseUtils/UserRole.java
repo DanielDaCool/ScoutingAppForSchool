@@ -1,8 +1,10 @@
 package com.example.mainapp.Utils.DatabaseUtils;
 
 /**
- * UserRole enum defines the authorization levels within the application.
- * ADMINs have full control over assignments and data, while SCOUTERs focus on data entry.
+ * Represents the UserRole component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public enum UserRole {
     ADMIN,

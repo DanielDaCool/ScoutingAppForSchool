@@ -17,14 +17,16 @@ import com.example.mainapp.Adapters.GameAdapter;
 import com.example.mainapp.R;
 import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.Game;
+import com.example.mainapp.Utils.InternetUtils;
 import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 
 import java.util.ArrayList;
 
 /**
- * GamesListActivity displays a list of all qualifying matches for the current competition.
- * It features a filter option to search for games involving a specific team number.
- * Clicking on a game item opens the GameDetailActivity for a deep dive into match statistics.
+ * Represents the GamesListActivity component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class GamesListActivity extends AppCompatActivity {
 
@@ -36,13 +38,12 @@ public class GamesListActivity extends AppCompatActivity {
     private Context context;
 
     @Override
-/**
- * Initializes the activity and prepares the screen components and data.
- * @param savedInstanceState parameter required for this method.
- */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_games_list);
+
+        if (!InternetUtils.checkConnection(this, this::finish)) return;
+
         init();
 
         setupRecyclerView();
@@ -86,9 +87,9 @@ public class GamesListActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Initializes the game list using data previously cached in AppCache.
-     */
+/**
+ * Executes the logic associated with the initGamesFromCache operation.
+ */
     private void initGamesFromCache(){
         gameList.clear();
         gameList.addAll(AppCache.getInstance().getGamesList());
@@ -98,10 +99,10 @@ public class GamesListActivity extends AppCompatActivity {
 
         gameAdapter.notifyDataSetChanged();
     }
-    /**
-     * Filters the displayed games list to only show matches featuring a specific team.
-     * @param teamNumber The team number to filter by.
-     */
+/**
+ * Executes the logic associated with the showFilteredGames operation.
+ * @param teamNumber parameter required for this method.
+ */
     private void showFilteredGames(int teamNumber){
         filteredGameList.clear();
         for (Game game : gameList) {

@@ -20,14 +20,16 @@ import com.example.mainapp.Adapters.TeamStatsAdapter;
 import com.example.mainapp.R;
 import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
+import com.example.mainapp.Utils.InternetUtils;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
 import java.util.ArrayList;
 
 /**
- * TeamStatsActivity provides a sortable and filterable table of statistics for all teams in the competition.
- * Users can sort teams by number, average points, or game piece counts to identify top performers.
- * The data is updated in real-time as scouters submit new forms.
+ * Represents the TeamStatsActivity component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class TeamStatsActivity extends AppCompatActivity {
 
@@ -47,13 +49,11 @@ public class TeamStatsActivity extends AppCompatActivity {
     private SortType currentSort = SortType.AVG_POINTS;
 
     @Override
-/**
- * Initializes the activity and prepares the screen components and data.
- * @param savedInstanceState parameter required for this method.
- */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team_stats);
+
+        if (!InternetUtils.checkConnection(this, this::finish)) return;
 
         init();
 

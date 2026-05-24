@@ -8,11 +8,13 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.mainapp.Adapters.PredictionPageAdapter;
 import com.example.mainapp.R;
+import com.example.mainapp.Utils.InternetUtils;
 
 /**
- * PredictionScreen is a container activity that hosts a ViewPager2 with two prediction modes:
- * 1. Automatic prediction based on scheduled matches (GamePredictionFragment).
- * 2. Manual prediction based on user-entered team numbers (ManualPredictionFragment).
+ * Represents the PredictionScreen component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class PredictionScreen extends AppCompatActivity {
 
@@ -20,13 +22,11 @@ public class PredictionScreen extends AppCompatActivity {
     private TextView tvHeader, tabGame, tabManual, btnBack;
 
     @Override
-/**
- * Initializes the activity and prepares the screen components and data.
- * @param savedInstanceState parameter required for this method.
- */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prediction_screen);
+
+        if (!InternetUtils.checkConnection(this, this::finish)) return;
 
         tvHeader  = findViewById(R.id.tvHeader);
         tabGame   = findViewById(R.id.tabGame);

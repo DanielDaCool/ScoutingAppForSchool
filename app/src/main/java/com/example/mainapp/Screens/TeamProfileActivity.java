@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mainapp.Adapters.GameHistoryAdapter;
 import com.example.mainapp.R;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
+import com.example.mainapp.Utils.InternetUtils;
 import com.example.mainapp.Utils.TeamUtils.Team;
 import com.example.mainapp.Utils.TeamUtils.TeamAtGame;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
@@ -41,13 +42,12 @@ public class TeamProfileActivity extends AppCompatActivity {
     public static final String EXTRA_TEAM_NUMBER = "teamNumber";
 
     @Override
-/**
- * Initializes the activity and prepares the screen components and data.
- * @param savedInstanceState parameter required for this method.
- */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team_profile);
+
+        if (!InternetUtils.checkConnection(this, this::finish)) return;
+
         context = this;
         init();
 

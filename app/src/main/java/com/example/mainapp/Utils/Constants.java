@@ -3,8 +3,10 @@ package com.example.mainapp.Utils;
 import com.example.mainapp.TBAHelpers.EVENTS;
 
 /**
- * Constants class holds application-wide static constant values,
- * such as Firebase table names and default competition events.
+ * Represents the Constants component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class Constants {
 

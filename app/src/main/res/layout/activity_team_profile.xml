@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Team Profile Dashboard Layout.
-    Displays detailed performance data and match history for a specific team.
-    Sections:
-    - Custom Header: Includes a back button (@id/tvBack) and the screen title.
-    - Statistics Summary Card:
-        - Team Identification: Displays team number (@id/tvTeamNumber) and name (@id/tvTeamName).
-        - Core Metrics: Shows average points (@id/tvAvgPoints), climb success rate (@id/tvClimbRate), and total games scouted (@id/tvGamesPlayed).
-    - Match History: A RecyclerView (@id/rvGameHistory) showing a breakdown of every scouted game for this team.
--->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

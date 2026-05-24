@@ -7,8 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TeamUtils provides static utility methods for searching teams and calculating
- * aggregated performance data from lists of match-specific team performances.
+ * Represents the TeamUtils component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class TeamUtils {
 

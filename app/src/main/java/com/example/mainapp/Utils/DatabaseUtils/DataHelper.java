@@ -22,8 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * DataHelper is a singleton class that manages interactions with Firebase Realtime Database and Firebase Authentication.
- * It provides methods for user authentication, fetching and saving assignments, and managing team statistics.
+ * Represents the DataHelper component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class DataHelper {
 

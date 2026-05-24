@@ -1,8 +1,10 @@
 package com.example.mainapp.Utils.DatabaseUtils;
 
 /**
- * Assignment class represents a specific match and team combination assigned to a scouter.
- * It uses a composite key based on the game and team numbers for identification in the database.
+ * Represents the Assignment component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class Assignment {
     private int gameNumber;

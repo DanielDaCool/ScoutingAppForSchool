@@ -1,21 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Admin Main Dashboard Layout.
-    The primary control center for users with the 'Admin' role.
-    Key Sections:
-    - Admin Header: Features the 'ScoutLy' logo and an admin-specific welcome (@id/textViewWelcome).
-    - FrameLayout Container:
-        - Admin Home (@id/panelHome):
-            - Management Banner: Identifies the dashboard as the admin control panel.
-            - Global Stats: Shows total teams (@id/tvTeamCount) and scouted matches (@id/tvGamesCount) for the event.
-            - Admin Actions:
-                - Mission Management (@id/btnAdminPanel): Access to the scouter assignment tools.
-                - Prediction (@id/btnPrediction): Link to the match outcome estimation tool.
-        - Admin Profile (@id/panelProfile):
-            - Account Details: Displays name (@id/tvProfileName) and email (@id/tvProfileEmail).
-            - Logout Action (@id/buttonLogout): Securely exits the application.
-    - Global Navigation: BottomNavigationView (@id/bottomNav) for cross-module navigation.
--->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"

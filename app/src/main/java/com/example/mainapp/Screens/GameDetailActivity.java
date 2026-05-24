@@ -9,14 +9,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mainapp.R;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
+import com.example.mainapp.Utils.InternetUtils;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
 import java.util.concurrent.CountDownLatch;
 
 /**
- * GameDetailActivity displays a side-by-side comparison of two alliances in a specific match.
- * For each team in the Red and Blue alliances, it shows aggregated statistics like average points,
- * highest scoring level, and climb success rate to help predict the match outcome.
+ * Represents the GameDetailActivity component in the application.
+ * <p>
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class GameDetailActivity extends AppCompatActivity {
 
@@ -43,13 +45,11 @@ public class GameDetailActivity extends AppCompatActivity {
     private int[] blueTeams = new int[3];
 
     @Override
-/**
- * Initializes the activity and prepares the screen components and data.
- * @param savedInstanceState parameter required for this method.
- */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_detail);
+
+        if (!InternetUtils.checkConnection(this, this::finish)) return;
 
         gameNumber = getIntent().getIntExtra("gameNumber", 0);
         redTeams[0] = getIntent().getIntExtra("redTeam1", 0);
@@ -75,9 +75,7 @@ public class GameDetailActivity extends AppCompatActivity {
     }
 
     /**
-     * Loads the historical performance data for all six teams in the match.
-     * Uses a CountDownLatch to synchronize multiple asynchronous database reads
-     * before updating the UI on the main thread.
+     * Executes the logic associated with the loadAllTeamData operation.
      */
     private void loadAllTeamData() {
         progressBar.setVisibility(View.VISIBLE);

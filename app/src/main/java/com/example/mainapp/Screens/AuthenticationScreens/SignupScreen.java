@@ -13,11 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.mainapp.R;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.DatabaseUtils.User;
+import com.example.mainapp.Utils.InternetUtils;
 
 /**
- * SignupScreen handles new user registration.
- * It validates user input (name, email, password match) and uses DataHelper
- * to create a new user account in Firebase.
+ * Represents the SignupScreen component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class SignupScreen extends AppCompatActivity {
 
@@ -63,6 +65,11 @@ public class SignupScreen extends AppCompatActivity {
             if (!password.equals(confirmPassword)) {
                 Toast.makeText(context, "הסיסמאות אינן תואמות", Toast.LENGTH_SHORT).show();
                 etConfirmPassword.setError("הסיסמאות אינן תואמות");
+                return;
+            }
+
+            if (!InternetUtils.isInternetConnected(context)) {
+                Toast.makeText(context, "אין חיבור לאינטרנט", Toast.LENGTH_LONG).show();
                 return;
             }
 

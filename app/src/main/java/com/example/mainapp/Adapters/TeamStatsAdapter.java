@@ -16,9 +16,10 @@ import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import java.util.ArrayList;
 
 /**
- * TeamStatsAdapter is a RecyclerView adapter used to display an overview of team statistics.
- * It shows the team number, name, average points, average game pieces scored, and the most common scoring level.
- * Clicking on an item navigates to the detailed profile for that team.
+ * Represents the TeamStatsAdapter component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.TeamStatsViewHolder> {
 

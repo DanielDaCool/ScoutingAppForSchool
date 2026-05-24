@@ -7,9 +7,10 @@ import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import java.util.ArrayList;
 
 /**
- * AppCache is a singleton class that provides a memory cache for frequently accessed data.
- * It stores lists of teams, games, and aggregated statistics to reduce database reads
- * and improve application responsiveness.
+ * Represents the AppCache component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class AppCache {
     private static AppCache instance;

@@ -30,13 +30,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * LoadingScreen is the initial synchronization screen of the application.
- * It performs several critical steps:
- * 1. Verifies internet connectivity.
- * 2. Fetches team and match data from The Blue Alliance API.
- * 3. Retrieves existing team statistics from Firebase.
- * 4. Initializes local caches to ensure a smooth user experience in other activities.
- * 5. Navigates the user to either the Admin or Scouter dashboard based on their role.
+ * Represents the LoadingScreen component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class LoadingScreen extends AppCompatActivity {
 

@@ -16,12 +16,14 @@ import com.example.mainapp.Screens.LoadingScreen;
 import com.example.mainapp.TBAHelpers.EVENTS;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.DatabaseUtils.User;
+import com.example.mainapp.Utils.InternetUtils;
 import com.example.mainapp.Utils.SharedPrefHelper;
 
 /**
- * LoginScreen handles user authentication via Firebase.
- * Upon successful login, users are prompted to select a competition district,
- * which determines the data scope for the rest of the application session.
+ * Represents the LoginScreen component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class LoginScreen extends AppCompatActivity {
 
@@ -45,6 +47,10 @@ public class LoginScreen extends AppCompatActivity {
             String password = etPassword.getText().toString().trim();
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(context, "אנא מלא את כל השדות", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!InternetUtils.isInternetConnected(context)) {
+                Toast.makeText(context, "אין חיבור לאינטרנט", Toast.LENGTH_LONG).show();
                 return;
             }
             btnLogin.setEnabled(false);

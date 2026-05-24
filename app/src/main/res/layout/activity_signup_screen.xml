@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Signup/Registration Screen Layout.
-    Allows new users to create an account in the ScoutLy system.
-    Layout Features:
-    - Navigation: Top row with a back link (@id/tvLoginLink) to return to the login screen.
-    - User Details:
-        - Full Name (@id/etFullName): Input for the user's display name.
-        - Email (@id/etEmail): Unique identifier for authentication.
-        - Password (@id/etPassword): Secure input for the user's secret key (min 6 chars).
-        - Confirm Password (@id/etConfirmPassword): Verification field to prevent typos.
-    - Action: Sign up button (@id/btnSignup) to create the account in Firebase.
--->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

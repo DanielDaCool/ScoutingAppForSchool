@@ -16,13 +16,15 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mainapp.R;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
+import com.example.mainapp.Utils.InternetUtils;
 
 import java.util.concurrent.CountDownLatch;
 
 /**
- * ManualPredictionFragment allows users to enter six arbitrary team numbers (three per alliance)
- * to calculate a predicted match outcome. This is useful for "what-if" scenarios
- * or for matches that are not yet in the official schedule.
+ * Represents the ManualPredictionFragment component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class ManualPredictionFragment extends Fragment {
 
@@ -58,6 +60,11 @@ public class ManualPredictionFragment extends Fragment {
         predictionTxt = view.findViewById(R.id.txtResult);
 
         btnCalculate.setOnClickListener(v -> {
+            if (!InternetUtils.isInternetConnected(requireContext())) {
+                predictionTxt.setText("אין חיבור לאינטרנט");
+                predictionTxt.setTextColor(Color.RED);
+                return;
+            }
             if (validateInputs()) {
                 calculate();
             }

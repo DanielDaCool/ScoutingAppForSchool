@@ -20,15 +20,17 @@ import com.example.mainapp.Screens.Predictions.PredictionScreen;
 import com.example.mainapp.Screens.TeamStatsActivity;
 import com.example.mainapp.Utils.DatabaseUtils.AppCache;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
+import com.example.mainapp.Utils.InternetUtils;
 import com.example.mainapp.Utils.SharedPrefHelper;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
 import java.util.ArrayList;
 
 /**
- * AdminMainActivity is the primary dashboard for users with the ADMIN role.
- * It provides high-level statistics and navigation to administrative features
- * like the Admin Panel for managing assignments.
+ * Represents the AdminMainActivity component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class AdminMainActivity extends AppCompatActivity {
 
@@ -81,9 +83,6 @@ public class AdminMainActivity extends AppCompatActivity {
     }
 
     @Override
-/**
- * Executes the logic associated with the onResume operation.
- */
     protected void onResume() {
         super.onResume();
         if (!prefs.isUserLoggedIn()) {
@@ -91,6 +90,15 @@ public class AdminMainActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        if (!InternetUtils.isInternetConnected(context)) {
+            new AlertDialog.Builder(context)
+                    .setTitle("אין חיבור לאינטרנט")
+                    .setMessage("חלק מהנתונים עשויים להיות לא מעודכנים. אנא התחבר לאינטרנט.")
+                    .setPositiveButton("הבנתי", null)
+                    .show();
+        }
+
         loadDashboardStats();
         refreshCacheInBackground();
     }

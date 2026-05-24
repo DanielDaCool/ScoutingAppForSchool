@@ -23,6 +23,7 @@ import com.example.mainapp.Utils.DatabaseUtils.Climb;
 import com.example.mainapp.Utils.Constants;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.GamePiece;
+import com.example.mainapp.Utils.InternetUtils;
 import com.example.mainapp.Utils.SharedPrefHelper;
 import com.example.mainapp.Utils.TeamUtils.Team;
 import com.example.mainapp.Utils.TeamUtils.TeamAtGame;
@@ -57,6 +58,8 @@ public class FormsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forms);
+
+
         init();
 
         if (getIntent().getExtras() != null) {
@@ -131,6 +134,10 @@ public class FormsActivity extends AppCompatActivity {
 
         TeamAtGame teamAtGame = new TeamAtGame(t, gameNum);
         if (updateGamePieces(teamAtGame)) {
+            if (!InternetUtils.isInternetConnected(context)) {
+                Toast.makeText(context, "אין חיבור לאינטרנט. המידע לא יישמר.", Toast.LENGTH_LONG).show();
+                return;
+            }
             progressBar.setVisibility(VISIBLE);
             sendBtn.setEnabled(false);
             saveToFirebase(t, gameNum, teamAtGame);

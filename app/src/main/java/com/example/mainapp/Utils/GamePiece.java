@@ -1,8 +1,10 @@
 package com.example.mainapp.Utils;
 
 /**
- * GamePiece enum represents the different scoring objectives available in the competition.
- * Each piece (L1-L4, Net, Processor) has distinct point values for Autonomous and Teleoperated periods.
+ * Represents the GamePiece component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public enum GamePiece {
     L1(3, 2),

@@ -14,22 +14,17 @@ import com.example.mainapp.Utils.DatabaseUtils.Assignment;
 import java.util.ArrayList;
 
 /**
- * AssignmentAdapter is a RecyclerView adapter used to display a list of scouting assignments.
- * Each assignment includes the game number and the team number to be scouted.
+ * Represents the AssignmentAdapter component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.AssignmentViewHolder> {
 
     private ArrayList<Assignment> assignments;
     private OnAssignmentClickListener listener;
 
-    /**
-     * Interface definition for a callback to be invoked when an assignment is clicked.
-     */
     public interface OnAssignmentClickListener {
-        /**
-         * Called when an assignment has been clicked.
-         * @param assignment The assignment object that was clicked.
-         */
         void onAssignmentClick(Assignment assignment);
     }
 
@@ -37,10 +32,10 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         this.assignments = assignments;
     }
 
-    /**
-     * Sets the click listener for assignment items.
-     * @param listener The listener to be notified of click events.
-     */
+/**
+ * Executes the logic associated with the setOnAssignmentClickListener operation.
+ * @param listener parameter required for this method.
+ */
     public void setOnAssignmentClickListener(OnAssignmentClickListener listener) {
         this.listener = listener;
     }
@@ -80,10 +75,10 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
     }
 
 
-    /**
-     * Removes an assignment from the list based on its unique key.
-     * @param key The unique key of the assignment to remove.
-     */
+/**
+ * Executes the logic associated with the removeByKey operation.
+ * @param key parameter required for this method.
+ */
     public void removeByKey(String key) {
         for (int i = 0; i < assignments.size(); i++) {
             if (assignments.get(i).getKey().equals(key)) {
@@ -94,9 +89,6 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         }
     }
 
-    /**
-     * ViewHolder class for assignment items.
-     */
     public class AssignmentViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvGameNumber;
@@ -108,10 +100,10 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
             tvTeamNumber = itemView.findViewById(R.id.tvAssignmentTeam);
         }
 
-        /**
-         * Binds an assignment object to the view holder's UI elements.
-         * @param assignment The assignment to bind.
-         */
+/**
+ * Executes the logic associated with the bind operation.
+ * @param assignment parameter required for this method.
+ */
         public void bind(Assignment assignment) {
             tvGameNumber.setText("משחק " + assignment.getGameNumber());
             tvTeamNumber.setText("#" + assignment.getTeamNumber());

@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 @IgnoreExtraProperties
 /**
- * TeamStats aggregates performance data for a specific team across all matches played.
- * It provides methods to calculate averages for points, climbs, and game piece scoring.
+ * Represents the TeamStats component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
  */
 public class TeamStats implements Serializable {
 
