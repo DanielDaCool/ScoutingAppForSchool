@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Team Statistics Overview Layout.
+    Provides a comprehensive list of all teams and their performance averages.
+    Key Components:
+    - Search Bar: EditText (@id/editTextTeamFilter) for filtering the list by team number.
+    - Sort Utility: Button (@id/btnSort) to open a sorting dialog (By Number, Points, or Game Pieces).
+    - Status Indicator: TextView (@id/tvSortIndicator) showing the currently active sort method.
+    - Main List: RecyclerView (@id/recyclerView) populated by TeamStatsAdapter.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

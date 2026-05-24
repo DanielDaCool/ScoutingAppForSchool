@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Login Screen Layout.
+    This layout provides the user interface for authenticating existing users.
+    It includes:
+    - ScrollView for handling different screen sizes and keyboard visibility.
+    - App branding and welcoming text.
+    - Email Input: An EditText field (@id/etEmail) with input type textEmailAddress.
+    - Password Input: A secure EditText field (@id/etPassword) with input type textPassword.
+    - Login Button: A primary action button (@id/btnLogin) to trigger authentication.
+    - Signup Link: A clickable TextView (@id/tvSignupLink) to navigate to the registration screen.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

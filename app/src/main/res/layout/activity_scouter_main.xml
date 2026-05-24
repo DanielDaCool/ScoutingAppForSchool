@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Main layout for the Scouter Dashboard.
-    This screen contains a header, a content area with a FrameLayout for switching panels,
-    and a BottomNavigationView for navigation between Home, Games, Stats, and Profile.
+    Scouter Main Dashboard Layout.
+    The primary interface for users with the 'Scouter' role.
+    Layout Components:
+    - Header: Displays the 'ScoutLy' brand and a personalized welcome message (@id/textViewWelcome).
+    - Content Area (FrameLayout):
+        - Home Panel (@id/panelHome):
+            - Welcome Banner: Shows current competition status.
+            - Stats Grid: Displays team count (@id/tvTeamCount) and game count (@id/tvGamesCount).
+            - Quick Actions: Buttons for starting a form (@id/btnForms) or prediction (@id/btnPrediction).
+        - Profile Panel (@id/panelProfile):
+            - User Info: Displays name (@id/tvProfileName), email (@id/tvProfileEmail), and current district (@id/tvCurrentDistrict).
+            - Assignments: A list (@id/rvAssignments) of matches assigned by an administrator.
+            - District Management: Button (@id/btnChangeDistrict) to switch competition scope.
+    - Navigation: BottomNavigationView (@id/bottomNav) for switching between Home, Games, Stats, and Profile views.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

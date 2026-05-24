@@ -22,10 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents the TeamProfileActivity component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * TeamProfileActivity displays a detailed overview of a single team's performance.
+ * It shows summary metrics (average points, climb success rate) and a scrollable list
+ * of all individual match performances recorded by scouters.
  */
 public class TeamProfileActivity extends AppCompatActivity {
 

@@ -1,10 +1,8 @@
 package com.example.mainapp.TBAHelpers;
 
 /**
- * Represents the EVENTS component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * EVENTS enum defines the supported FIRST Robotics Competition (FRC) events in Israel for the 2025 season.
+ * Each enum constant maps to a specific event key used by The Blue Alliance API.
  */
 public enum EVENTS {
 

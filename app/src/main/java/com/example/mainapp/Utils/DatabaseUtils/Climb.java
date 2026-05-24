@@ -1,10 +1,8 @@
 package com.example.mainapp.Utils.DatabaseUtils;
 
 /**
- * Represents the Climb component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * Climb enum represents the possible end-game states for a robot.
+ * Each state (High, Low, Failed, Did Not Try) is associated with a specific point value.
  */
 public enum Climb {
     HIGH(12),

@@ -10,10 +10,9 @@ import com.example.mainapp.Adapters.PredictionPageAdapter;
 import com.example.mainapp.R;
 
 /**
- * Represents the PredictionScreen component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * PredictionScreen is a container activity that hosts a ViewPager2 with two prediction modes:
+ * 1. Automatic prediction based on scheduled matches (GamePredictionFragment).
+ * 2. Manual prediction based on user-entered team numbers (ManualPredictionFragment).
  */
 public class PredictionScreen extends AppCompatActivity {
 

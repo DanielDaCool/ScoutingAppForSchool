@@ -20,10 +20,9 @@ import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Represents the ManualPredictionFragment component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * ManualPredictionFragment allows users to enter six arbitrary team numbers (three per alliance)
+ * to calculate a predicted match outcome. This is useful for "what-if" scenarios
+ * or for matches that are not yet in the official schedule.
  */
 public class ManualPredictionFragment extends Fragment {
 

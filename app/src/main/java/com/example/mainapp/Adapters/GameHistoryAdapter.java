@@ -16,10 +16,9 @@ import com.example.mainapp.Utils.TeamUtils.TeamAtGame;
 import java.util.ArrayList;
 
 /**
- * Represents the GameHistoryAdapter component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * GameHistoryAdapter is a RecyclerView adapter used to display a team's performance history.
+ * Each item in the list represents a single match and shows a breakdown of points,
+ * scoring levels (L1-L4, Net, Processor), and end-game climb status.
  */
 public class GameHistoryAdapter extends RecyclerView.Adapter<GameHistoryAdapter.TeamAtGameViewHolder> {
 

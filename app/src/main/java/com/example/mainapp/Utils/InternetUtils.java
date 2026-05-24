@@ -10,10 +10,8 @@ import android.widget.Toast;
 import com.example.mainapp.R;
 
 /**
- * Represents the InternetUtils component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * InternetUtils provides static helper methods to check for active network connectivity.
+ * This is used to gate features that require real-time synchronization with Firebase or The Blue Alliance.
  */
 public class InternetUtils {
     public static boolean isInternetConnected(Context context) {

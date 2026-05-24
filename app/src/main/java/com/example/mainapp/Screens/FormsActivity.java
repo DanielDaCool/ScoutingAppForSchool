@@ -30,10 +30,9 @@ import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 
 /**
- * Represents the FormsActivity component in the application.
- * <p>
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * FormsActivity is the scouting data entry screen.
+ * Scouters use this form to record a team's performance during a match, including
+ * autonomous and teleop scoring across different levels, and end-game climb status.
  */
 public class FormsActivity extends AppCompatActivity {
 
@@ -96,7 +95,9 @@ public class FormsActivity extends AppCompatActivity {
 
 
     /**
-     * Executes the logic associated with the handleSendBtnClick operation.
+     * Handles the click event for the send button.
+     * Validates the input fields (team number, game number, scoring counts)
+     * before initiating the save process.
      */
     private void handleSendBtnClick() {
         if (teamNumber.getText().toString().trim().isEmpty()) {
@@ -138,11 +139,11 @@ public class FormsActivity extends AppCompatActivity {
 
 
     /**
-     * Executes the logic associated with the saveToFirebase operation.
-     *
-     * @param t          parameter required for this method.
-     * @param gameNum    parameter required for this method.
-     * @param teamAtGame parameter required for this method.
+     * Initiates the process of saving the collected scouting data to Firebase.
+     * First, it fetches existing stats for the team to ensure the new data is appended correctly.
+     * @param t The team being scouted.
+     * @param gameNum The match number.
+     * @param teamAtGame The data object containing the team's performance in this specific game.
      */
     private void saveToFirebase(Team t, int gameNum, TeamAtGame teamAtGame) {
         DataHelper.getInstance().readTeamStats(Integer.toString(t.getTeamNumber()),
@@ -162,12 +163,12 @@ public class FormsActivity extends AppCompatActivity {
     }
 
     /**
-     * Executes the logic associated with the persistToFirebase operation.
-     *
-     * @param t          parameter required for this method.
-     * @param gameNum    parameter required for this method.
-     * @param teamAtGame parameter required for this method.
-     * @param stats      parameter required for this method.
+     * Persists the aggregated team statistics back to the Firebase database.
+     * If the form was opened from an assignment, it also marks that assignment as completed.
+     * @param t The team being scouted.
+     * @param gameNum The match number.
+     * @param teamAtGame The performance data for this game.
+     * @param stats The updated aggregated statistics for the team.
      */
     private void persistToFirebase(Team t, int gameNum, TeamAtGame teamAtGame, TeamStats stats) {
         stats.addGame(teamAtGame);
@@ -189,10 +190,9 @@ public class FormsActivity extends AppCompatActivity {
     }
 
     /**
-     * Executes the logic associated with the completeAssignment operation.
-     *
-     * @param t       parameter required for this method.
-     * @param gameNum parameter required for this method.
+     * Marks a pending assignment as completed in the database.
+     * @param t The team that was scouted.
+     * @param gameNum The match number that was scouted.
      */
     private void completeAssignment(Team t, int gameNum) {
         String userId = SharedPrefHelper.getInstance(context).getUserId();
@@ -217,7 +217,8 @@ public class FormsActivity extends AppCompatActivity {
     }
 
     /**
-     * Executes the logic associated with the onSaveSuccess operation.
+     * Called when the scouting data has been successfully saved to the database.
+     * Resets the form and provides feedback to the user.
      */
     private void onSaveSuccess() {
         progressBar.setVisibility(GONE);
@@ -229,9 +230,9 @@ public class FormsActivity extends AppCompatActivity {
     }
 
     /**
-     * Executes the logic associated with the updateGamePieces operation.
-     *
-     * @param tg parameter required for this method.
+     * Collects and validates all game piece scoring data from the form's EditText fields.
+     * @param tg The TeamAtGame object to populate with scoring data.
+     * @return true if all data is valid, false otherwise.
      */
     private boolean updateGamePieces(TeamAtGame tg) {
 

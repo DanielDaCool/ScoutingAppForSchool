@@ -13,17 +13,23 @@ import com.example.mainapp.Utils.Game;
 import java.util.List;
 
 /**
- * Represents the GameAdapter component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * GameAdapter is a RecyclerView adapter used to display a list of games (matches).
+ * It shows the game title and a description, typically listing the competing teams.
  */
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder> {
 
     private List<Game> games;
     private OnItemClickListener listener;
 
+    /**
+     * Interface definition for a callback to be invoked when a game item is clicked.
+     */
     public interface OnItemClickListener {
+        /**
+         * Called when a game has been clicked.
+         * @param game The game object that was clicked.
+         * @param position The position of the item in the adapter.
+         */
         void onItemClick(Game game, int position);
     }
 
@@ -31,10 +37,10 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         this.games = games;
     }
 
-/**
- * Executes the logic associated with the setOnItemClickListener operation.
- * @param listener parameter required for this method.
- */
+    /**
+     * Sets the click listener for game items.
+     * @param listener The listener to be notified of click events.
+     */
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
@@ -83,11 +89,11 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
             gameDescription = itemView.findViewById(R.id.item_description);
         }
 
-/**
- * Executes the logic associated with the bind operation.
- * @param game parameter required for this method.
- * @param position parameter required for this method.
- */
+        /**
+         * Binds a game object to the view holder's UI elements.
+         * @param game The game to bind.
+         * @param position The position of the item in the list.
+         */
         public void bind(Game game, int position) {
             gameTitle.setText(game.getGameTitle());
             gameDescription.setText(game.getDescription());

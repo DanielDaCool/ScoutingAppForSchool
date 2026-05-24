@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Scouting Data Entry Form Layout.
+    Used by scouters to record match performance data.
+    Structure:
+    - Header Section: Displays the form title.
+    - Identification Group: Contains EditTexts for Team Number (@id/TeamNumberEditText) and Game Number (@id/GameNumberEditText).
+    - Autonomous Section: Quantitative inputs for Reef levels L1-L4 during the autonomous period.
+    - Teleop Section: Quantitative inputs for Reef levels L1-L4, Net, and Processor scoring during teleoperated period.
+    - End Game Section: RadioGroup (@id/ClimbGroup) for selecting the climb result (HIGH, LOW, FAILED, DIDNT TRY).
+    - Submission: Button (@id/buttonSave) to persist data to Firebase via FormsActivity.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

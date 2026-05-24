@@ -8,10 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Represents the JsonParser component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * JsonParser provides static utility methods to transform JSON objects from The Blue Alliance API
+ * into internal application models such as Team and Game objects.
  */
 public class JsonParser {
     public static Team parseToTeam(JSONObject ob){

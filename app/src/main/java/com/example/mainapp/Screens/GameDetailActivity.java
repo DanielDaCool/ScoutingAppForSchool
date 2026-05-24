@@ -14,10 +14,9 @@ import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Represents the GameDetailActivity component in the application.
- * <p>
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * GameDetailActivity displays a side-by-side comparison of two alliances in a specific match.
+ * For each team in the Red and Blue alliances, it shows aggregated statistics like average points,
+ * highest scoring level, and climb success rate to help predict the match outcome.
  */
 public class GameDetailActivity extends AppCompatActivity {
 
@@ -76,7 +75,9 @@ public class GameDetailActivity extends AppCompatActivity {
     }
 
     /**
-     * Executes the logic associated with the loadAllTeamData operation.
+     * Loads the historical performance data for all six teams in the match.
+     * Uses a CountDownLatch to synchronize multiple asynchronous database reads
+     * before updating the UI on the main thread.
      */
     private void loadAllTeamData() {
         progressBar.setVisibility(View.VISIBLE);

@@ -26,10 +26,9 @@ import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Represents the GamePredictionFragment component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * GamePredictionFragment allows users to select a scheduled match and get a prediction
+ * based on the historical performance of all teams on the competing alliances.
+ * It calculates the average points for each team and compares the total alliance averages.
  */
 public class GamePredictionFragment extends Fragment {
 

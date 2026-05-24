@@ -7,10 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents the TeamUtils component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * TeamUtils provides static utility methods for searching teams and calculating
+ * aggregated performance data from lists of match-specific team performances.
  */
 public class TeamUtils {
 

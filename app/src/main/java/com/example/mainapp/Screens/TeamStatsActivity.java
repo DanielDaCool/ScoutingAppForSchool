@@ -25,10 +25,9 @@ import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import java.util.ArrayList;
 
 /**
- * Represents the TeamStatsActivity component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * TeamStatsActivity provides a sortable and filterable table of statistics for all teams in the competition.
+ * Users can sort teams by number, average points, or game piece counts to identify top performers.
+ * The data is updated in real-time as scouters submit new forms.
  */
 public class TeamStatsActivity extends AppCompatActivity {
 

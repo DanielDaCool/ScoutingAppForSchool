@@ -11,10 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents the TeamAtGame component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * TeamAtGame represents the performance of a specific team in a specific match.
+ * it stores details about game pieces scored (autonomous and teleop) and the end-game climb result.
  */
 public class TeamAtGame implements Serializable {
     private Team team;
@@ -96,11 +94,11 @@ public class TeamAtGame implements Serializable {
     public Climb getClimb(){return this.climb;}
 
 
-/**
- * Executes the logic associated with the addGamePieceScored operation.
- * @param gamePiece parameter required for this method.
- * @param isScoredInAuto parameter required for this method.
- */
+    /**
+     * Records a game piece being scored during a match.
+     * @param gamePiece The type of game piece scored (L1-L4, Net, Processor).
+     * @param isScoredInAuto True if scored during the autonomous period, false if teleop.
+     */
     public void addGamePieceScored(GamePiece gamePiece, Boolean isScoredInAuto) {
         if (this.gamePiecesScored == null) {
             this.gamePiecesScored = new ArrayList<>();
@@ -120,11 +118,12 @@ public class TeamAtGame implements Serializable {
     }
 
 
+    /**
+     * Calculates the total points earned by the team in this match.
+     * Includes points from all game pieces scored and the end-game climb.
+     * @return Total points as an integer.
+     */
     @Exclude
-/**
- * Executes the logic associated with the calculatePoints operation.
- * @return the value produced by this method.
- */
     public int calculatePoints() {
         if (gamePiecesScored == null || gamePiecesScored.isEmpty()) {
             return 0;
@@ -137,6 +136,9 @@ public class TeamAtGame implements Serializable {
         return sum + climb.getPoints();
     }
 
+    /**
+     * Inner class representing a single scoring action.
+     */
     public static class GamePieceScore implements Serializable {
         private String piece;
         private boolean inAuto;

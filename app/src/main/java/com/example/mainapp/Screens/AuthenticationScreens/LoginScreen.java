@@ -19,10 +19,9 @@ import com.example.mainapp.Utils.DatabaseUtils.User;
 import com.example.mainapp.Utils.SharedPrefHelper;
 
 /**
- * Represents the LoginScreen component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * LoginScreen handles user authentication via Firebase.
+ * Upon successful login, users are prompted to select a competition district,
+ * which determines the data scope for the rest of the application session.
  */
 public class LoginScreen extends AppCompatActivity {
 

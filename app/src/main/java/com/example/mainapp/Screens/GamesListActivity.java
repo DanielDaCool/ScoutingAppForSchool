@@ -22,10 +22,9 @@ import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 import java.util.ArrayList;
 
 /**
- * Represents the GamesListActivity component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * GamesListActivity displays a list of all qualifying matches for the current competition.
+ * It features a filter option to search for games involving a specific team number.
+ * Clicking on a game item opens the GameDetailActivity for a deep dive into match statistics.
  */
 public class GamesListActivity extends AppCompatActivity {
 
@@ -87,9 +86,9 @@ public class GamesListActivity extends AppCompatActivity {
         });
     }
 
-/**
- * Executes the logic associated with the initGamesFromCache operation.
- */
+    /**
+     * Initializes the game list using data previously cached in AppCache.
+     */
     private void initGamesFromCache(){
         gameList.clear();
         gameList.addAll(AppCache.getInstance().getGamesList());
@@ -99,10 +98,10 @@ public class GamesListActivity extends AppCompatActivity {
 
         gameAdapter.notifyDataSetChanged();
     }
-/**
- * Executes the logic associated with the showFilteredGames operation.
- * @param teamNumber parameter required for this method.
- */
+    /**
+     * Filters the displayed games list to only show matches featuring a specific team.
+     * @param teamNumber The team number to filter by.
+     */
     private void showFilteredGames(int teamNumber){
         filteredGameList.clear();
         for (Game game : gameList) {

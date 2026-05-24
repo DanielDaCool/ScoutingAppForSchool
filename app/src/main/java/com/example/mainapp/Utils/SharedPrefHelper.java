@@ -7,10 +7,9 @@ import com.example.mainapp.TBAHelpers.EVENTS;
 import com.example.mainapp.Utils.DatabaseUtils.UserRole;
 
 /**
- * Represents the SharedPrefHelper component in the application.
- *
- * This class is responsible for handling the logic, data flow,
- * and interactions related to its specific feature inside the Android app.
+ * SharedPrefHelper is a utility class for managing Android SharedPreferences.
+ * It provides a clean API for persisting and retrieving user session data,
+ * application settings, and the currently selected competition district.
  */
 public class SharedPrefHelper {
 
