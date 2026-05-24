@@ -19,6 +19,12 @@ import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * Represents the ManualPredictionFragment component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class ManualPredictionFragment extends Fragment {
 
     private EditText edtRedTeam1, edtRedTeam2, edtRedTeam3;
@@ -35,6 +41,11 @@ public class ManualPredictionFragment extends Fragment {
     }
 
     @Override
+/**
+ * Executes the logic associated with the onViewCreated operation.
+ * @param view parameter required for this method.
+ * @param savedInstanceState parameter required for this method.
+ */
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -54,6 +65,10 @@ public class ManualPredictionFragment extends Fragment {
         });
     }
 
+/**
+ * Executes the logic associated with the validateInputs operation.
+ * @return the value produced by this method.
+ */
     private boolean validateInputs() {
         EditText[] all = {edtRedTeam1, edtRedTeam2, edtRedTeam3,
                 edtBlueTeam1, edtBlueTeam2, edtBlueTeam3};
@@ -66,6 +81,9 @@ public class ManualPredictionFragment extends Fragment {
         return true;
     }
 
+/**
+ * Executes the logic associated with the calculate operation.
+ */
     private void calculate() {
         predictionTxt.setText("מחשב חיזוי...");
         predictionTxt.setTextColor(0xFF7C6F8E);

@@ -21,6 +21,12 @@ import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the TeamProfileActivity component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class TeamProfileActivity extends AppCompatActivity {
 
     private TextView    tvTeamName, tvTeamNumber, tvAvgPoints, tvClimbRate, tvGamesPlayed;
@@ -36,6 +42,10 @@ public class TeamProfileActivity extends AppCompatActivity {
     public static final String EXTRA_TEAM_NUMBER = "teamNumber";
 
     @Override
+/**
+ * Initializes the activity and prepares the screen components and data.
+ * @param savedInstanceState parameter required for this method.
+ */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team_profile);
@@ -50,6 +60,10 @@ public class TeamProfileActivity extends AppCompatActivity {
         loadTeamProfile(teamNumber);
     }
 
+/**
+ * Executes the logic associated with the loadTeamProfile operation.
+ * @param teamNumber parameter required for this method.
+ */
     private void loadTeamProfile(int teamNumber) {
         progressBar.setVisibility(View.VISIBLE);
 
@@ -72,6 +86,10 @@ public class TeamProfileActivity extends AppCompatActivity {
         );
     }
 
+/**
+ * Executes the logic associated with the displayTeamProfile operation.
+ * @param stats parameter required for this method.
+ */
     private void displayTeamProfile(TeamStats stats) {
         Team team = stats.getTeam();
 
@@ -102,6 +120,11 @@ public class TeamProfileActivity extends AppCompatActivity {
         rvGameHistory.setVisibility(View.VISIBLE);
     }
 
+/**
+ * Executes the logic associated with the calculateClimbRate operation.
+ * @param games parameter required for this method.
+ * @return the value produced by this method.
+ */
     private int calculateClimbRate(List<TeamAtGame> games) {
         if (games == null || games.isEmpty()) return 0;
         int climbed = 0;
@@ -120,6 +143,9 @@ public class TeamProfileActivity extends AppCompatActivity {
         return (int) Math.round(climbed * 100.0 / games.size());
     }
 
+/**
+ * Executes the logic associated with the init operation.
+ */
     private void init() {
         tvBack        = findViewById(R.id.tvBack);
         tvTeamNumber  = findViewById(R.id.tvTeamNumber);

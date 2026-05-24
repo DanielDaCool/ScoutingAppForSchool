@@ -18,6 +18,12 @@ import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.DatabaseUtils.User;
 import com.example.mainapp.Utils.SharedPrefHelper;
 
+/**
+ * Represents the LoginScreen component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class LoginScreen extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
@@ -26,6 +32,10 @@ public class LoginScreen extends AppCompatActivity {
     private Context  context;
 
     @Override
+/**
+ * Initializes the activity and prepares the screen components and data.
+ * @param savedInstanceState parameter required for this method.
+ */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
@@ -47,6 +57,11 @@ public class LoginScreen extends AppCompatActivity {
         );
     }
 
+/**
+ * Executes the logic associated with the loginUser operation.
+ * @param email parameter required for this method.
+ * @param password parameter required for this method.
+ */
     private void loginUser(String email, String password) {
         DataHelper.getInstance().loginUser(email, password, new DataHelper.DataCallback<User>() {
             @Override public void onSuccess(User user) {
@@ -80,6 +95,10 @@ public class LoginScreen extends AppCompatActivity {
     }
 
 
+/**
+ * Executes the logic associated with the showDistrictPickerDialog operation.
+ * @param isAdmin parameter required for this method.
+ */
     private void showDistrictPickerDialog(boolean isAdmin) {
         EVENTS[] events     = EVENTS.values();
         String[] eventNames = new String[events.length];
@@ -95,11 +114,17 @@ public class LoginScreen extends AppCompatActivity {
                 .show();
     }
 
+/**
+ * Executes the logic associated with the navigateToLoading operation.
+ */
     private void navigateToLoading() {
         startActivity(new Intent(context, LoadingScreen.class));
         finish();
     }
 
+/**
+ * Executes the logic associated with the init operation.
+ */
     private void init() {
         etEmail      = findViewById(R.id.etEmail);
         etPassword   = findViewById(R.id.etPassword);

@@ -10,6 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents the TeamAtGame component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class TeamAtGame implements Serializable {
     private Team team;
     private List<GamePieceScore> gamePiecesScored;
@@ -37,19 +43,35 @@ public class TeamAtGame implements Serializable {
 
     }
 
+/**
+ * Executes the logic associated with the getTeam operation.
+ * @return the value produced by this method.
+ */
     public Team getTeam() {
         return this.team;
     }
 
+/**
+ * Executes the logic associated with the setTeam operation.
+ * @param team parameter required for this method.
+ */
     public void setTeam(Team team) {
         this.team = team;
     }
 
+/**
+ * Executes the logic associated with the getGameID operation.
+ * @return the value produced by this method.
+ */
     public int getGameID() {
         return this.gameID;
     }
 
 
+/**
+ * Executes the logic associated with the getGamePiecesScored operation.
+ * @return the value produced by this method.
+ */
     public List<GamePieceScore> getGamePiecesScored() {
         return this.gamePiecesScored;
     }
@@ -60,12 +82,25 @@ public class TeamAtGame implements Serializable {
     }
 
 
+/**
+ * Executes the logic associated with the setClimb operation.
+ * @param c parameter required for this method.
+ */
     public void setClimb(Climb c){
         this.climb = c;
     }
+/**
+ * Executes the logic associated with the getClimb operation.
+ * @return the value produced by this method.
+ */
     public Climb getClimb(){return this.climb;}
 
 
+/**
+ * Executes the logic associated with the addGamePieceScored operation.
+ * @param gamePiece parameter required for this method.
+ * @param isScoredInAuto parameter required for this method.
+ */
     public void addGamePieceScored(GamePiece gamePiece, Boolean isScoredInAuto) {
         if (this.gamePiecesScored == null) {
             this.gamePiecesScored = new ArrayList<>();
@@ -81,6 +116,10 @@ public class TeamAtGame implements Serializable {
 
 
     @Exclude
+/**
+ * Executes the logic associated with the calculatePoints operation.
+ * @return the value produced by this method.
+ */
     public int calculatePoints() {
         if (gamePiecesScored == null || gamePiecesScored.isEmpty()) {
             return 0;
@@ -100,6 +139,10 @@ public class TeamAtGame implements Serializable {
         public GamePieceScore() {
         }
 
+/**
+ * Executes the logic associated with the getPoints operation.
+ * @return the value produced by this method.
+ */
         public int getPoints(){
             GamePiece piece = GamePiece.valueOf(this.piece);
             return this.inAuto ? piece.getAutoPoints() : piece.getTeleopPoints();
@@ -111,11 +154,19 @@ public class TeamAtGame implements Serializable {
             this.inAuto = inAuto;
         }
 
+/**
+ * Executes the logic associated with the getPiece operation.
+ * @return the value produced by this method.
+ */
         public String getPiece() {
             return piece;
         }
 
 
+/**
+ * Executes the logic associated with the isInAuto operation.
+ * @return the value produced by this method.
+ */
         public boolean isInAuto() {
             return inAuto;
         }

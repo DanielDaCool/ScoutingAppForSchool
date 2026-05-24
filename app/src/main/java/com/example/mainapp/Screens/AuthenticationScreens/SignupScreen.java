@@ -14,6 +14,12 @@ import com.example.mainapp.R;
 import com.example.mainapp.Utils.DatabaseUtils.DataHelper;
 import com.example.mainapp.Utils.DatabaseUtils.User;
 
+/**
+ * Represents the SignupScreen component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class SignupScreen extends AppCompatActivity {
 
     private EditText etFullName, etEmail, etPassword, etConfirmPassword;
@@ -22,6 +28,10 @@ public class SignupScreen extends AppCompatActivity {
     private Context context;
 
     @Override
+/**
+ * Initializes the activity and prepares the screen components and data.
+ * @param savedInstanceState parameter required for this method.
+ */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_screen);
@@ -61,6 +71,10 @@ public class SignupScreen extends AppCompatActivity {
 
             DataHelper.getInstance().registerUser(fullName, email, password, new DataHelper.DataCallback<User>() {
                 @Override
+/**
+ * Executes the logic associated with the onSuccess operation.
+ * @param user parameter required for this method.
+ */
                 public void onSuccess(User user) {
                     runOnUiThread(() -> {
                         Toast.makeText(context,
@@ -71,6 +85,10 @@ public class SignupScreen extends AppCompatActivity {
                 }
 
                 @Override
+/**
+ * Executes the logic associated with the onFailure operation.
+ * @param error parameter required for this method.
+ */
                 public void onFailure(String error) {
                     runOnUiThread(() -> {
                         btnSignup.setEnabled(true);
@@ -89,6 +107,9 @@ public class SignupScreen extends AppCompatActivity {
         tvLoginLink.setOnClickListener(v -> finish());
     }
 
+/**
+ * Executes the logic associated with the init operation.
+ */
     private void init() {
         etFullName       = findViewById(R.id.etFullName);
         etEmail          = findViewById(R.id.etEmail);

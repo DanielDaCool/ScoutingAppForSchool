@@ -27,6 +27,12 @@ import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Represents the AdminPanelActivity component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class AdminPanelActivity extends AppCompatActivity {
 
     private RecyclerView   rvScouters;
@@ -37,6 +43,10 @@ public class AdminPanelActivity extends AppCompatActivity {
     private Context     context;
 
     @Override
+/**
+ * Initializes the activity and prepares the screen components and data.
+ * @param savedInstanceState parameter required for this method.
+ */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_panel);
@@ -46,11 +56,17 @@ public class AdminPanelActivity extends AppCompatActivity {
     }
 
     @Override
+/**
+ * Executes the logic associated with the onResume operation.
+ */
     protected void onResume() {
         super.onResume();
         loadScouters();
     }
 
+/**
+ * Executes the logic associated with the loadScouters operation.
+ */
     private void loadScouters() {
         progressBar.setVisibility(View.VISIBLE);
         DataHelper.getInstance().getAllUsers(new DataHelper.DataCallback<ArrayList<User>>() {
@@ -74,6 +90,9 @@ public class AdminPanelActivity extends AppCompatActivity {
     }
 
 
+/**
+ * Executes the logic associated with the loadPendingCounts operation.
+ */
     private void loadPendingCounts() {
         EVENTS[] districts = EVENTS.values();
         for (User scouter : scouterList) {
@@ -100,6 +119,10 @@ public class AdminPanelActivity extends AppCompatActivity {
         }
     }
 
+/**
+ * Executes the logic associated with the showAssignDialog operation.
+ * @param scouter parameter required for this method.
+ */
     private void showAssignDialog(User scouter) {
         View     dialogView = getLayoutInflater().inflate(R.layout.dialog_assign, null);
         EditText etGame     = dialogView.findViewById(R.id.etAssignGame);
@@ -142,6 +165,12 @@ public class AdminPanelActivity extends AppCompatActivity {
                 .show();
     }
 
+/**
+ * Executes the logic associated with the saveAssignment operation.
+ * @param scouter parameter required for this method.
+ * @param assignment parameter required for this method.
+ * @param district parameter required for this method.
+ */
     private void saveAssignment(User scouter, Assignment assignment, EVENTS district) {
         DataHelper.getInstance().saveAssignment(scouter.getUserId(), district, assignment,
                 new DataHelper.DatabaseCallback() {
@@ -161,6 +190,9 @@ public class AdminPanelActivity extends AppCompatActivity {
         );
     }
 
+/**
+ * Executes the logic associated with the init operation.
+ */
     private void init() {
         tvBack      = findViewById(R.id.tvBackBtn);
         progressBar = findViewById(R.id.progressBar);

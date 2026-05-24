@@ -1,5 +1,11 @@
 package com.example.mainapp.Utils;
 
+/**
+ * Represents the GamePiece component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public enum GamePiece {
     L1(3, 2),
     L2(4,3),
@@ -16,8 +22,16 @@ public enum GamePiece {
         this.teleopPoints = teleopPoints;
     }
 
+/**
+ * Executes the logic associated with the getTeleopPoints operation.
+ * @return the value produced by this method.
+ */
     public int getTeleopPoints(){return  this.teleopPoints;}
 
+/**
+ * Executes the logic associated with the getAutoPoints operation.
+ * @return the value produced by this method.
+ */
     public int getAutoPoints(){return  this.autoPoints;}
     public static GamePiece getGamePieceFromString(String gamePiece){
         switch (gamePiece.toLowerCase()){

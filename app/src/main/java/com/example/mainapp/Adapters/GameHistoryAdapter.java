@@ -15,6 +15,12 @@ import com.example.mainapp.Utils.TeamUtils.TeamAtGame;
 
 import java.util.ArrayList;
 
+/**
+ * Represents the GameHistoryAdapter component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class GameHistoryAdapter extends RecyclerView.Adapter<GameHistoryAdapter.TeamAtGameViewHolder> {
 
     private final ArrayList<TeamAtGame> games;
@@ -24,6 +30,12 @@ public class GameHistoryAdapter extends RecyclerView.Adapter<GameHistoryAdapter.
     }
 
     @NonNull @Override
+/**
+ * Creates and inflates a new RecyclerView item layout.
+ * @param parent parameter required for this method.
+ * @param viewType parameter required for this method.
+ * @return the value produced by this method.
+ */
     public TeamAtGameViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_game_history, parent, false);
@@ -31,6 +43,11 @@ public class GameHistoryAdapter extends RecyclerView.Adapter<GameHistoryAdapter.
     }
 
     @Override
+/**
+ * Binds data from the current item into the RecyclerView row.
+ * @param holder parameter required for this method.
+ * @param position parameter required for this method.
+ */
     public void onBindViewHolder(@NonNull TeamAtGameViewHolder holder, int position) {
         holder.bind(games.get(position));
     }

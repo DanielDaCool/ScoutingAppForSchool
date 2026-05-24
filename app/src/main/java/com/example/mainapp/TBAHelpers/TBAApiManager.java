@@ -19,6 +19,12 @@ import java.util.List;
 import java.util.Set;
 
 
+/**
+ * Represents the TBAApiManager component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class TBAApiManager {
 
 
@@ -37,6 +43,11 @@ public class TBAApiManager {
         return  instance;
     }
 
+/**
+ * Executes the logic associated with the fetchData operation.
+ * @param endpoint parameter required for this method.
+ * @return the value produced by this method.
+ */
     private String fetchData(String endpoint) throws IOException {
         Request request = new Request.Builder()
                 .url(BASE_URL + endpoint)
@@ -53,6 +64,11 @@ public class TBAApiManager {
     }
 
 
+/**
+ * Executes the logic associated with the getEventTeams operation.
+ * @param eventKey parameter required for this method.
+ * @param callback parameter required for this method.
+ */
     public void getEventTeams(EVENTS eventKey, TeamCallback callback) throws IOException, JSONException {
         ArrayList<Team> teams = new ArrayList<Team>();
         new Thread(() -> {
@@ -81,6 +97,11 @@ public class TBAApiManager {
         }).start();
 
     }
+/**
+ * Executes the logic associated with the getEventGames operation.
+ * @param eventKey parameter required for this method.
+ * @param callback parameter required for this method.
+ */
     public void getEventGames(EVENTS eventKey, GameCallback callback) {
         new Thread(() -> {
             try {
@@ -128,6 +149,10 @@ public class TBAApiManager {
     }
 
 
+/**
+ * Executes the logic associated with the getIsraeliTeams operation.
+ * @param callback parameter required for this method.
+ */
     public void getIsraeliTeams(TeamCallback callback) {
         new Thread(()->{
             Set<Team> israeliTeams = new HashSet<>();

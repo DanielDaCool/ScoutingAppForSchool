@@ -21,6 +21,12 @@ import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 
 import java.util.ArrayList;
 
+/**
+ * Represents the GamesListActivity component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class GamesListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -31,6 +37,10 @@ public class GamesListActivity extends AppCompatActivity {
     private Context context;
 
     @Override
+/**
+ * Initializes the activity and prepares the screen components and data.
+ * @param savedInstanceState parameter required for this method.
+ */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_games_list);
@@ -41,6 +51,13 @@ public class GamesListActivity extends AppCompatActivity {
 
         listFilter.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
+/**
+ * Executes the logic associated with the onEditorAction operation.
+ * @param v parameter required for this method.
+ * @param actionId parameter required for this method.
+ * @param event parameter required for this method.
+ * @return the value produced by this method.
+ */
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     String input = listFilter.getText().toString().trim();
@@ -70,6 +87,9 @@ public class GamesListActivity extends AppCompatActivity {
         });
     }
 
+/**
+ * Executes the logic associated with the initGamesFromCache operation.
+ */
     private void initGamesFromCache(){
         gameList.clear();
         gameList.addAll(AppCache.getInstance().getGamesList());
@@ -79,6 +99,10 @@ public class GamesListActivity extends AppCompatActivity {
 
         gameAdapter.notifyDataSetChanged();
     }
+/**
+ * Executes the logic associated with the showFilteredGames operation.
+ * @param teamNumber parameter required for this method.
+ */
     private void showFilteredGames(int teamNumber){
         filteredGameList.clear();
         for (Game game : gameList) {
@@ -89,6 +113,9 @@ public class GamesListActivity extends AppCompatActivity {
         gameAdapter.notifyDataSetChanged();
     }
 
+/**
+ * Executes the logic associated with the init operation.
+ */
     private void init(){
         recyclerView = findViewById(R.id.gamesList);
         context = GamesListActivity.this;
@@ -101,9 +128,17 @@ public class GamesListActivity extends AppCompatActivity {
         gameAdapter = new GameAdapter(filteredGameList);
     }
 
+/**
+ * Executes the logic associated with the setupRecyclerView operation.
+ */
     private void setupRecyclerView() {
         gameAdapter.setOnItemClickListener(new GameAdapter.OnItemClickListener() {
             @Override
+/**
+ * Executes the logic associated with the onItemClick operation.
+ * @param game parameter required for this method.
+ * @param position parameter required for this method.
+ */
             public void onItemClick(Game game, int position) {
                 Intent intent = new Intent(context, GameDetailActivity.class);
                 intent.putExtra("gameNumber", game.getGameNumber());

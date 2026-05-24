@@ -12,6 +12,12 @@ import com.example.mainapp.Utils.Game;
 
 import java.util.List;
 
+/**
+ * Represents the GameAdapter component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder> {
 
     private List<Game> games;
@@ -25,12 +31,22 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         this.games = games;
     }
 
+/**
+ * Executes the logic associated with the setOnItemClickListener operation.
+ * @param listener parameter required for this method.
+ */
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
     @NonNull
     @Override
+/**
+ * Creates and inflates a new RecyclerView item layout.
+ * @param parent parameter required for this method.
+ * @param viewType parameter required for this method.
+ * @return the value produced by this method.
+ */
     public GameViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.game_layout, parent, false);
@@ -38,12 +54,21 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
     }
 
     @Override
+/**
+ * Binds data from the current item into the RecyclerView row.
+ * @param holder parameter required for this method.
+ * @param position parameter required for this method.
+ */
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
         Game game = games.get(position);
         holder.bind(game, position);
     }
 
     @Override
+/**
+ * Returns the number of items displayed by the adapter.
+ * @return the value produced by this method.
+ */
     public int getItemCount() {
         return games.size();
     }
@@ -58,6 +83,11 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
             gameDescription = itemView.findViewById(R.id.item_description);
         }
 
+/**
+ * Executes the logic associated with the bind operation.
+ * @param game parameter required for this method.
+ * @param position parameter required for this method.
+ */
         public void bind(Game game, int position) {
             gameTitle.setText(game.getGameTitle());
             gameDescription.setText(game.getDescription());

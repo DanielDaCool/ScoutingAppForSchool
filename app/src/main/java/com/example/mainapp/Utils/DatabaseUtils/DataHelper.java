@@ -21,6 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents the DataHelper component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class DataHelper {
 
     private final FirebaseDatabase database;
@@ -57,6 +63,13 @@ public class DataHelper {
         ).start();
     }
 
+/**
+ * Executes the logic associated with the writeNode operation.
+ * @param table parameter required for this method.
+ * @param id parameter required for this method.
+ * @param data parameter required for this method.
+ * @param callback parameter required for this method.
+ */
     private void writeNode(String table, String id, Object data, DatabaseCallback callback) {
         new Thread(() ->
                 rootRef.child(table).child(id).setValue(data)
@@ -67,6 +80,13 @@ public class DataHelper {
 
     // ==================== AUTH ====================
 
+/**
+ * Executes the logic associated with the registerUser operation.
+ * @param fullName parameter required for this method.
+ * @param email parameter required for this method.
+ * @param password parameter required for this method.
+ * @param callback parameter required for this method.
+ */
     public void registerUser(String fullName, String email, String password, DataCallback<User> callback) {
         new Thread(() ->
                 auth.createUserWithEmailAndPassword(email, password)
@@ -91,6 +111,12 @@ public class DataHelper {
         ).start();
     }
 
+/**
+ * Executes the logic associated with the loginUser operation.
+ * @param email parameter required for this method.
+ * @param password parameter required for this method.
+ * @param callback parameter required for this method.
+ */
     public void loginUser(String email, String password, DataCallback<User> callback) {
         new Thread(() ->
                 auth.signInWithEmailAndPassword(email, password)
@@ -125,8 +151,19 @@ public class DataHelper {
         ).start();
     }
 
+/**
+ * Executes the logic associated with the logoutUser operation.
+ */
     public void logoutUser()                   { auth.signOut(); }
+/**
+ * Executes the logic associated with the getCurrentFirebaseUser operation.
+ * @return the value produced by this method.
+ */
     public FirebaseUser getCurrentFirebaseUser() { return auth.getCurrentUser(); }
+/**
+ * Executes the logic associated with the getCurrentUserId operation.
+ * @return the value produced by this method.
+ */
     public String getCurrentUserId() {
         FirebaseUser u = auth.getCurrentUser();
         return u != null ? u.getUid() : null;
@@ -134,6 +171,10 @@ public class DataHelper {
 
     // ==================== USERS ====================
 
+/**
+ * Executes the logic associated with the getAllUsers operation.
+ * @param callback parameter required for this method.
+ */
     public void getAllUsers(DataCallback<ArrayList<User>> callback) {
         new Thread(() ->
                 rootRef.child(Constants.USERS_TABLE_NAME).get().addOnCompleteListener(task -> {
@@ -162,6 +203,13 @@ public class DataHelper {
     /**
      * Firebase path: assignments / userId / districtEventKey / pending|completed / key
      */
+/**
+ * Executes the logic associated with the assignmentPath operation.
+ * @param userId parameter required for this method.
+ * @param district parameter required for this method.
+ * @param sub parameter required for this method.
+ * @return the value produced by this method.
+ */
     private String assignmentPath(String userId, EVENTS district, String sub) {
         return Constants.ASSIGNMENTS_TABLE_NAME + "/" + userId
                 + "/" + district.getEventKey() + "/" + sub;
@@ -242,11 +290,21 @@ public class DataHelper {
 
     // ==================== TEAMS ====================
 
+/**
+ * Executes the logic associated with the createTeamStats operation.
+ * @param data parameter required for this method.
+ * @param callback parameter required for this method.
+ */
     public void createTeamStats(TeamStats data, DatabaseCallback callback) {
         writeNode(Constants.TEAMS_TABLE_NAME,
                 Integer.toString(data.getTeam().getTeamNumber()), data, callback);
     }
 
+/**
+ * Executes the logic associated with the isTeamDataExists operation.
+ * @param t parameter required for this method.
+ * @param callback parameter required for this method.
+ */
     public void isTeamDataExists(Team t, ExistsCallback callback) {
         readTeamStats(Integer.toString(t.getTeamNumber()), new DataCallback<TeamStats>() {
             @Override public void onSuccess(TeamStats data) { callback.onResult(data.getGamesPlayed() != 0); }
@@ -254,6 +312,11 @@ public class DataHelper {
         });
     }
 
+/**
+ * Executes the logic associated with the readTeamStats operation.
+ * @param teamID parameter required for this method.
+ * @param callback parameter required for this method.
+ */
     public void readTeamStats(String teamID, DataCallback<TeamStats> callback) {
         fetchNode(Constants.TEAMS_TABLE_NAME + "/" + teamID, TeamStats.class,
                 new DataCallback<TeamStats>() {
@@ -263,6 +326,10 @@ public class DataHelper {
         );
     }
 
+/**
+ * Executes the logic associated with the readAllTeamStats operation.
+ * @param callback parameter required for this method.
+ */
     public void readAllTeamStats(DataCallback<ArrayList<TeamStats>> callback) {
         new Thread(() ->
                 rootRef.child(Constants.TEAMS_TABLE_NAME).get().addOnCompleteListener(task -> {
@@ -283,6 +350,10 @@ public class DataHelper {
         ).start();
     }
 
+/**
+ * Executes the logic associated with the countTeams operation.
+ * @param callback parameter required for this method.
+ */
     public void countTeams(CountCallback callback) {
         new Thread(() ->
                 rootRef.child(Constants.TEAMS_TABLE_NAME).get().addOnCompleteListener(task -> {
@@ -295,13 +366,32 @@ public class DataHelper {
         ).start();
     }
 
+/**
+ * Executes the logic associated with the replace operation.
+ * @param table parameter required for this method.
+ * @param id parameter required for this method.
+ * @param data parameter required for this method.
+ * @param callback parameter required for this method.
+ */
     public void replace(String table, String id, Object data, DatabaseCallback callback) {
         writeNode(table, id, data, callback);
     }
 
+/**
+ * Executes the logic associated with the getAvgOfTeam operation.
+ * @param teamID parameter required for this method.
+ * @param amount parameter required for this method.
+ * @param callback parameter required for this method.
+ */
     public void getAvgOfTeam(int teamID, int amount,  DataCallback<Double> callback){
         getAvgOfTeam(Integer.toString(teamID), amount, callback);
     }
+/**
+ * Executes the logic associated with the getAvgOfTeam operation.
+ * @param teamID parameter required for this method.
+ * @param amount parameter required for this method.
+ * @param callback parameter required for this method.
+ */
     public void getAvgOfTeam(String teamID, int amount, DataCallback<Double> callback) {
         new Thread(() ->
                 rootRef.child(Constants.TEAMS_TABLE_NAME).child(teamID).get()
@@ -321,6 +411,11 @@ public class DataHelper {
         ).start();
     }
 
+/**
+ * Executes the logic associated with the getUpdatedTeamStats operation.
+ * @param team parameter required for this method.
+ * @param callback parameter required for this method.
+ */
     public void getUpdatedTeamStats(Team team, DataCallback<TeamStats> callback) {
         rootRef.child(Constants.TEAMS_TABLE_NAME)
                 .child(Integer.toString(team.getTeamNumber()))
@@ -336,6 +431,10 @@ public class DataHelper {
                 });
     }
 
+/**
+ * Executes the logic associated with the getUpdatedTeamsStats operation.
+ * @param callback parameter required for this method.
+ */
     public void getUpdatedTeamsStats(DataCallback<ArrayList<TeamStats>> callback) {
         rootRef.child(Constants.TEAMS_TABLE_NAME).addValueEventListener(new ValueEventListener() {
             @Override public void onDataChange(@NonNull DataSnapshot snap) {
@@ -352,6 +451,10 @@ public class DataHelper {
         });
     }
 
+/**
+ * Executes the logic associated with the getCurrentTeamSnapshot operation.
+ * @param callback parameter required for this method.
+ */
     public void getCurrentTeamSnapshot(TeamSnapshotCallback callback) {
         new Thread(() ->
                 rootRef.child(Constants.TEAMS_TABLE_NAME).get().addOnCompleteListener(task -> {
@@ -361,6 +464,14 @@ public class DataHelper {
         ).start();
     }
 
+/**
+ * Updates existing information in the database.
+ * @param table parameter required for this method.
+ * @param id parameter required for this method.
+ * @param Map<String parameter required for this method.
+ * @param updates parameter required for this method.
+ * @param callback parameter required for this method.
+ */
     public void update(String table, String id, Map<String, Object> updates, DatabaseCallback callback) {
         new Thread(() ->
                 rootRef.child(table).child(id).updateChildren(updates)

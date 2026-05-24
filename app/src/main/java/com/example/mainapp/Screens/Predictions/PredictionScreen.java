@@ -9,12 +9,22 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.mainapp.Adapters.PredictionPageAdapter;
 import com.example.mainapp.R;
 
+/**
+ * Represents the PredictionScreen component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class PredictionScreen extends AppCompatActivity {
 
     private ViewPager2 viewPager;
     private TextView tvHeader, tabGame, tabManual, btnBack;
 
     @Override
+/**
+ * Initializes the activity and prepares the screen components and data.
+ * @param savedInstanceState parameter required for this method.
+ */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prediction_screen);
@@ -30,6 +40,10 @@ public class PredictionScreen extends AppCompatActivity {
 
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
+/**
+ * Executes the logic associated with the onPageSelected operation.
+ * @param position parameter required for this method.
+ */
             public void onPageSelected(int position) {
                 if (position == 0) {
                     tvHeader.setText("חיזוי לפי משחק");

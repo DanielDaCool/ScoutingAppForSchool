@@ -25,6 +25,12 @@ import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
 import java.util.ArrayList;
 
+/**
+ * Represents the AdminMainActivity component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class AdminMainActivity extends AppCompatActivity {
 
     private TextView textViewWelcome, tvTeamCount, tvGamesCount;
@@ -43,6 +49,10 @@ public class AdminMainActivity extends AppCompatActivity {
 
 
     @Override
+/**
+ * Initializes the activity and prepares the screen components and data.
+ * @param savedInstanceState parameter required for this method.
+ */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
@@ -56,6 +66,9 @@ public class AdminMainActivity extends AppCompatActivity {
         setupButtons();
         setupProfilePanel();
     }
+/**
+ * Executes the logic associated with the checkAndHandleNonAuthenticatedUser operation.
+ */
     private void checkAndHandleNonAuthenticatedUser(){
         if (!SharedPrefHelper.getInstance(context).isUserLoggedIn()) {
             startActivity(new Intent(context, LoginScreen.class));
@@ -69,6 +82,9 @@ public class AdminMainActivity extends AppCompatActivity {
     }
 
     @Override
+/**
+ * Executes the logic associated with the onResume operation.
+ */
     protected void onResume() {
         super.onResume();
         if (!prefs.isUserLoggedIn()) {
@@ -80,12 +96,18 @@ public class AdminMainActivity extends AppCompatActivity {
         refreshCacheInBackground();
     }
 
+/**
+ * Executes the logic associated with the loadDashboardStats operation.
+ */
     private void loadDashboardStats() {
         AppCache cache = AppCache.getInstance();
         tvTeamCount.setText(cache.getTeamCount()  > 0 ? String.valueOf(cache.getTeamCount())  : "—");
         tvGamesCount.setText(cache.getTotalGames() > 0 ? String.valueOf(cache.getTotalGames()) : "—");
     }
 
+/**
+ * Executes the logic associated with the refreshCacheInBackground operation.
+ */
     private void refreshCacheInBackground() {
         DataHelper.getInstance().readAllTeamStats(new DataHelper.DataCallback<ArrayList<TeamStats>>() {
             @Override public void onSuccess(ArrayList<TeamStats> data) {
@@ -102,6 +124,9 @@ public class AdminMainActivity extends AppCompatActivity {
         });
     }
 
+/**
+ * Executes the logic associated with the setupProfilePanel operation.
+ */
     private void setupProfilePanel() {
         tvProfileName.setText(prefs.getFullName());
         tvProfileEmail.setText(prefs.getEmail());
@@ -109,6 +134,9 @@ public class AdminMainActivity extends AppCompatActivity {
         tvProfileRole.setTextColor(0xFFC084FC);
     }
 
+/**
+ * Executes the logic associated with the setupBottomNav operation.
+ */
     private void setupBottomNav() {
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -120,12 +148,19 @@ public class AdminMainActivity extends AppCompatActivity {
         });
     }
 
+/**
+ * Executes the logic associated with the showPanel operation.
+ * @param panel parameter required for this method.
+ */
     private void showPanel(View panel) {
         panelHome.setVisibility(View.GONE);
         panelProfile.setVisibility(View.GONE);
         panel.setVisibility(View.VISIBLE);
     }
 
+/**
+ * Executes the logic associated with the setupButtons operation.
+ */
     private void setupButtons() {
         btnPrediction.setOnClickListener(v ->
                 startActivity(new Intent(context, PredictionScreen.class)));
@@ -145,6 +180,9 @@ public class AdminMainActivity extends AppCompatActivity {
         );
     }
 
+/**
+ * Executes the logic associated with the init operation.
+ */
     private void init() {
         textViewWelcome = findViewById(R.id.textViewWelcome);
         tvTeamCount     = findViewById(R.id.tvTeamCount);

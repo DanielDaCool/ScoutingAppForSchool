@@ -13,6 +13,12 @@ import com.example.mainapp.Utils.DatabaseUtils.Assignment;
 
 import java.util.ArrayList;
 
+/**
+ * Represents the AssignmentAdapter component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.AssignmentViewHolder> {
 
     private ArrayList<Assignment> assignments;
@@ -26,12 +32,22 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         this.assignments = assignments;
     }
 
+/**
+ * Executes the logic associated with the setOnAssignmentClickListener operation.
+ * @param listener parameter required for this method.
+ */
     public void setOnAssignmentClickListener(OnAssignmentClickListener listener) {
         this.listener = listener;
     }
 
     @NonNull
     @Override
+/**
+ * Creates and inflates a new RecyclerView item layout.
+ * @param parent parameter required for this method.
+ * @param viewType parameter required for this method.
+ * @return the value produced by this method.
+ */
     public AssignmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_assignment, parent, false);
@@ -39,17 +55,30 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
     }
 
     @Override
+/**
+ * Binds data from the current item into the RecyclerView row.
+ * @param holder parameter required for this method.
+ * @param position parameter required for this method.
+ */
     public void onBindViewHolder(@NonNull AssignmentViewHolder holder, int position) {
         Assignment assignment = assignments.get(position);
         holder.bind(assignment);
     }
 
     @Override
+/**
+ * Returns the number of items displayed by the adapter.
+ * @return the value produced by this method.
+ */
     public int getItemCount() {
         return assignments.size();
     }
 
 
+/**
+ * Executes the logic associated with the removeByKey operation.
+ * @param key parameter required for this method.
+ */
     public void removeByKey(String key) {
         for (int i = 0; i < assignments.size(); i++) {
             if (assignments.get(i).getKey().equals(key)) {
@@ -71,6 +100,10 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
             tvTeamNumber = itemView.findViewById(R.id.tvAssignmentTeam);
         }
 
+/**
+ * Executes the logic associated with the bind operation.
+ * @param assignment parameter required for this method.
+ */
         public void bind(Assignment assignment) {
             tvGameNumber.setText("משחק " + assignment.getGameNumber());
             tvTeamNumber.setText("#" + assignment.getTeamNumber());

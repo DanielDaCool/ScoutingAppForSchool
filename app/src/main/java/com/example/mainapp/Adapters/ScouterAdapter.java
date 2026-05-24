@@ -14,6 +14,12 @@ import com.example.mainapp.Utils.DatabaseUtils.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Represents the ScouterAdapter component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class ScouterAdapter extends RecyclerView.Adapter<ScouterAdapter.ScouterViewHolder> {
 
     private ArrayList<User> scouters;
@@ -26,19 +32,38 @@ public class ScouterAdapter extends RecyclerView.Adapter<ScouterAdapter.ScouterV
 
     public ScouterAdapter(ArrayList<User> scouters) { this.scouters = scouters; }
 
+/**
+ * Executes the logic associated with the setOnScouterClickListener operation.
+ * @param l parameter required for this method.
+ */
     public void setOnScouterClickListener(OnScouterClickListener l) { this.listener = l; }
 
+/**
+ * Executes the logic associated with the updateData operation.
+ * @param newList parameter required for this method.
+ */
     public void updateData(ArrayList<User> newList) {
         this.scouters = newList;
         notifyDataSetChanged();
     }
 
+/**
+ * Executes the logic associated with the setPendingCount operation.
+ * @param userId parameter required for this method.
+ * @param count parameter required for this method.
+ */
     public void setPendingCount(String userId, int count) {
         pendingCounts.put(userId, count);
         notifyDataSetChanged();
     }
 
     @NonNull @Override
+/**
+ * Creates and inflates a new RecyclerView item layout.
+ * @param parent parameter required for this method.
+ * @param viewType parameter required for this method.
+ * @return the value produced by this method.
+ */
     public ScouterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_scouter, parent, false);
@@ -46,6 +71,11 @@ public class ScouterAdapter extends RecyclerView.Adapter<ScouterAdapter.ScouterV
     }
 
     @Override
+/**
+ * Binds data from the current item into the RecyclerView row.
+ * @param holder parameter required for this method.
+ * @param position parameter required for this method.
+ */
     public void onBindViewHolder(@NonNull ScouterViewHolder holder, int position) {
         User scouter = scouters.get(position);
         holder.bind(scouter);
@@ -68,6 +98,10 @@ public class ScouterAdapter extends RecyclerView.Adapter<ScouterAdapter.ScouterV
             tvPendingCount = itemView.findViewById(R.id.tvPendingCount);
         }
 
+/**
+ * Executes the logic associated with the bind operation.
+ * @param scouter parameter required for this method.
+ */
         public void bind(User scouter) {
             tvName.setText(scouter.getFullName());
             tvEmail.setText(scouter.getEmail());

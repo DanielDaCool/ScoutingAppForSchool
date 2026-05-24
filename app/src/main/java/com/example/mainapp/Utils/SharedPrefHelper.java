@@ -6,6 +6,12 @@ import android.content.SharedPreferences;
 import com.example.mainapp.TBAHelpers.EVENTS;
 import com.example.mainapp.Utils.DatabaseUtils.UserRole;
 
+/**
+ * Represents the SharedPrefHelper component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class SharedPrefHelper {
 
     private static final String PREF_NAME        = "MainAppPreferences";
@@ -32,6 +38,13 @@ public class SharedPrefHelper {
     }
 
 
+/**
+ * Executes the logic associated with the saveUser operation.
+ * @param fullName parameter required for this method.
+ * @param email parameter required for this method.
+ * @param userId parameter required for this method.
+ * @param role parameter required for this method.
+ */
     public void saveUser(String fullName, String email, String userId, UserRole role) {
         editor.putString(KEY_FULL_NAME, fullName);
         editor.putString(KEY_EMAIL, email);
@@ -41,6 +54,9 @@ public class SharedPrefHelper {
         editor.apply();
     }
 
+/**
+ * Executes the logic associated with the logout operation.
+ */
     public void logout() {
         editor.putString(KEY_FULL_NAME, "");
         editor.putString(KEY_EMAIL, "");
@@ -52,11 +68,19 @@ public class SharedPrefHelper {
     }
 
 
+/**
+ * Executes the logic associated with the saveDistrict operation.
+ * @param district parameter required for this method.
+ */
     public void saveDistrict(EVENTS district) {
         editor.putString(KEY_DISTRICT, district.name());
         editor.apply();
     }
 
+/**
+ * Executes the logic associated with the getCurrentDistrict operation.
+ * @return the value produced by this method.
+ */
     public EVENTS getCurrentDistrict() {
         String d = prefs.getString(KEY_DISTRICT, null);
         if (d == null || d.isEmpty()) return null;
@@ -65,26 +89,61 @@ public class SharedPrefHelper {
     }
 
 
+/**
+ * Executes the logic associated with the hasLaunchedBefore operation.
+ * @return the value produced by this method.
+ */
     public boolean hasLaunchedBefore() {
         return prefs.getBoolean(KEY_HAS_LAUNCHED, false);
     }
 
+/**
+ * Executes the logic associated with the markHasLaunched operation.
+ */
     public void markHasLaunched() {
         editor.putBoolean(KEY_HAS_LAUNCHED, true);
         editor.apply();
     }
 
 
+/**
+ * Executes the logic associated with the isUserLoggedIn operation.
+ * @return the value produced by this method.
+ */
     public boolean isUserLoggedIn() { return prefs.getBoolean(KEY_IS_LOGGED_IN, false); }
+/**
+ * Executes the logic associated with the getFullName operation.
+ * @return the value produced by this method.
+ */
     public String getFullName()     { return isUserLoggedIn() ? prefs.getString(KEY_FULL_NAME, "") : "משתמש"; }
+/**
+ * Executes the logic associated with the getFirstName operation.
+ * @return the value produced by this method.
+ */
     public String getFirstName()    { return getFullName().split(" ", 2)[0]; }
+/**
+ * Executes the logic associated with the getEmail operation.
+ * @return the value produced by this method.
+ */
     public String getEmail()        { return prefs.getString(KEY_EMAIL, ""); }
+/**
+ * Executes the logic associated with the getUserId operation.
+ * @return the value produced by this method.
+ */
     public String getUserId()       { return prefs.getString(KEY_USER_ID, ""); }
 
+/**
+ * Executes the logic associated with the getRole operation.
+ * @return the value produced by this method.
+ */
     public UserRole getRole() {
         try { return UserRole.valueOf(prefs.getString(KEY_ROLE, UserRole.SCOUTER.name())); }
         catch (IllegalArgumentException e) { return UserRole.SCOUTER; }
     }
 
+/**
+ * Executes the logic associated with the isAdmin operation.
+ * @return the value produced by this method.
+ */
     public boolean isAdmin() { return getRole() == UserRole.ADMIN; }
 }

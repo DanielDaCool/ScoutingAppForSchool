@@ -27,6 +27,12 @@ import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
 import java.util.ArrayList;
 
+/**
+ * Represents the ScouterMainActivity component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class ScouterMainActivity extends AppCompatActivity {
 
     private TextView textViewWelcome, tvTeamCount, tvGamesCount, tvCurrentEvent;
@@ -51,6 +57,10 @@ public class ScouterMainActivity extends AppCompatActivity {
     private EVENTS  registeredListenerDistrict = null;
 
     @Override
+/**
+ * Initializes the activity and prepares the screen components and data.
+ * @param savedInstanceState parameter required for this method.
+ */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!SharedPrefHelper.getInstance(this).isUserLoggedIn()) {
@@ -69,6 +79,9 @@ public class ScouterMainActivity extends AppCompatActivity {
     }
 
     @Override
+/**
+ * Executes the logic associated with the onResume operation.
+ */
     protected void onResume() {
         super.onResume();
         if (!prefs.isUserLoggedIn()) {
@@ -97,14 +110,20 @@ public class ScouterMainActivity extends AppCompatActivity {
         }
     }
 
-    // ==================== DASHBOARD ====================
+    // ==================== DASHBOARD ====================-
 
+/**
+ * Executes the logic associated with the loadDashboardStats operation.
+ */
     private void loadDashboardStats() {
         AppCache cache = AppCache.getInstance();
         tvTeamCount.setText(cache.getTeamCount()  > 0 ? String.valueOf(cache.getTeamCount())  : "—");
         tvGamesCount.setText(cache.getTotalGames() > 0 ? String.valueOf(cache.getTotalGames()) : "—");
     }
 
+/**
+ * Executes the logic associated with the refreshCacheInBackground operation.
+ */
     private void refreshCacheInBackground() {
         DataHelper.getInstance().readAllTeamStats(new DataHelper.DataCallback<ArrayList<TeamStats>>() {
             @Override public void onSuccess(ArrayList<TeamStats> data) {
@@ -123,6 +142,9 @@ public class ScouterMainActivity extends AppCompatActivity {
 
     // ==================== PROFILE PANEL ====================
 
+/**
+ * Executes the logic associated with the setupProfilePanel operation.
+ */
     private void setupProfilePanel() {
         tvProfileName.setText(prefs.getFullName());
         tvProfileEmail.setText(prefs.getEmail());
@@ -134,6 +156,9 @@ public class ScouterMainActivity extends AppCompatActivity {
         setupAssignmentList();
     }
 
+/**
+ * Executes the logic associated with the showChangeDistrictDialog operation.
+ */
     private void showChangeDistrictDialog() {
         EVENTS[] events     = EVENTS.values();
         String[] eventNames = new String[events.length];
@@ -155,6 +180,9 @@ public class ScouterMainActivity extends AppCompatActivity {
 
     // ==================== ASSIGNMENTS ====================
 
+/**
+ * Executes the logic associated with the setupAssignmentList operation.
+ */
     private void setupAssignmentList() {
         assignmentAdapter = new AssignmentAdapter(assignmentList);
         rvAssignments.setLayoutManager(new LinearLayoutManager(context));
@@ -176,6 +204,9 @@ public class ScouterMainActivity extends AppCompatActivity {
         });
     }
 
+/**
+ * Executes the logic associated with the listenToFirebaseAssignments operation.
+ */
     private void listenToFirebaseAssignments() {
         EVENTS district = prefs.getCurrentDistrict();
         if (district == null) return;
@@ -197,6 +228,9 @@ public class ScouterMainActivity extends AppCompatActivity {
     }
 
 
+/**
+ * Executes the logic associated with the setupBottomNav operation.
+ */
     private void setupBottomNav() {
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -208,6 +242,10 @@ public class ScouterMainActivity extends AppCompatActivity {
         });
     }
 
+/**
+ * Executes the logic associated with the showPanel operation.
+ * @param panel parameter required for this method.
+ */
     private void showPanel(View panel) {
         panelHome.setVisibility(View.GONE);
         panelProfile.setVisibility(View.GONE);
@@ -215,6 +253,9 @@ public class ScouterMainActivity extends AppCompatActivity {
     }
 
 
+/**
+ * Executes the logic associated with the setupButtons operation.
+ */
     private void setupButtons() {
         btnForms.setOnClickListener(v ->
                 startActivity(new Intent(context, FormsActivity.class)));
@@ -236,6 +277,9 @@ public class ScouterMainActivity extends AppCompatActivity {
     }
 
 
+/**
+ * Executes the logic associated with the init operation.
+ */
     private void init() {
         textViewWelcome   = findViewById(R.id.textViewWelcome);
         tvTeamCount       = findViewById(R.id.tvTeamCount);

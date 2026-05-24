@@ -15,6 +15,12 @@ import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
 import java.util.ArrayList;
 
+/**
+ * Represents the TeamStatsAdapter component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.TeamStatsViewHolder> {
 
     private ArrayList<TeamStats> teamStats;
@@ -26,6 +32,12 @@ public class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.Team
 
     @NonNull
     @Override
+/**
+ * Creates and inflates a new RecyclerView item layout.
+ * @param parent parameter required for this method.
+ * @param viewType parameter required for this method.
+ * @return the value produced by this method.
+ */
     public TeamStatsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_team_stats, parent, false);
@@ -33,6 +45,11 @@ public class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.Team
     }
 
     @Override
+/**
+ * Binds data from the current item into the RecyclerView row.
+ * @param holder parameter required for this method.
+ * @param position parameter required for this method.
+ */
     public void onBindViewHolder(@NonNull TeamStatsViewHolder holder, int position) {
         TeamStats curTeamStats = teamStats.get(position);
 
@@ -65,10 +82,18 @@ public class TeamStatsAdapter extends RecyclerView.Adapter<TeamStatsAdapter.Team
 
 
     @Override
+/**
+ * Returns the number of items displayed by the adapter.
+ * @return the value produced by this method.
+ */
     public int getItemCount() {
         return teamStats.size();
     }
 
+/**
+ * Executes the logic associated with the updateData operation.
+ * @param newData parameter required for this method.
+ */
     public void updateData(ArrayList<TeamStats> newData) {
         this.teamStats = newData;
         notifyDataSetChanged();

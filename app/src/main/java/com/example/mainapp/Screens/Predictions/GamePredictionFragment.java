@@ -25,6 +25,12 @@ import com.example.mainapp.Utils.TeamUtils.Team;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * Represents the GamePredictionFragment component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class GamePredictionFragment extends Fragment {
 
     private ArrayList<Game> allGames;
@@ -42,6 +48,11 @@ public class GamePredictionFragment extends Fragment {
     }
 
     @Override
+/**
+ * Executes the logic associated with the onViewCreated operation.
+ * @param view parameter required for this method.
+ * @param savedInstanceState parameter required for this method.
+ */
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -82,18 +93,32 @@ public class GamePredictionFragment extends Fragment {
         });
     }
 
+/**
+ * Executes the logic associated with the initGames operation.
+ */
     private void initGames() {
         TBAApiManager.getInstance().getEventGames(Constants.DEFAULT_EVENT, new TBAApiManager.GameCallback() {
             @Override
+/**
+ * Executes the logic associated with the onSuccess operation.
+ * @param games parameter required for this method.
+ */
             public void onSuccess(ArrayList<Game> games) {
                 allGames = games;
                 requireActivity().runOnUiThread(() -> initSpinner());
             }
             @Override
+/**
+ * Executes the logic associated with the onError operation.
+ * @param e parameter required for this method.
+ */
             public void onError(Exception e) {}
         });
     }
 
+/**
+ * Executes the logic associated with the initSpinner operation.
+ */
     private void initSpinner() {
         ArrayList<String> gameNames = new ArrayList<>();
         gameNames.add("בחר משחק");
@@ -106,9 +131,19 @@ public class GamePredictionFragment extends Fragment {
         spinnerGames.setAdapter(adapter);
     }
 
+/**
+ * Executes the logic associated with the onClickGame operation.
+ */
     private void onClickGame() {
         spinnerGames.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
+/**
+ * Executes the logic associated with the onItemSelected operation.
+ * @param parent parameter required for this method.
+ * @param view parameter required for this method.
+ * @param position parameter required for this method.
+ * @param id parameter required for this method.
+ */
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position > 0 && allGames != null) {
                     currentGameID = position;
@@ -128,10 +163,20 @@ public class GamePredictionFragment extends Fragment {
                 }
             }
             @Override
+/**
+ * Executes the logic associated with the onNothingSelected operation.
+ * @param parent parameter required for this method.
+ */
             public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
+/**
+ * Executes the logic associated with the getAllTeamAverages operation.
+ * @param redTeams parameter required for this method.
+ * @param blueTeams parameter required for this method.
+ * @param callback parameter required for this method.
+ */
     private void getAllTeamAverages(Team[] redTeams, Team[] blueTeams, AllianceCallback callback) {
         CountDownLatch latch = new CountDownLatch(6);
         double[] avgs = new double[6];

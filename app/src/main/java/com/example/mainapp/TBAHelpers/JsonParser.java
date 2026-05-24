@@ -7,6 +7,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Represents the JsonParser component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class JsonParser {
     public static Team parseToTeam(JSONObject ob){
         int num = ob.optInt("team_number", -1);

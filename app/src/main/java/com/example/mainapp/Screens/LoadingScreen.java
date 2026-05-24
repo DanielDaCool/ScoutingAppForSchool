@@ -29,6 +29,12 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Represents the LoadingScreen component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class LoadingScreen extends AppCompatActivity {
 
     private ProgressBar progressBar;
@@ -38,6 +44,10 @@ public class LoadingScreen extends AppCompatActivity {
     private EVENTS districtToLoad;
 
     @Override
+/**
+ * Initializes the activity and prepares the screen components and data.
+ * @param savedInstanceState parameter required for this method.
+ */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_screen);
@@ -88,6 +98,9 @@ public class LoadingScreen extends AppCompatActivity {
         loadStep1_TBATeams();
     }
 
+/**
+ * Executes the logic associated with the showNoInternetState operation.
+ */
     private void showNoInternetState() {
         progressBar.setVisibility(View.GONE);
         tvPercent.setVisibility(View.GONE);
@@ -98,18 +111,29 @@ public class LoadingScreen extends AppCompatActivity {
 
 
 
+/**
+ * Executes the logic associated with the loadStep1_TBATeams operation.
+ */
     private void loadStep1_TBATeams() {
         setProgress(10, "טוען  מידע...");
         try {
             TBAApiManager.getInstance().getEventTeams(districtToLoad,
                     new TBAApiManager.TeamCallback() {
                         @Override
+/**
+ * Executes the logic associated with the onSuccess operation.
+ * @param teams parameter required for this method.
+ */
                         public void onSuccess(ArrayList<Team> teams) {
                             AppCache.getInstance().setTeamsAtEvent(teams.toArray(new Team[0]));
                             loadStep2_TeamStats();
                         }
 
                         @Override
+/**
+ * Executes the logic associated with the onError operation.
+ * @param e parameter required for this method.
+ */
                         public void onError(Exception e) {
                             loadStep2_TeamStats();
                         }
@@ -122,10 +146,17 @@ public class LoadingScreen extends AppCompatActivity {
         }
     }
 
+/**
+ * Executes the logic associated with the loadStep2_TeamStats operation.
+ */
     private void loadStep2_TeamStats() {
         setProgressWithoutText(30);
         DataHelper.getInstance().readAllTeamStats(new DataHelper.DataCallback<ArrayList<TeamStats>>() {
             @Override
+/**
+ * Executes the logic associated with the onSuccess operation.
+ * @param data parameter required for this method.
+ */
             public void onSuccess(ArrayList<TeamStats> data) {
                 AppCache.getInstance().setAllTeamStats(data);
                 int totalGames = 0;
@@ -136,12 +167,19 @@ public class LoadingScreen extends AppCompatActivity {
             }
 
             @Override
+/**
+ * Executes the logic associated with the onFailure operation.
+ * @param error parameter required for this method.
+ */
             public void onFailure(String error) {
                 loadStep3_TeamCount();
             }
         });
     }
 
+/**
+ * Executes the logic associated with the loadStep3_TeamCount operation.
+ */
     private void loadStep3_TeamCount() {
         setProgressWithoutText(50);
         DataHelper.getInstance().countTeams(count -> {
@@ -150,17 +188,28 @@ public class LoadingScreen extends AppCompatActivity {
         });
     }
 
+/**
+ * Executes the logic associated with the loadStep4_Games operation.
+ */
     private void loadStep4_Games() {
         setProgressWithoutText(65);
         TBAApiManager.getInstance().getEventGames(districtToLoad,
                 new TBAApiManager.GameCallback() {
                     @Override
+/**
+ * Executes the logic associated with the onSuccess operation.
+ * @param games parameter required for this method.
+ */
                     public void onSuccess(ArrayList<Game> games) {
                         AppCache.getInstance().setGamesList(games);
                         loadStep5_IsraeliTeams();
                     }
 
                     @Override
+/**
+ * Executes the logic associated with the onError operation.
+ * @param e parameter required for this method.
+ */
                     public void onError(Exception e) {
                         loadStep5_IsraeliTeams();
                     }
@@ -168,22 +217,37 @@ public class LoadingScreen extends AppCompatActivity {
         );
     }
 
+/**
+ * Executes the logic associated with the loadStep5_IsraeliTeams operation.
+ */
     private void loadStep5_IsraeliTeams() {
         setProgressWithoutText(80);
         TBAApiManager.getInstance().getIsraeliTeams(new TBAApiManager.TeamCallback() {
             @Override
+/**
+ * Executes the logic associated with the onSuccess operation.
+ * @param teams parameter required for this method.
+ */
             public void onSuccess(ArrayList<Team> teams) {
                 AppCache.getInstance().setIsraeliTeams(teams);
                 loadStep6_InitTeams(teams);
             }
 
             @Override
+/**
+ * Executes the logic associated with the onError operation.
+ * @param e parameter required for this method.
+ */
             public void onError(Exception e) {
 
             }
         });
     }
 
+/**
+ * Executes the logic associated with the loadStep6_InitTeams operation.
+ * @param teams parameter required for this method.
+ */
     private void loadStep6_InitTeams(ArrayList<Team> teams) {
         setProgressWithoutText(90);
         for (Team t : teams) {
@@ -196,10 +260,19 @@ public class LoadingScreen extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(() -> navigateNext(), 400);
     }
 
+/**
+ * Executes the logic associated with the setProgressWithoutText operation.
+ * @param percent parameter required for this method.
+ */
     private void setProgressWithoutText(int percent) {
         setProgress(percent, tvStatus.getText().toString());
     }
 
+/**
+ * Executes the logic associated with the setProgress operation.
+ * @param percent parameter required for this method.
+ * @param message parameter required for this method.
+ */
     private void setProgress(int percent, String message) {
         runOnUiThread(() -> {
             progressBar.setProgress(percent);
@@ -208,6 +281,9 @@ public class LoadingScreen extends AppCompatActivity {
         });
     }
 
+/**
+ * Executes the logic associated with the navigateNext operation.
+ */
     private void navigateNext() {
         if (!prefs.isUserLoggedIn()) {
             startActivity(new Intent(this, LoginScreen.class));

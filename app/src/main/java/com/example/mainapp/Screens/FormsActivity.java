@@ -28,6 +28,12 @@ import com.example.mainapp.Utils.TeamUtils.TeamAtGame;
 import com.example.mainapp.Utils.TeamUtils.TeamStats;
 import com.example.mainapp.Utils.TeamUtils.TeamUtils;
 
+/**
+ * Represents the FormsActivity component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class FormsActivity extends AppCompatActivity {
 
     private EditText autoL1, autoL2, autoL3, autoL4;
@@ -44,6 +50,10 @@ public class FormsActivity extends AppCompatActivity {
     private EVENTS assignmentDistrict = null;
 
     @Override
+/**
+ * Initializes the activity and prepares the screen components and data.
+ * @param savedInstanceState parameter required for this method.
+ */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forms);
@@ -79,6 +89,9 @@ public class FormsActivity extends AppCompatActivity {
         sendBtn.setOnClickListener(v -> handleSendBtnClick());
     }
 
+/**
+ * Executes the logic associated with the handleSendBtnClick operation.
+ */
     private void handleSendBtnClick() {
         if (teamNumber.getText().toString().trim().isEmpty()) {
             Toast.makeText(context, "הכנס מספר קבוצה", Toast.LENGTH_LONG).show(); return;
@@ -111,6 +124,12 @@ public class FormsActivity extends AppCompatActivity {
         saveToFirebase(t, gameNum, teamAtGame);
     }
 
+/**
+ * Executes the logic associated with the saveToFirebase operation.
+ * @param t parameter required for this method.
+ * @param gameNum parameter required for this method.
+ * @param teamAtGame parameter required for this method.
+ */
     private void saveToFirebase(Team t, int gameNum, TeamAtGame teamAtGame) {
         DataHelper.getInstance().readTeamStats(Integer.toString(t.getTeamNumber()),
                 new DataHelper.DataCallback<TeamStats>() {
@@ -125,6 +144,13 @@ public class FormsActivity extends AppCompatActivity {
         );
     }
 
+/**
+ * Executes the logic associated with the persistToFirebase operation.
+ * @param t parameter required for this method.
+ * @param gameNum parameter required for this method.
+ * @param teamAtGame parameter required for this method.
+ * @param stats parameter required for this method.
+ */
     private void persistToFirebase(Team t, int gameNum, TeamAtGame teamAtGame, TeamStats stats) {
         stats.addGame(teamAtGame);
         DataHelper.getInstance().replace(
@@ -141,6 +167,11 @@ public class FormsActivity extends AppCompatActivity {
         );
     }
 
+/**
+ * Executes the logic associated with the completeAssignment operation.
+ * @param t parameter required for this method.
+ * @param gameNum parameter required for this method.
+ */
     private void completeAssignment(Team t, int gameNum) {
         String userId = SharedPrefHelper.getInstance(context).getUserId();
         if (assignmentDistrict == null) { runOnUiThread(() -> onSaveSuccess()); return; }
@@ -153,6 +184,9 @@ public class FormsActivity extends AppCompatActivity {
         );
     }
 
+/**
+ * Executes the logic associated with the onSaveSuccess operation.
+ */
     private void onSaveSuccess() {
         progressBar.setVisibility(GONE);
         sendBtn.setEnabled(true);
@@ -162,6 +196,10 @@ public class FormsActivity extends AppCompatActivity {
         if (assignmentKey != null) finish();
     }
 
+/**
+ * Executes the logic associated with the updateGamePieces operation.
+ * @param tg parameter required for this method.
+ */
     private void updateGamePieces(TeamAtGame tg) {
         for (int i = 0; i < getInput(autoL1); i++) tg.addGamePieceScored(GamePiece.L1, true);
         for (int i = 0; i < getInput(autoL2); i++) tg.addGamePieceScored(GamePiece.L2, true);
@@ -176,6 +214,10 @@ public class FormsActivity extends AppCompatActivity {
         tg.setClimb(checkClimb());
     }
 
+/**
+ * Executes the logic associated with the checkClimb operation.
+ * @return the value produced by this method.
+ */
     private Climb checkClimb() {
         int id = group.getCheckedRadioButtonId();
         if (id == R.id.ClimbHigh)   return Climb.HIGH;
@@ -184,11 +226,19 @@ public class FormsActivity extends AppCompatActivity {
         return Climb.DIDNT_TRY;
     }
 
+/**
+ * Executes the logic associated with the getInput operation.
+ * @param et parameter required for this method.
+ * @return the value produced by this method.
+ */
     private int getInput(EditText et) {
         try { return Integer.parseInt(et.getText().toString().trim()); }
         catch (NumberFormatException e) { return 0; }
     }
 
+/**
+ * Executes the logic associated with the clearForm operation.
+ */
     private void clearForm() {
         autoL1.setText(""); autoL2.setText(""); autoL3.setText(""); autoL4.setText("");
         teleL1.setText(""); teleL2.setText(""); teleL3.setText(""); teleL4.setText("");
@@ -197,6 +247,9 @@ public class FormsActivity extends AppCompatActivity {
         group.clearCheck();
     }
 
+/**
+ * Executes the logic associated with the init operation.
+ */
     private void init() {
         autoL1      = findViewById(R.id.AutoL1Count);
         autoL2      = findViewById(R.id.AutoL2Count);

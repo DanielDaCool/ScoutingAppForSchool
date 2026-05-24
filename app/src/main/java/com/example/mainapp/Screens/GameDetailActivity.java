@@ -13,6 +13,12 @@ import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * Represents the GameDetailActivity component in the application.
+ * <p>
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class GameDetailActivity extends AppCompatActivity {
 
     private TextView tvGameTitle, tvBackBtn;
@@ -34,18 +40,22 @@ public class GameDetailActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private int gameNumber;
-    private int[] redTeams  = new int[3];
+    private int[] redTeams = new int[3];
     private int[] blueTeams = new int[3];
 
     @Override
+/**
+ * Initializes the activity and prepares the screen components and data.
+ * @param savedInstanceState parameter required for this method.
+ */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_detail);
 
-        gameNumber   = getIntent().getIntExtra("gameNumber", 0);
-        redTeams[0]  = getIntent().getIntExtra("redTeam1", 0);
-        redTeams[1]  = getIntent().getIntExtra("redTeam2", 0);
-        redTeams[2]  = getIntent().getIntExtra("redTeam3", 0);
+        gameNumber = getIntent().getIntExtra("gameNumber", 0);
+        redTeams[0] = getIntent().getIntExtra("redTeam1", 0);
+        redTeams[1] = getIntent().getIntExtra("redTeam2", 0);
+        redTeams[2] = getIntent().getIntExtra("redTeam3", 0);
         blueTeams[0] = getIntent().getIntExtra("blueTeam1", 0);
         blueTeams[1] = getIntent().getIntExtra("blueTeam2", 0);
         blueTeams[2] = getIntent().getIntExtra("blueTeam3", 0);
@@ -65,6 +75,9 @@ public class GameDetailActivity extends AppCompatActivity {
         loadAllTeamData();
     }
 
+    /**
+     * Executes the logic associated with the loadAllTeamData operation.
+     */
     private void loadAllTeamData() {
         progressBar.setVisibility(View.VISIBLE);
         CountDownLatch latch = new CountDownLatch(6);
@@ -77,16 +90,34 @@ public class GameDetailActivity extends AppCompatActivity {
             DataHelper.getInstance().readTeamStats(
                     String.valueOf(redTeams[i]),
                     new DataHelper.DataCallback<TeamStats>() {
-                        @Override public void onSuccess(TeamStats data) { stats[ri] = data; latch.countDown(); }
-                        @Override public void onFailure(String e)       { stats[ri] = null; latch.countDown(); }
+                        @Override
+                        public void onSuccess(TeamStats data) {
+                            stats[ri] = data;
+                            latch.countDown();
+                        }
+
+                        @Override
+                        public void onFailure(String e) {
+                            stats[ri] = null;
+                            latch.countDown();
+                        }
                     }
             );
 
             DataHelper.getInstance().readTeamStats(
                     String.valueOf(blueTeams[i]),
                     new DataHelper.DataCallback<TeamStats>() {
-                        @Override public void onSuccess(TeamStats data) { stats[bi] = data; latch.countDown(); }
-                        @Override public void onFailure(String e)       { stats[bi] = null; latch.countDown(); }
+                        @Override
+                        public void onSuccess(TeamStats data) {
+                            stats[bi] = data;
+                            latch.countDown();
+                        }
+
+                        @Override
+                        public void onFailure(String e) {
+                            stats[bi] = null;
+                            latch.countDown();
+                        }
                     }
             );
         }
@@ -135,41 +166,44 @@ public class GameDetailActivity extends AppCompatActivity {
         tvGames.setText("משחקים: " + ts.getGamesPlayed());
     }
 
+    /**
+     * Executes the logic associated with the init operation.
+     */
     private void init() {
         tvGameTitle = findViewById(R.id.tvGameTitle);
-        tvBackBtn   = findViewById(R.id.tvBackBtn);
+        tvBackBtn = findViewById(R.id.tvBackBtn);
         progressBar = findViewById(R.id.progressBar);
 
-        tvRedTeam1   = findViewById(R.id.tvRedTeam1);
-        tvRedTeam2   = findViewById(R.id.tvRedTeam2);
-        tvRedTeam3   = findViewById(R.id.tvRedTeam3);
+        tvRedTeam1 = findViewById(R.id.tvRedTeam1);
+        tvRedTeam2 = findViewById(R.id.tvRedTeam2);
+        tvRedTeam3 = findViewById(R.id.tvRedTeam3);
         tvRedPoints1 = findViewById(R.id.tvRedPoints1);
         tvRedPoints2 = findViewById(R.id.tvRedPoints2);
         tvRedPoints3 = findViewById(R.id.tvRedPoints3);
         tvRedHeight1 = findViewById(R.id.tvRedHeight1);
         tvRedHeight2 = findViewById(R.id.tvRedHeight2);
         tvRedHeight3 = findViewById(R.id.tvRedHeight3);
-        tvRedClimb1  = findViewById(R.id.tvRedClimb1);
-        tvRedClimb2  = findViewById(R.id.tvRedClimb2);
-        tvRedClimb3  = findViewById(R.id.tvRedClimb3);
-        tvRedGames1  = findViewById(R.id.tvRedGames1);
-        tvRedGames2  = findViewById(R.id.tvRedGames2);
-        tvRedGames3  = findViewById(R.id.tvRedGames3);
+        tvRedClimb1 = findViewById(R.id.tvRedClimb1);
+        tvRedClimb2 = findViewById(R.id.tvRedClimb2);
+        tvRedClimb3 = findViewById(R.id.tvRedClimb3);
+        tvRedGames1 = findViewById(R.id.tvRedGames1);
+        tvRedGames2 = findViewById(R.id.tvRedGames2);
+        tvRedGames3 = findViewById(R.id.tvRedGames3);
 
-        tvBlueTeam1   = findViewById(R.id.tvBlueTeam1);
-        tvBlueTeam2   = findViewById(R.id.tvBlueTeam2);
-        tvBlueTeam3   = findViewById(R.id.tvBlueTeam3);
+        tvBlueTeam1 = findViewById(R.id.tvBlueTeam1);
+        tvBlueTeam2 = findViewById(R.id.tvBlueTeam2);
+        tvBlueTeam3 = findViewById(R.id.tvBlueTeam3);
         tvBluePoints1 = findViewById(R.id.tvBluePoints1);
         tvBluePoints2 = findViewById(R.id.tvBluePoints2);
         tvBluePoints3 = findViewById(R.id.tvBluePoints3);
         tvBlueHeight1 = findViewById(R.id.tvBlueHeight1);
         tvBlueHeight2 = findViewById(R.id.tvBlueHeight2);
         tvBlueHeight3 = findViewById(R.id.tvBlueHeight3);
-        tvBlueClimb1  = findViewById(R.id.tvBlueClimb1);
-        tvBlueClimb2  = findViewById(R.id.tvBlueClimb2);
-        tvBlueClimb3  = findViewById(R.id.tvBlueClimb3);
-        tvBlueGames1  = findViewById(R.id.tvBlueGames1);
-        tvBlueGames2  = findViewById(R.id.tvBlueGames2);
-        tvBlueGames3  = findViewById(R.id.tvBlueGames3);
+        tvBlueClimb1 = findViewById(R.id.tvBlueClimb1);
+        tvBlueClimb2 = findViewById(R.id.tvBlueClimb2);
+        tvBlueClimb3 = findViewById(R.id.tvBlueClimb3);
+        tvBlueGames1 = findViewById(R.id.tvBlueGames1);
+        tvBlueGames2 = findViewById(R.id.tvBlueGames2);
+        tvBlueGames3 = findViewById(R.id.tvBlueGames3);
     }
 }

@@ -9,6 +9,12 @@ import android.widget.Toast;
 
 import com.example.mainapp.R;
 
+/**
+ * Represents the InternetUtils component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class InternetUtils {
     public static boolean isInternetConnected(Context context) {
         ConnectivityManager connectivityManager =

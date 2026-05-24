@@ -24,6 +24,12 @@ import com.example.mainapp.Utils.TeamUtils.TeamStats;
 
 import java.util.ArrayList;
 
+/**
+ * Represents the TeamStatsActivity component in the application.
+ *
+ * This class is responsible for handling the logic, data flow,
+ * and interactions related to its specific feature inside the Android app.
+ */
 public class TeamStatsActivity extends AppCompatActivity {
 
     private enum SortType {
@@ -42,6 +48,10 @@ public class TeamStatsActivity extends AppCompatActivity {
     private SortType currentSort = SortType.AVG_POINTS;
 
     @Override
+/**
+ * Initializes the activity and prepares the screen components and data.
+ * @param savedInstanceState parameter required for this method.
+ */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team_stats);
@@ -61,6 +71,10 @@ public class TeamStatsActivity extends AppCompatActivity {
         // Live updates from Firebase
         DataHelper.getInstance().getUpdatedTeamsStats(new DataHelper.DataCallback<ArrayList<TeamStats>>() {
             @Override
+/**
+ * Executes the logic associated with the onSuccess operation.
+ * @param fresh parameter required for this method.
+ */
             public void onSuccess(ArrayList<TeamStats> fresh) {
                 AppCache.getInstance().setAllTeamStats(fresh);
                 cachedStats = fresh;
@@ -69,10 +83,17 @@ public class TeamStatsActivity extends AppCompatActivity {
                 });
             }
             @Override
+/**
+ * Executes the logic associated with the onFailure operation.
+ * @param error parameter required for this method.
+ */
             public void onFailure(String error) {}
         });
     }
 
+/**
+ * Executes the logic associated with the setupSortButton operation.
+ */
     private void setupSortButton() {
         btnSort.setOnClickListener(v -> {
             new AlertDialog.Builder(context)
@@ -93,6 +114,9 @@ public class TeamStatsActivity extends AppCompatActivity {
         });
     }
 
+/**
+ * Executes the logic associated with the sortAndRefresh operation.
+ */
     private void sortAndRefresh() {
         ArrayList<TeamStats> stats = AppCache.getInstance().getAllTeamStats();
         if (stats == null) return;
@@ -118,6 +142,9 @@ public class TeamStatsActivity extends AppCompatActivity {
         updateUI(stats);
     }
 
+/**
+ * Executes the logic associated with the addFilterSearchTeam operation.
+ */
     private void addFilterSearchTeam() {
         editText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -145,16 +172,28 @@ public class TeamStatsActivity extends AppCompatActivity {
         });
     }
 
+/**
+ * Executes the logic associated with the showFilteredTeam operation.
+ * @param teamNumber parameter required for this method.
+ */
     private void showFilteredTeam(int teamNumber) {
         DataHelper.getInstance().readTeamStats(Integer.toString(teamNumber),
                 new DataHelper.DataCallback<TeamStats>() {
                     @Override
+/**
+ * Executes the logic associated with the onSuccess operation.
+ * @param data parameter required for this method.
+ */
                     public void onSuccess(TeamStats data) {
                         ArrayList<TeamStats> filtered = new ArrayList<>();
                         filtered.add(data);
                         runOnUiThread(() -> updateUI(filtered));
                     }
                     @Override
+/**
+ * Executes the logic associated with the onFailure operation.
+ * @param error parameter required for this method.
+ */
                     public void onFailure(String error) {
                         runOnUiThread(() -> {
                             Toast.makeText(context, "קבוצה לא נמצאה", LENGTH_SHORT).show();
@@ -165,11 +204,18 @@ public class TeamStatsActivity extends AppCompatActivity {
         );
     }
 
+/**
+ * Executes the logic associated with the updateUI operation.
+ * @param newStats parameter required for this method.
+ */
     private void updateUI(ArrayList<TeamStats> newStats) {
         adapter.updateData(newStats);
         adapter.notifyDataSetChanged();
     }
 
+/**
+ * Executes the logic associated with the init operation.
+ */
     private void init() {
         context = TeamStatsActivity.this;
         recyclerView = findViewById(R.id.recyclerView);
