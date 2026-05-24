@@ -115,6 +115,11 @@ public class TeamAtGame implements Serializable {
     }
 
 
+    public void addGamePieceScored(GamePieceScore gamePieceScore, int count){
+        for(int i = 0; i < count; i++) addGamePieceScored(GamePiece.getGamePieceFromString(gamePieceScore.getPiece()), gamePieceScore.isInAuto());
+    }
+
+
     @Exclude
 /**
  * Executes the logic associated with the calculatePoints operation.
@@ -152,6 +157,9 @@ public class TeamAtGame implements Serializable {
         public GamePieceScore(String piece, boolean inAuto) {
             this.piece = piece;
             this.inAuto = inAuto;
+        }
+        public  GamePieceScore(GamePiece g, boolean inAuto){
+            this(g.name(), inAuto);
         }
 
 /**
