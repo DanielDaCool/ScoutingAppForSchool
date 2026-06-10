@@ -130,8 +130,6 @@ public class FormsActivity extends AppCompatActivity {
         if (teamsAtEvent != null) t = TeamUtils.getTeamFromArray(teamsAtEvent, teamNum);
         if (t == null) t = new Team(teamNum, "Team " + teamNum);
 
-
-
         TeamAtGame teamAtGame = new TeamAtGame(t, gameNum);
         if (updateGamePieces(teamAtGame)) {
             if (!InternetUtils.isInternetConnected(context)) {
@@ -312,7 +310,7 @@ public class FormsActivity extends AppCompatActivity {
 
 
     private boolean isGamePieceAmountCorrect(int value) {
-        return value >= 0 && value < 20;
+        return value >= 0 && value <= 12;
 
     }
 
